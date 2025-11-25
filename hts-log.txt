@@ -1,0 +1,11 @@
+HTTrack3.49-2+htsswf+htsjava launched on Thu, 23 Oct 2025 11:52:10 at https://finapp.bragherstudio.com/view22/index.html +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar +https://finapp.bragherstudio.com/view22/index.html
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f0#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" https://finapp.bragherstudio.com/view22/index.html -O1 "C:\Users\VIKESHKUMAR\Desktop\finapp" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar +https://finapp.bragherstudio.com/view22/index.html )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+
+HTTrack Website Copier/3.49-2 mirror complete in 59 seconds : 111 links scanned, 110 files written (2790260 bytes overall) [1330138 bytes received at 22544 bytes/sec], 1872673 bytes transferred using HTTP compression in 76 files, ratio 19%, 8.5 requests per connection
+(No errors, 0 warnings, 0 messages)
