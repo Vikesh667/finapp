@@ -94,6 +94,7 @@ class TransactionController extends BaseController
             'gst_number'       => $gstNumber,
             'created_by'       => $loggedIn,
             'recipt_no'        => $receiptNo,
+             'company_id'      => $this->request->getPath('company_id'),  
             'remark'           => $this->request->getPost('remark')
         ];
 

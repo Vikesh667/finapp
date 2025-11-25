@@ -214,6 +214,38 @@
 
             </div>
         </div>
+        <!-- ================= TERMS & CONDITIONS SECTION ================= -->
+
+        <div class="section p-2 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="m-0">Terms & Conditions</h5>
+                </div>
+
+                <?php if (session()->getFlashdata('success')): ?>
+                    <div class="alert alert-success m-2"><?= session()->getFlashdata('success') ?></div>
+                <?php endif; ?>
+
+                <div class="card-body">
+                    <form action="<?= base_url('admin/save-terms') ?>" method="post">
+
+                        <label class="form-label">Terms & Conditions Text</label>
+                        <textarea name="terms_content" class="form-control" rows="8" placeholder="Enter terms here..."><?= esc($latestTerms['content'] ?? '') ?></textarea>
+
+                        <button class="btn btn-primary mt-3 w-100">
+                            <ion-icon name="save-outline"></ion-icon> Save & Create New Version
+                        </button>
+                    </form>
+
+                    <?php if (!empty($latestTerms)): ?>
+                        <div class="mt-3 small text-muted">
+                            Last Updated: <?= $latestTerms['updated_at'] ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <?= view('sidebar'); ?>

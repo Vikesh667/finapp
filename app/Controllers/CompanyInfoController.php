@@ -11,8 +11,12 @@ class CompanyInfoController extends BaseController
 {
     public function company_info()
     {
-        $companyInfoModel = new CompanyInfoModel();
-        $data['companies'] = $companyInfoModel->findAll();
+        $companyModel = new \App\Models\CompanyInfoModel();
+        $termsModel   = new \App\Models\TermsModel();
+
+        $data['companies']   = $companyModel->findAll();
+        $data['latestTerms'] = $termsModel->orderBy('id', 'DESC')->first();
+
         return view('admin/company-info', $data);
     }
 
@@ -55,5 +59,20 @@ class CompanyInfoController extends BaseController
         $companyInfoModel->insert($data);
 
         return redirect()->to(base_url('admin/company-manage'))->with('success', 'Company Added Successfully!');
+    }
+    public function getCompanies()
+    {
+        $companyModel = new CompanyInfoModel();
+        $companies = $companyModel->findAll();
+        return $this->response->setJSON($companies);
+    }
+    public function save_terms()
+    {
+        $termsModel = new \App\Models\TermsModel();
+        $content = $this->request->getPost('terms_content');
+
+        $termsModel->insert(['content' => $content]); // stores version
+
+        return redirect()->to('/admin/company-manage')->with('success', 'Terms Updated Successfully!');
     }
 }

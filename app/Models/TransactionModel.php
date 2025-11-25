@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class TransactionModel extends Model {
     protected $table='transactions';
     protected $primaryKey='id';
-    protected $allowedFields=['user_id','client_id','customer_id','code','rate','extra_code','total_amount','paid_amount','remaining_amount','total_code','created_By','recipt_no','gst_number','gst_applied','remark'];
+    protected $allowedFields=['user_id','client_id','customer_id','company_id','code','rate','extra_code','total_amount','paid_amount','remaining_amount','total_code','created_By','recipt_no','gst_number','gst_applied','remark'];
     protected $useTimestamps=true;
     
     protected $createdField  = 'created_at';

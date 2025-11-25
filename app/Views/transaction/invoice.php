@@ -273,9 +273,9 @@
 </html> -->
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Invoice <?= $invoice['invoice_no'] ?></title>
+
     <style>
         @page {
             size: A4;
@@ -285,203 +285,189 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 13px;
+            margin: 0;
+            padding: 0;
         }
 
         .page {
             border: 1px solid #000;
             padding: 10px;
+            max-width: 800px;
+            margin: auto;
         }
+
+        h2 { margin: 5px 0 15px 0; }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #000;
             padding: 6px;
+            vertical-align: top;
         }
 
-        .center {
-            text-align: center;
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .bold { font-weight: bold; }
+
+        /* ---- Responsive Fix ---- */
+        @media screen and (max-width: 768px) {
+            .top-grid {
+                display: block;
+            }
+
+            .company-block, .logo-block {
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            table, th, td {
+                font-size: 12px;
+            }
+
+            td div {
+                max-width: 100% !important;
+            }
         }
 
-        .right {
-            text-align: right;
-        }
-
-        .bold {
-            font-weight: bold;
+        /* --- Print Mode Always Fixed Layout --- */
+        @media print {
+            .top-grid { display: grid; grid-template-columns: 70% 30%; }
         }
     </style>
 </head>
 
 <body>
+<div class="page">
 
-    <div class="page">
+    <h2 class="center">TAX INVOICE</h2>
 
-        <h2 class="center">TAX INVOICE</h2>
+    <?php $company = $invoice['company']; ?>
 
-        <?php $company = $invoice['company']; ?>
+    <!-- Top Header Area (Responsive Grid) -->
+    <div class="top-grid" style="display:grid; grid-template-columns:70% 30%; gap:10px;">
+        
+        <!-- LEFT -->
+        <div class="company-block" style="line-height:18px;">
+            <strong style="font-size:18px;"><?= esc($company['company_name']) ?></strong><br>
 
-        <table style="width:100%; border-collapse: collapse; font-size:14px;">
-            <tr>
-                <td width="70%" style="vertical-align:top; line-height:18px;">
+            <div style="max-width:220px; word-wrap:break-word;">
+                <?= nl2br(esc($company['address'])) ?>
+            </div>
 
-                    <!-- Company Name -->
-                    <strong style="font-size:18px;"><?= esc($company['company_name']) ?></strong><br>
+            <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
+            <strong>State:</strong>
+            <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
+        </div>
 
-                    <!-- Address -->
-                    <?= nl2br(esc($company['address'])) ?><br>
+        <!-- RIGHT -->
+        <div class="logo-block center">
+            <strong>ORIGINAL FOR RECIPIENT</strong><br><br>
 
-                    <!-- State, Country -->
-                    <?= esc($company['state']) ?>, <?= esc($company['country']) ?><br>
-
-                    <!-- GST & Code -->
-                    <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
-                    <strong>State:</strong>
-                    <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
-
-
-                </td>
-
-                <!-- Logo Section -->
-                <td style="text-align:center; vertical-align:top;">
-                    <strong>ORIGINAL FOR RECIPIENT</strong><br><br>
-
-                    <?php if (!empty($company['logo'])): ?>
-                        <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
-                            width="90" height="90"
-                            style="object-fit:contain; border:1px solid #ddd; padding:5px; border-radius:6px;">
-                    <?php else: ?>
-                        <img src="https://via.placeholder.com/90" width="90" height="90">
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </table>
-
-
-
-        <table style="margin-top:5px;">
-            <tr>
-                <td><b>Invoice No:</b> <?= $invoice['invoice_no'] ?></td>
-                <td><b>Date:</b> <?= date("d-m-Y", strtotime($invoice['date'])) ?></td>
-            </tr>
-            <tr>
-                <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST Applicable)' : 'Invoice (Without GST)' ?></td>
-                <td><b>State :</b> <?= esc($invoice['customer']['state']) ?><p> <strong>State Code </strong>:<?= $invoice['customer_state_code'] ?? 'N/A' ?></p></td>
-            </tr>
-        </table>
-
-        <table style="margin-top:10px;">
-            <tr>
-                <th colspan="2">Bill To</th>
-            </tr>
-            <tr>
-                <td>
-                    <b><?= $invoice['customer']['name'] ?></b><br>
-                    <?= $invoice['customer']['address'] ?><br>
-
-                    <!-- Only show GST if customer is registered -->
-                    <?php if (!empty($invoice['gst_number'])): ?>
-                        <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?>
-                    <?php else: ?>
-                        <b>Customer GSTIN:</b> Not Registered
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </table>
-
-        <table style="margin-top:10px;">
-            <tr>
-                <th>Sr</th>
-                <th>HSN/SAC</th>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Rate (₹)</th>
-                <th>Amount (₹)</th>
-            </tr>
-            <tr>
-                <td class="center">1</td>
-                <td>998314</td>
-                <td>Purchase of License Codes</td>
-                <td class="center"><?= $invoice['total_code'] ?></td>
-                <td class="right"><?= number_format($invoice['rate'], 2) ?></td>
-                <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
-            </tr>
-        </table>
-
-        <table style="margin-top:10px;">
-            <tr>
-                <th>Description</th>
-                <th class="right">Amount (₹)</th>
-            </tr>
-            <tr>
-                <td>Subtotal</td>
-                <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
-            </tr>
-
-            <?php if ($invoice['gst_applied']): ?>
-
-                <?php if ($invoice['igst'] > 0): ?>
-                    <tr>
-                        <td>IGST (18%)</td>
-                        <td class="right"><?= number_format($invoice['igst'], 2) ?></td>
-                    </tr>
-                <?php else: ?>
-                    <tr>
-                        <td>CGST (9%)</td>
-                        <td class="right"><?= number_format($invoice['cgst'], 2) ?></td>
-                    </tr>
-                    <tr>
-                        <td>SGST (9%)</td>
-                        <td class="right"><?= number_format($invoice['sgst'], 2) ?></td>
-                    </tr>
-                <?php endif; ?>
-
+            <?php if (!empty($company['logo'])): ?>
+                <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
+                     width="90" height="90" style="object-fit:contain;border:1px solid #ddd;padding:5px;border-radius:6px;">
             <?php else: ?>
-                <tr>
-                    <td colspan="2" class="center" style="font-size:11px;">GST Not Applicable on this Invoice</td>
-                </tr>
+                <img src="https://via.placeholder.com/90">
             <?php endif; ?>
-
-            <tr class="bold">
-                <td>Total Invoice Amount</td>
-                <td class="right"><?= number_format($invoice['grand_total'], 2) ?></td>
-            </tr>
-            <tr>
-                <td>Amount Paid</td>
-                <td class="right"><?= number_format($invoice['paid_amount'], 2) ?></td>
-            </tr>
-            <tr>
-                <td><b>Balance Due</b></td>
-                <td class="right"><b><?= number_format($invoice['remaining_amount'], 2) ?></b></td>
-            </tr>
-        </table>
-
-        <table style="margin-top:15px;">
-            <tr>
-                <td width="60%">
-                    <strong>Terms & Conditions:</strong><br>
-                    • No refund or replacement after code delivery.<br>
-                    • Invoice becomes valid only after full payment.<br>
-                    • Software License is non-transferable.<br>
-                    • Subject to Thane, Maharashtra jurisdiction.
-                </td>
-
-                <td class="center">
-                    <div style="border:1px dashed #444;width:120px;height:70px;margin:auto;display:flex;align-items:center;justify-content:center;">
-                        STAMP
-                    </div>
-                    <br><b>Authorized Signatory</b>
-                </td>
-            </tr>
-        </table>
-
-        <p class="center" style="margin-top:10px;font-size:12px;"><i>Thank you for choosing VMIT Technologies!</i></p>
-
+        </div>
     </div>
-</body>
 
+
+    <table>
+        <tr>
+            <td><b>Invoice No:</b> <?= $invoice['invoice_no'] ?></td>
+            <td><b>Date:</b> <?= date("d-m-Y", strtotime($invoice['date'])) ?></td>
+        </tr>
+
+        <tr>
+            <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST Applicable)' : 'Invoice (Without GST)' ?></td>
+            <td><b>State:</b> <?= esc($invoice['customer']['state']) ?> |
+                <strong>State Code:</strong> <?= $invoice['customer_state_code'] ?? 'N/A' ?>
+            </td>
+        </tr>
+    </table>
+
+
+    <table>
+        <tr><th colspan="2">Bill To</th></tr>
+        <tr>
+            <td>
+                <b><?= esc($invoice['customer']['name']) ?></b><br>
+                <?= nl2br(esc($invoice['customer']['address'])) ?><br>
+
+                <?php if (!empty($invoice['gst_number'])): ?>
+                    <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?>
+                <?php else: ?>
+                    <b>Customer GSTIN:</b> Not Registered
+                <?php endif; ?>
+            </td>
+        </tr>
+    </table>
+
+
+    <table>
+        <tr>
+            <th>Sr</th>
+            <th>HSN/SAC</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Rate (₹)</th>
+            <th>Amount (₹)</th>
+        </tr>
+
+        <tr>
+            <td class="center">1</td>
+            <td>998314</td>
+            <td><?= esc($invoice['remark'] ?? 'Service Charges') ?></td>
+            <td class="center"><?= $invoice['total_code'] ?></td>
+            <td class="right"><?= number_format($invoice['rate'], 2) ?></td>
+            <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
+        </tr>
+    </table>
+
+
+    <table>
+        <tr><th>Description</th><th class="right">Amount (₹)</th></tr>
+
+        <tr><td>Subtotal</td><td class="right"><?= number_format($invoice['base_amount'], 2) ?></td></tr>
+        <tr><td>CGST (9%)</td><td class="right"><?= number_format($invoice['cgst'] ?? 0, 2) ?></td></tr>
+        <tr><td>SGST (9%)</td><td class="right"><?= number_format($invoice['sgst'] ?? 0, 2) ?></td></tr>
+        <tr><td>IGST (18%)</td><td class="right"><?= number_format($invoice['igst'] ?? 0, 2) ?></td></tr>
+
+        <tr class="bold"><td>Total Invoice Amount</td><td class="right"><?= number_format($invoice['grand_total'], 2) ?></td></tr>
+        <tr><td>Amount Paid</td><td class="right"><?= number_format($invoice['paid_amount'], 2) ?></td></tr>
+        <tr><td><b>Balance Due</b></td><td class="right"><b><?= number_format($invoice['remaining_amount'], 2) ?></b></td></tr>
+    </table>
+
+
+    <table>
+        <tr>
+            <td width="60%">
+                <strong>Terms & Conditions:</strong><br>
+                <div style="font-size:12px;white-space:pre-line;">
+                    <?= nl2br(esc($invoice['terms'])) ?>
+                </div>
+            </td>
+
+            <td class="center">
+                <div style="border:1px dashed #444;width:120px;height:70px;margin:auto;display:flex;align-items:center;justify-content:center;">
+                    STAMP
+                </div>
+                <br><b>Authorized Signatory</b>
+            </td>
+        </tr>
+    </table>
+
+
+    <p class="center" style="margin-top:10px;font-size:12px;">
+        <i>Thank you for choosing <?= esc($company['company_name']) ?>!</i>
+    </p>
+
+</div>
+</body>
 </html>

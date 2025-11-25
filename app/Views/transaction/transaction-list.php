@@ -386,6 +386,14 @@
                                     <input type="number" name="total_code" class="form-control" placeholder="Total Code" required id="totalCodes">
                                 </div>
                             </div>
+                            <div class="form-group mb-2">
+                                <label class="form-label">Select Selling Company</label>
+                                <select id="companySelect" name="company_id" class="form-control" required>
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
+
+
                             <div class="form-group basic mb-3">
                                 <label class="label">Remark</label>
                                 <div class="input-group">

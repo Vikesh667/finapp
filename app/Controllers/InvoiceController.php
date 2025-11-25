@@ -17,7 +17,7 @@ class InvoiceController extends BaseController
         $clientModel  = new \App\Models\ClientModel();
         $customerModel = new \App\Models\CustomerModel();
         $compnayInfoModel = new \App\Models\CompanyInfoModel();
-
+        $termsModel = new \App\Models\TermsModel();
         $transaction = $tModel->find($transactionId);
 
         if (!$transaction) {
@@ -27,7 +27,7 @@ class InvoiceController extends BaseController
         $db = \Config\Database::connect();
 
         // ===== Company =====
-        $company = $compnayInfoModel->find(2);
+        $company = $compnayInfoModel->find($transaction['company_id']);
         $stateId = $company['state'];
         $query = $db->query('SELECT state_code FROM states WHERE name = ?', [$company['state']]);
 
@@ -36,15 +36,15 @@ class InvoiceController extends BaseController
 
         // ===== Customer =====
         $customer = $customerModel->find($transaction['customer_id']);
-         
+
         $customerStateCode = null;
         if ($customer && isset($customer['state'])) {
             $custStateId = $customer['state'];
-           $query2 = $db->query('SELECT state_code FROM states WHERE name = ?', [$custStateId]);
+            $query2 = $db->query('SELECT state_code FROM states WHERE name = ?', [$custStateId]);
             $result2 = $query2->getRow();
             $customerStateCode = $result2 ? $result2->state_code : null;
         }
-
+        $storedTerms = $termsModel->find($transaction['terms_id']);
         // GST Calculation Logic
         $gstApplied  = (int)$transaction['gst_applied'];
         $baseAmount  = (float)$transaction['total_amount'];
@@ -74,7 +74,7 @@ class InvoiceController extends BaseController
             'total_code'       => $transaction['total_code'],
             'rate'             => $transaction['rate'],
             'code'             => $transaction['code'],
-
+            'remark'           => $transaction['remark'],
             'gst_applied'      => $gstApplied,
             'gst_number'       => $transaction['gst_number'],
             'igst'             => $igst,
@@ -82,9 +82,10 @@ class InvoiceController extends BaseController
             'sgst'             => $sgst,
             'grand_total'      => $grandTotal,
             'seller_state_code' => $sellerStateCode,
-            'customer_state_code' => $customerStateCode
-        ];
+            'customer_state_code' => $customerStateCode,
 
+        ];
+        $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";
         return view('transaction/invoice', compact('invoice'));
     }
 

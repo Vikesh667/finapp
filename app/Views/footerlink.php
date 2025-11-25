@@ -417,6 +417,7 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
+
                 const role = "<?= $role ?>";
                 const userId = "<?= $userId ?>";
                 const userSelect = document.getElementById('userSelect');
@@ -424,11 +425,48 @@
                 const countrySelect = document.getElementById('countrySelect');
                 const stateSelect = document.getElementById('stateSelect');
                 const citySelect = document.getElementById('citySelect');
-                const ccc = document.querySelector('.ccc');
+                const companySelect = document.getElementById('companySelect');
+
+                /* -------------------------
+                   🔹 LOAD COMPANIES ALWAYS
+                --------------------------*/
+                companySelect.innerHTML = `<option value="">Loading...</option>`;
+
+                let companyApi = role === 'admin' ?
+                    "<?= base_url('admin/get-companies') ?>" :
+                    "<?= base_url('user/get-companies') ?>";
+
+                fetch(companyApi)
+                    .then(res => res.json())
+                    .then(companies => {
+
+                        if (!companies.length) {
+                            companySelect.innerHTML = `<option value="">No companies found</option>`;
+                            return;
+                        }
+
+                        companySelect.innerHTML = `<option value="">Select Company</option>`;
+
+                        companies.forEach(company => {
+                            companySelect.innerHTML += `
+                    <option value="${company.id}">
+                        ${company.company_name}
+                    </option>`;
+                        });
+                    })
+                    .catch(() => {
+                        companySelect.innerHTML = `<option value="">Error loading companies</option>`;
+                    });
+
+
+                /* --------------------------------------------------
+                   🔹 The remaining logic should stay inside modal load
+                ---------------------------------------------------*/
                 $('#addCustomerModal').on('show.bs.modal', function() {
 
-                    //  For Admin - Load Users
                     if (role === 'admin') {
+
+                        // Load Users
                         fetch("<?= base_url('admin/get-users') ?>")
                             .then(res => res.json())
                             .then(users => {
@@ -436,156 +474,48 @@
                                 users.forEach(user => {
                                     userSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
                                 });
-                            })
-                            .catch(() => {
-                                userSelect.innerHTML = '<option value="">Error loading users</option>';
                             });
 
-                        // When Admin selects a User, load their clients
-                        userSelect.addEventListener('change', function() {
-                            const selectedUserId = this.value;
-                            if (!selectedUserId) {
-                                clientSelects.innerHTML = '<option value="">Select user first</option>';
-                                return;
-                            }
-
-                            fetch(`<?= base_url('admin/get-clients/') ?>${selectedUserId}`)
-                                .then(res => res.json())
-                                .then(clients => {
-                                    clientSelects.innerHTML = '<option value="">-- Select Client --</option>';
-                                    clients.forEach(client => {
-                                        clientSelects.innerHTML += `<option value="${client.id}">${client.company_name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    clientSelects.innerHTML = '<option value="">Error loading clients</option>';
-                                });
-                        });
-
+                        // Load Countries
                         fetch("<?= base_url('admin/get-countries') ?>")
                             .then(res => res.json())
                             .then(countries => {
                                 countrySelect.innerHTML = '<option value="">Select Country</option>';
                                 countries.forEach(c => {
                                     countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-
                                 });
-                            })
-                            .catch(() => {
-                                countrySelect.innerHTML = '<option value="">Error loading countries</option>';
                             });
-                        countrySelect.addEventListener('change', function() {
-                            const countryId = this.value;
-                            if (!countryId) {
-                                stateSelect.innerHTML = '<option value="">Select Country First</option>';
-                                citySelect.innerHTML = '<option value="">Select State First</option>';
-                                return;
-                            }
 
-                            fetch(`<?= base_url('admin/get-states/') ?>${countryId}`)
-                                .then(res => res.json())
-                                .then(states => {
-                                    stateSelect.innerHTML = '<option value="">Select State</option>';
-                                    citySelect.innerHTML = '<option value="">Select State First</option>';
-                                    states.forEach(s => {
-                                        stateSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    stateSelect.innerHTML = '<option value="">Error loading states</option>';
-                                });
-                        });
-                        stateSelect.addEventListener('change', function() {
-                            const stateId = this.value;
-                            if (!stateId) {
-                                citySelect.innerHTML = '<option value="">Select State First</option>';
-                                return;
-                            }
-
-                            fetch(`<?= base_url('admin/get-cities/') ?>${stateId}`)
-                                .then(res => res.json())
-                                .then(cities => {
-                                    citySelect.innerHTML = '<option value="">Select City</option>';
-                                    cities.forEach(c => {
-                                        citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    citySelect.innerHTML = '<option value="">Error loading cities</option>';
-                                });
-                        });
                     }
 
-                    // For User - Load their own clients
                     if (role === 'user') {
+
+                        // Load clients assigned to logged-in user
                         fetch(`<?= base_url('user/get-clients/') ?>${userId}`)
                             .then(res => res.json())
                             .then(clients => {
-                                clientSelects.innerHTML = '<option value="">-- Select Client --</option>';
+                                clientSelect.innerHTML = '<option value="">-- Select Client --</option>';
                                 clients.forEach(client => {
-                                    clientSelects.innerHTML += `<option value="${client.id}">${client.company_name}</option>`;
+                                    clientSelect.innerHTML += `<option value="${client.id}">${client.company_name}</option>`;
                                 });
-                            })
-                            .catch(() => {
-                                clientSelects.innerHTML = '<option value="">Error loading clients</option>';
                             });
 
+                        // Load Countries
                         fetch("<?= base_url('user/get-countries') ?>")
                             .then(res => res.json())
                             .then(countries => {
                                 countrySelect.innerHTML = '<option value="">Select Country</option>';
                                 countries.forEach(c => {
                                     countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-
                                 });
-                            })
-                            .catch(() => {
-                                countrySelect.innerHTML = '<option value="">Error loading countries</option>';
                             });
-                        countrySelect.addEventListener('change', function() {
-                            const countryId = this.value;
-                            if (!countryId) {
-                                stateSelect.innerHTML = '<option value="">Select Country First</option>';
-                                citySelect.innerHTML = '<option value="">Select State First</option>';
-                                return;
-                            }
 
-                            fetch(`<?= base_url('user/get-states/') ?>${countryId}`)
-                                .then(res => res.json())
-                                .then(states => {
-                                    stateSelect.innerHTML = '<option value="">Select State</option>';
-                                    citySelect.innerHTML = '<option value="">Select State First</option>';
-                                    states.forEach(s => {
-                                        stateSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    stateSelect.innerHTML = '<option value="">Error loading states</option>';
-                                });
-                        });
-                        stateSelect.addEventListener('change', function() {
-                            const stateId = this.value;
-                            if (!stateId) {
-                                citySelect.innerHTML = '<option value="">Select State First</option>';
-                                return;
-                            }
-
-                            fetch(`<?= base_url('user/get-cities/') ?>${stateId}`)
-                                .then(res => res.json())
-                                .then(cities => {
-                                    citySelect.innerHTML = '<option value="">Select City</option>';
-                                    cities.forEach(c => {
-                                        citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    citySelect.innerHTML = '<option value="">Error loading cities</option>';
-                                });
-                        });
                     }
 
                 });
+
             });
+
 
             <?php if (session()->getFlashdata('success')): ?>
                 Swal.fire({
