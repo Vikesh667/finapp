@@ -11,8 +11,11 @@ class CompanyInfoModel extends Model
     protected $allowedFields = [
         'company_name',
         'address',
+        'city',
         'state',
         'country',
-        'gst_number'
+        'gst_number',
+        'logo',
+        
     ];
 }

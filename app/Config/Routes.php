@@ -84,7 +84,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->post('invoice/save/(:num)', 'InvoiceController::saveInvoice/$1');
   $routes->get('invoice/view/(:num)', 'InvoiceController::view/$1');
   $routes->get('company-manage', 'CompanyInfoController::company_info');
-  $routes->post('admin/save-company-info', 'CompanyInfoController::save');
+  $routes->post('save-company-info', 'CompanyInfoController::save');
 
 
   // --- APP SETTINGS ---

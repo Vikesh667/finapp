@@ -35,8 +35,7 @@
         <div class="section p-2">
             <div class="card">
                 <div class="card-body">
-
-                    <form method="POST" action="<?= base_url('admin/save-company-info') ?>" enctype="multipart/form-data">
+                    <form method="post" action="<?= base_url('admin/save-company-info') ?>" enctype="multipart/form-data">
 
                         <div class="form-group mb-2">
                             <label class="form-label">Company Logo</label>
@@ -94,68 +93,66 @@
                             let preview = document.getElementById('logoPreview');
                             preview.src = URL.createObjectURL(event.target.files[0]);
                             preview.style.display = 'block';
-                        } 
-                       
-                            document.addEventListener('DOMContentLoaded', function() {
+                        }
 
-                                const role = "<?= session()->get('role') ?>";
-                                const userId = "<?= session()->get('user_id') ?>";
-                                const countrySelect = document.getElementById('countrySelect');
-                                const stateSelect = document.getElementById('stateSelect');
-                                const citySelect = document.getElementById('citySelect');
+                        document.addEventListener('DOMContentLoaded', function() {
 
-                                let baseUrl = role === 'admin' ? "<?= base_url('admin') ?>" : "<?= base_url('user') ?>";
+                            const role = "<?= session()->get('role') ?>";
+                            const userId = "<?= session()->get('user_id') ?>";
+                            const countrySelect = document.getElementById('countrySelect');
+                            const stateSelect = document.getElementById('stateSelect');
+                            const citySelect = document.getElementById('citySelect');
 
-                                // Load Countries
-                                fetch(baseUrl + '/get-countries')
+                            let baseUrl = role === 'admin' ? "<?= base_url('admin') ?>" : "<?= base_url('user') ?>";
+
+                            // Load Countries
+                            fetch(baseUrl + '/get-countries')
+                                .then(res => res.json())
+                                .then(countries => {
+                                    countrySelect.innerHTML = '<option value="">Select Country</option>';
+                                    countries.forEach(c => {
+                                        countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                                    });
+                                });
+
+                            // When Country Changes → Load States
+                            countrySelect.addEventListener('change', function() {
+                                const id = this.value;
+                                if (!id) {
+                                    stateSelect.innerHTML = '<option value="">Select Country First</option>';
+                                    citySelect.innerHTML = '<option value="">Select State First</option>';
+                                    return;
+                                }
+
+                                fetch(baseUrl + '/get-states/' + id)
                                     .then(res => res.json())
-                                    .then(countries => {
-                                        countrySelect.innerHTML = '<option value="">Select Country</option>';
-                                        countries.forEach(c => {
-                                            countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                                    .then(states => {
+                                        stateSelect.innerHTML = '<option value="">Select State</option>';
+                                        states.forEach(s => {
+                                            stateSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
                                         });
                                     });
-
-                                // When Country Changes → Load States
-                                countrySelect.addEventListener('change', function() {
-                                    const id = this.value;
-                                    if (!id) {
-                                        stateSelect.innerHTML = '<option value="">Select Country First</option>';
-                                        citySelect.innerHTML = '<option value="">Select State First</option>';
-                                        return;
-                                    }
-
-                                    fetch(baseUrl + '/get-states/' + id)
-                                        .then(res => res.json())
-                                        .then(states => {
-                                            stateSelect.innerHTML = '<option value="">Select State</option>';
-                                            states.forEach(s => {
-                                                stateSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-                                            });
-                                        });
-                                });
-
-                                // When State Changes → Load Cities
-                                stateSelect.addEventListener('change', function() {
-                                    const id = this.value;
-                                    if (!id) {
-                                        citySelect.innerHTML = '<option value="">Select State First</option>';
-                                        return;
-                                    }
-
-                                    fetch(baseUrl + '/get-cities/' + id)
-                                        .then(res => res.json())
-                                        .then(cities => {
-                                            citySelect.innerHTML = '<option value="">Select City</option>';
-                                            cities.forEach(c => {
-                                                citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                                            });
-                                        });
-                                });
-
                             });
-                  
 
+                            // When State Changes → Load Cities
+                            stateSelect.addEventListener('change', function() {
+                                const id = this.value;
+                                if (!id) {
+                                    citySelect.innerHTML = '<option value="">Select State First</option>';
+                                    return;
+                                }
+
+                                fetch(baseUrl + '/get-cities/' + id)
+                                    .then(res => res.json())
+                                    .then(cities => {
+                                        citySelect.innerHTML = '<option value="">Select City</option>';
+                                        cities.forEach(c => {
+                                            citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                                        });
+                                    });
+                            });
+
+                        });
                     </script>
 
                 </div>
@@ -178,6 +175,7 @@
                                 <th>#</th>
                                 <th>Company Name</th>
                                 <th>Address</th>
+                                <th>City</th>
                                 <th>State</th>
                                 <th>Country</th>
                                 <th>GST No.</th>
@@ -191,6 +189,7 @@
                                         <td><?= $index + 1 ?></td>
                                         <td><?= esc($c['company_name']) ?></td>
                                         <td><?= nl2br(esc($c['address'])) ?></td>
+                                        <td><?= esc($c['city']) ?></td>
                                         <td><?= esc($c['state']) ?></td>
                                         <td><?= esc($c['country']) ?></td>
                                         <td><?= esc($c['gst_number']) ?></td>

@@ -323,20 +323,45 @@
 
         <h2 class="center">TAX INVOICE</h2>
 
-        <table>
+        <?php $company = $invoice['company']; ?>
+
+        <table style="width:100%; border-collapse: collapse; font-size:14px;">
             <tr>
-                <td width="70%">
-                    <b>VMIT Technologies Pvt. Ltd.</b><br>
-                    24/2 Ramball Yadav Chawl, Gautam Nagar,<br>
-                    Thane (W), Maharashtra - 400604<br>
-                    <b>GSTIN:</b> 27AAGCV4108B1ZO
+                <td width="70%" style="vertical-align:top; line-height:18px;">
+
+                    <!-- Company Name -->
+                    <strong style="font-size:18px;"><?= esc($company['company_name']) ?></strong><br>
+
+                    <!-- Address -->
+                    <?= nl2br(esc($company['address'])) ?><br>
+
+                    <!-- State, Country -->
+                    <?= esc($company['state']) ?>, <?= esc($company['country']) ?><br>
+
+                    <!-- GST & Code -->
+                    <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
+                    <strong>State:</strong>
+                    <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
+
+
                 </td>
-                <td class="center">
-                    <b>ORIGINAL FOR RECIPIENT</b><br><br>
-                    <img src="https://via.placeholder.com/90">
+
+                <!-- Logo Section -->
+                <td style="text-align:center; vertical-align:top;">
+                    <strong>ORIGINAL FOR RECIPIENT</strong><br><br>
+
+                    <?php if (!empty($company['logo'])): ?>
+                        <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
+                            width="90" height="90"
+                            style="object-fit:contain; border:1px solid #ddd; padding:5px; border-radius:6px;">
+                    <?php else: ?>
+                        <img src="https://via.placeholder.com/90" width="90" height="90">
+                    <?php endif; ?>
                 </td>
             </tr>
         </table>
+
+
 
         <table style="margin-top:5px;">
             <tr>
@@ -345,7 +370,7 @@
             </tr>
             <tr>
                 <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST Applicable)' : 'Invoice (Without GST)' ?></td>
-                <td><b>State Code:</b> <?= $invoice['client']['state_code'] ?? 'N/A' ?></td>
+                <td><b>State :</b> <?= esc($invoice['customer']['state']) ?><p> <strong>State Code </strong>:<?= $invoice['customer_state_code'] ?? 'N/A' ?></p></td>
             </tr>
         </table>
 

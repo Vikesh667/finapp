@@ -11,71 +11,82 @@ class InvoiceController extends BaseController
 {
 
     /** STEP 1: Preview page showing GST selection + invoice information */
-   public function preview($transactionId)
-{
-    $tModel       = new \App\Models\TransactionModel();
-    $clientModel  = new \App\Models\ClientModel();
-    $customerModel= new \App\Models\CustomerModel();
+    public function preview($transactionId)
+    {
+        $tModel       = new \App\Models\TransactionModel();
+        $clientModel  = new \App\Models\ClientModel();
+        $customerModel = new \App\Models\CustomerModel();
+        $compnayInfoModel = new \App\Models\CompanyInfoModel();
 
-    $transaction = $tModel->find($transactionId);
+        $transaction = $tModel->find($transactionId);
 
-    if (!$transaction) {
-        return redirect()->back()->with('error', 'Transaction not found.');
-    }
-
-    // Buyer & Seller States (CHANGE seller manually or config)
-    $sellerStateCode = 27; // Maharashtra
-   
-    $client          = $clientModel->find($transaction['client_id']);
-    $customer        = $customerModel->find($transaction['customer_id']);
-    $buyerStateCode  = $customer['state_code'] ?? '09';
-
-    // GST Logic
-    $gstApplied  = (int)$transaction['gst_applied'];
-    $baseAmount  = (float)$transaction['total_amount'];
-
-    $igst = $cgst = $sgst = 0;
-
-    if ($gstApplied) {
-        if ($sellerStateCode != $buyerStateCode) {
-            $igst = round($baseAmount * 0.18, 2);
-        } else {
-            $cgst = round($baseAmount * 0.09, 2);
-            $sgst = round($baseAmount * 0.09, 2);
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found.');
         }
+
+        $db = \Config\Database::connect();
+
+        // ===== Company =====
+        $company = $compnayInfoModel->find(2);
+        $stateId = $company['state'];
+        $query = $db->query('SELECT state_code FROM states WHERE name = ?', [$company['state']]);
+
+        $result = $query->getRow();
+        $sellerStateCode = $result ? $result->state_code : null;
+
+        // ===== Customer =====
+        $customer = $customerModel->find($transaction['customer_id']);
+         
+        $customerStateCode = null;
+        if ($customer && isset($customer['state'])) {
+            $custStateId = $customer['state'];
+           $query2 = $db->query('SELECT state_code FROM states WHERE name = ?', [$custStateId]);
+            $result2 = $query2->getRow();
+            $customerStateCode = $result2 ? $result2->state_code : null;
+        }
+
+        // GST Calculation Logic
+        $gstApplied  = (int)$transaction['gst_applied'];
+        $baseAmount  = (float)$transaction['total_amount'];
+
+        $igst = $cgst = $sgst = 0;
+
+        if ($gstApplied) {
+            if ($sellerStateCode != $customerStateCode) {
+                $igst = round($baseAmount * 0.18, 2);
+            } else {
+                $cgst = round($baseAmount * 0.09, 2);
+                $sgst = round($baseAmount * 0.09, 2);
+            }
+        }
+
+        $grandTotal = $baseAmount + $igst + $cgst + $sgst;
+
+        $invoice = [
+            'invoice_no'       => $transaction['recipt_no'],
+            'date'             => $transaction['created_at'],
+            'client'           => $clientModel->find($transaction['client_id']),
+            'customer'         => $customer,
+            'company'          => $company,
+            'base_amount'      => $baseAmount,
+            'paid_amount'      => $transaction['paid_amount'],
+            'remaining_amount' => $transaction['remaining_amount'],
+            'total_code'       => $transaction['total_code'],
+            'rate'             => $transaction['rate'],
+            'code'             => $transaction['code'],
+
+            'gst_applied'      => $gstApplied,
+            'gst_number'       => $transaction['gst_number'],
+            'igst'             => $igst,
+            'cgst'             => $cgst,
+            'sgst'             => $sgst,
+            'grand_total'      => $grandTotal,
+            'seller_state_code' => $sellerStateCode,
+            'customer_state_code' => $customerStateCode
+        ];
+
+        return view('transaction/invoice', compact('invoice'));
     }
-
-    $grandTotal = $baseAmount + $igst + $cgst + $sgst;
-
-    $invoice = [
-        // Basic
-        'invoice_no'       => $transaction['recipt_no'],
-        'date'             => $transaction['created_at'],
-
-        // Parties
-        'client'           => $client,
-        'customer'         => $customer,
-
-        // Transaction
-        'base_amount'      => $baseAmount,
-        'paid_amount'      => $transaction['paid_amount'],
-        'remaining_amount' => $transaction['remaining_amount'],
-        'total_code'       => $transaction['total_code'],
-        'rate'             => $transaction['rate'],
-        'code'             => $transaction['code'],
-
-        // GST
-        'gst_applied'      => $gstApplied,
-        'gst_number'       => $transaction['gst_number'],
-        'igst'             => $igst,
-        'cgst'             => $cgst,
-        'sgst'             => $sgst,
-
-        'grand_total'      => $grandTotal
-    ];
-
-    return view('transaction/invoice', compact('invoice'));
-}
 
 
 
@@ -84,7 +95,7 @@ class InvoiceController extends BaseController
     {
         $transactionModel = new TransactionModel();
         $invoiceModel     = new InvoiceModel();
-        
+
         $transaction = $transactionModel->find($transactionId);
 
         if (!$transaction) {

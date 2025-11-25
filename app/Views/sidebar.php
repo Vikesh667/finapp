@@ -136,6 +136,14 @@ $counter = $this->common->getcounter();
 
                     <?php if ($role === 'admin'): ?>
                         <li>
+                            <a href="<?= base_url('admin/company-manage') ?>" class="item">
+                                <div class="icon-box bg-primary">
+                                    <ion-icon name="business-outline"></ion-icon>
+                                </div>
+                                <div class="in">Company Info</div>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= base_url('admin/app-settings') ?>" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="settings-outline"></ion-icon>
@@ -183,7 +191,7 @@ $counter = $this->common->getcounter();
                             </a>
                         </li>
                     <?php endif; ?>
-                      
+
                     <li>
                         <a href="<?= base_url('/logout') ?>" class="item">
                             <div class="icon-box bg-primary">
