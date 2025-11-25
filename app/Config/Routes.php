@@ -80,8 +80,12 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('get-states/(:num)', 'UserController::getStateByCountry/$1');
   $routes->get('get-cities/(:num)', 'UserController::getCityByState/$1');
 
+  $routes->get('invoice/preview/(:num)', 'InvoiceController::preview/$1');
+  $routes->post('invoice/save/(:num)', 'InvoiceController::saveInvoice/$1');
   $routes->get('invoice/view/(:num)', 'InvoiceController::view/$1');
-  $routes->get('invoice/download/(:num)', 'InvoiceController::download/$1');
+  $routes->get('company-manage', 'CompanyInfoController::company_info');
+  $routes->post('admin/save-company-info', 'CompanyInfoController::save');
+
 
   // --- APP SETTINGS ---
 

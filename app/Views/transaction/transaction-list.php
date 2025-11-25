@@ -221,7 +221,6 @@
 
 
                                         <td class="text-center">
-
                                             <div>
                                                 <?php if ($transaction['remaining_amount'] > 0): ?>
                                                     <a href="#"
@@ -247,6 +246,12 @@
                                                     </button>
                                                 <?php endif; ?>
                                             </form>
+                                            <a href="<?= base_url('admin/invoice/preview/' . $transaction['id']) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                Generate Invoice
+                                            </a>
+
+
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -381,21 +386,6 @@
                                     <input type="number" name="total_code" class="form-control" placeholder="Total Code" required id="totalCodes">
                                 </div>
                             </div>
-                            <div class="form-group mb-3">
-                                <label for="gst_applied">Apply GST?</label>
-                                <select name="gst_applied" id="gst_applied" class="form-control" required>
-                                    <option value="">-- Select --</option>
-                                    <option value="1">Yes, Apply GST (18%)</option>
-                                    <option value="0" selected>No, Without GST</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3" id="gst_number_wrapper" style="display:none;">
-                                <label for="gst_number">Enter GST Number</label>
-                                <input type="text" name="gst_number" id="gst_number" class="form-control" placeholder="27ABCDE1234F1Z5">
-                            </div>
-
-
                             <div class="form-group basic mb-3">
                                 <label class="label">Remark</label>
                                 <div class="input-group">
@@ -620,35 +610,27 @@
                 });
 
         });
-        const gstCheck = document.getElementById("gstCheck");
-        const gstInput = document.getElementById("gstNumber");
-        const gstSection = document.getElementById("gstSection");
 
-        gstCheck.addEventListener("change", () => {
-            const paidAmount = parseFloat(document.getElementById("paidAmount").innerText || 0);
-            const gstAmount = (paidAmount * 18) / 100;
+        document.addEventListener("DOMContentLoaded", function() {
 
-            document.getElementById("baseAmount").innerText = paidAmount.toFixed(2);
-            document.getElementById("gst").innerText = gstAmount.toFixed(2);
-            document.getElementById("totalWithGST").innerText = (paidAmount + gstAmount).toFixed(2);
+            const gstSelect = document.getElementById("gst_applied");
+            const gstWrapper = document.getElementById("gst_number_wrapper");
+            const gstInput = document.getElementById("gst_number");
 
-            gstInput.style.display = gstCheck.checked ? "block" : "none";
-            gstSection.style.display = gstCheck.checked ? "block" : "none";
-        });
-
-        document.getElementById('gst_applied').addEventListener('change', function() {
-            let gstField = document.getElementById('gst_number_wrapper');
-
-            if (this.value == "1") {
-                gstField.style.display = 'block';
-                document.getElementById('gst_number').setAttribute('required', 'required');
-            } else {
-                gstField.style.display = 'none';
-                document.getElementById('gst_number').removeAttribute('required');
-                document.getElementById('gst_number').value = "";
-            }
+            gstSelect.addEventListener("change", function() {
+                if (this.value === "1") {
+                    gstWrapper.style.display = "block";
+                    gstInput.setAttribute("required", "required");
+                } else {
+                    gstWrapper.style.display = "none";
+                    gstInput.removeAttribute("required");
+                    gstInput.value = "";
+                }
+            });
         });
     </script>
+
+
 
 
     <?php echo view('sidebar'); ?>

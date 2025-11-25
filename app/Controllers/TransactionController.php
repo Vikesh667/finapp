@@ -46,8 +46,8 @@ class TransactionController extends BaseController
 
         // For dropdown in filters
         $data['clients'] = model('ClientModel')->findAll();
-        $userId=($userRole==='admin')  ? "created_by" : session()->get('user_id');
-        $data['customers'] = model('CustomerModel')->where('user_id',$userId)->findAll();
+        $userId = ($userRole === 'admin')  ? "created_by" : session()->get('user_id');
+        $data['customers'] = model('CustomerModel')->where('user_id', $userId)->findAll();
 
         // For form to remember filters
         $data['filters'] = $filters;
@@ -57,96 +57,74 @@ class TransactionController extends BaseController
 
 
 
-  public function create_transaction()
-{
-    $transactionModel = new TransactionModel();
-    $historyModel     = new \App\Models\TransactionHistoryModal();
-    $invoiceModel     = new \App\Models\InvoiceModel(); // <-- ADD THIS
+    public function create_transaction()
+    {
+        $transactionModel = new TransactionModel();
+        $historyModel     = new \App\Models\TransactionHistoryModal();
 
-    $clientId   = (int)$this->request->getPost('client_id');
-    $customerId = (int)$this->request->getPost('customer_id');
-    $userId     = (int)$this->request->getPost('user_id');
-    $paidAmount = (float)$this->request->getPost('paid_amount');
-    $receiptNo  = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
-    $loggedIn   = session()->get('user_id');
-  
-    if (!$clientId || !$customerId) {
-        return redirect()->back()->with('error', 'Please select a client and customer.');
+        $clientId   = (int)$this->request->getPost('client_id');
+        $customerId = (int)$this->request->getPost('customer_id');
+        $userId     = (int)$this->request->getPost('user_id');
+        $paidAmount = (float)$this->request->getPost('paid_amount');
+        $receiptNo  = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
+        $loggedIn   = session()->get('user_id');
+
+        if (!$clientId || !$customerId) {
+            return redirect()->back()->with('error', 'Please select a client and customer.');
+        }
+
+        $totalAmount  = (float) $this->request->getPost('total_amount');
+
+        // Store GST flag but don't calculate
+        $gstApplied = (int)$this->request->getPost('gst_applied');
+        $gstNumber  = ($gstApplied) ? $this->request->getPost('gst_number') : null;
+
+        $data = [
+            'user_id'          => $userId,
+            'client_id'        => $clientId,
+            'customer_id'      => $customerId,
+            'code'             => $this->request->getPost('code'),
+            'rate'             => $this->request->getPost('rate'),
+            'extra_code'       => $this->request->getPost('extra_code'),
+            'total_amount'     => $totalAmount, // NO GST added here
+            'paid_amount'      => $paidAmount,
+            'remaining_amount' => $totalAmount - $paidAmount,
+            'total_code'       => $this->request->getPost('total_code'),
+            'gst_applied'      => $gstApplied,
+            'gst_number'       => $gstNumber,
+            'created_by'       => $loggedIn,
+            'recipt_no'        => $receiptNo,
+            'remark'           => $this->request->getPost('remark')
+        ];
+
+        if (!$this->validate($transactionModel->getValidationRules())) {
+            return redirect()->back()->with('error', $this->validator->getErrors());
+        }
+
+        $transactionId = $transactionModel->insert($data);
+
+        if ($paidAmount > 0) {
+            $historyModel->insert([
+                'user_id'            => $userId,
+                'client_id'          => $clientId,
+                'customer_id'        => $customerId,
+                'transaction_id'     => $transactionId,
+                'amount'             => $paidAmount,
+                'before_paid_amount' => 0,
+                'after_paid_amount'  => $paidAmount,
+                'payment_method'     => $this->request->getPost('payment_method'),
+                'created_at'         => date("Y-m-d H:i:s"),
+                'remark'             => $this->request->getPost('remark')
+            ]);
+        }
+
+        $redirectPath = session()->get('role') === 'admin'
+            ? 'admin/transaction-list'
+            : 'user/transaction-list';
+
+        return redirect()->to(base_url($redirectPath))
+            ->with('success', 'Transaction saved. Invoice ready for GST generation.');
     }
-
-    // Optional GST future support
-    $gstEnabled   = (int) $this->request->getPost('gst_enabled') ?? 0;
-    $totalAmount  = (float) $this->request->getPost('total_amount');
-    $gstAmount    = $gstEnabled ? round($totalAmount * 0.18, 2) : 0;
-    $grandTotal   = $totalAmount + $gstAmount;
-
-    $data = [
-        'user_id'          => $userId,
-        'client_id'        => $clientId,
-        'customer_id'      => $customerId,
-        'code'             => $this->request->getPost('code'),
-        'rate'             => $this->request->getPost('rate'),
-        'extra_code'       => $this->request->getPost('extra_code'),
-        'total_amount'     => $grandTotal,
-        'paid_amount'      => $paidAmount,
-        'remaining_amount' => $grandTotal - $paidAmount,
-        'total_code'       => $this->request->getPost('total_code'),
-        'created_by'       => $loggedIn,
-        'recipt_no'        => $receiptNo,
-        'gst_applied'      => $gstEnabled,
-        'gst_number'       => $this->request->getPost('gst_number'),
-        'remark'           => $this->request->getPost('remark')
-    ];
-
-    if (!$this->validate($transactionModel->getValidationRules())) {
-        return redirect()->back()->with('error', $this->validator->getErrors());
-    }
-
-    // Insert transaction
-    $transactionId = $transactionModel->insert($data);
-
-
-    //--------------------------------------------
-    //  STORE INITIAL INVOICE (PROFORMA)
-    //--------------------------------------------
-    $invoiceModel->insert([
-        'transaction_id' => $transactionId,
-        'invoice_no'     => 'INV-' . str_pad($transactionId, 6, '0', STR_PAD_LEFT), // simple invoice no
-        'client_id'      => $clientId,
-        'customer_id'    => $customerId,
-        'amount'         => $totalAmount,
-        'gst_amount'     => $gstAmount,
-        'grand_total'    => $grandTotal,
-        'gst_enabled'    => $gstEnabled,
-        'invoice_type'   => 'Proforma',
-        'status'         => ($paidAmount >= $grandTotal) ? 'Paid' : 'Pending',
-        'created_at'     => date("Y-m-d H:i:s"),
-    ]);
-    //--------------------------------------------
-
-
-    if ($paidAmount > 0) {
-        // Create payment history entry
-        $historyModel->insert([
-            'user_id'            => $userId,
-            'client_id'          => $clientId,
-            'customer_id'        => $customerId,
-            'transaction_id'     => $transactionId,
-            'amount'             => $paidAmount,
-            'before_paid_amount' => 0,
-            'after_paid_amount'  => $paidAmount,
-            'payment_method'     => $this->request->getPost('payment_method'),
-            'created_at'         => date("Y-m-d H:i:s"),
-            'remark'             => $this->request->getPost('remark')
-        ]);
-    }
-
-    $redirectPath = session()->get('role') === 'admin'
-        ? 'admin/transaction-list'
-        : 'user/transaction-list';
-
-    return redirect()->to(base_url($redirectPath))->with('success', 'Transaction & Invoice created successfully.');
-}
 
     public function getTransaction($id)
     {
@@ -179,80 +157,80 @@ class TransactionController extends BaseController
     }
 
 
-   public function payNow()
-{
-    $transactionId = $this->request->getPost('transaction_id');
-    $payAmount     = (float) $this->request->getPost('pay_amount');
-    $gstEnabled    = (int) $this->request->getPost('gst_enabled');
+    public function payNow()
+    {
+        $transactionId = $this->request->getPost('transaction_id');
+        $payAmount     = (float) $this->request->getPost('pay_amount');
+        $gstEnabled    = (int) $this->request->getPost('gst_enabled');
 
-    $transactionModel = new TransactionModel();
-    $invoiceModel     = new \App\Models\InvoiceModel();
-    $historyModel     = new TransactionHistoryModal();
+        $transactionModel = new TransactionModel();
+        $invoiceModel     = new \App\Models\InvoiceModel();
+        $historyModel     = new TransactionHistoryModal();
 
-    $transaction = $transactionModel->find($transactionId);
+        $transaction = $transactionModel->find($transactionId);
 
-    if (!$transaction) {
-        return redirect()->back()->with('error', 'Transaction not found.');
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found.');
+        }
+
+        if ($payAmount > $transaction['remaining_amount']) {
+            return redirect()->back()->with('error', 'Pay amount exceeds remaining amount.');
+        }
+
+        // GST Calculation for the payment being made now
+        $gstAmount  = $gstEnabled ? round($payAmount * 0.18, 2) : 0;
+        $grandTotal = $payAmount + $gstAmount;
+
+        // Update transaction totals
+        $newPaid      = $transaction['paid_amount'] + $payAmount;
+        $newRemaining = $transaction['remaining_amount'] - $payAmount;
+
+        $transactionModel->update($transactionId, [
+            'paid_amount'      => $newPaid,
+            'remaining_amount' => $newRemaining,
+            'updated_at'       => date("Y-m-d H:i:s")
+        ]);
+
+
+        //--------------------------------------------
+        //  CREATE NEW INVOICE FOR THIS PAYMENT
+        //--------------------------------------------
+
+        $invoiceModel->insert([
+            'transaction_id' => $transactionId,
+            'invoice_no'     => 'INV-' . str_pad($transactionId . '-' . time(), 6, '0', STR_PAD_LEFT),
+            'client_id'      => $transaction['client_id'],
+            'customer_id'    => $transaction['customer_id'],
+            'amount'         => $payAmount,
+            'gst_amount'     => $gstAmount,
+            'grand_total'    => $grandTotal,
+            'gst_enabled'    => $gstEnabled,
+            'invoice_type'   => ($newRemaining == 0) ? 'Final Invoice' : 'Payment Invoice',
+            'status'         => ($newRemaining == 0) ? 'Paid' : 'Partial',
+            'created_at'     => date("Y-m-d H:i:s"),
+        ]);
+
+        //--------------------------------------------
+
+
+        // Add payment history
+        $historyModel->insert([
+            'transaction_id' => $transactionId,
+            'user_id'        => $transaction['user_id'],
+            'client_id'      => $transaction['client_id'],
+            'customer_id'    => $transaction['customer_id'],
+            'amount'         => $payAmount,
+            'before_paid_amount' => $transaction['paid_amount'],
+            'after_paid_amount' => $newPaid,
+            'payment_method' => $this->request->getPost('payment_method'),
+            'created_at'     => date("Y-m-d H:i:s"),
+            'remark'         => $this->request->getPost('remark')
+        ]);
+
+        $redirectPath = (session()->get('role') === 'admin') ? 'admin/transaction-list' : 'user/transaction-list';
+
+        return redirect()->to(base_url($redirectPath))->with('success', 'Payment received and invoice generated.');
     }
-
-    if ($payAmount > $transaction['remaining_amount']) {
-        return redirect()->back()->with('error', 'Pay amount exceeds remaining amount.');
-    }
-
-    // GST Calculation for the payment being made now
-    $gstAmount  = $gstEnabled ? round($payAmount * 0.18, 2) : 0;
-    $grandTotal = $payAmount + $gstAmount;
-
-    // Update transaction totals
-    $newPaid      = $transaction['paid_amount'] + $payAmount;
-    $newRemaining = $transaction['remaining_amount'] - $payAmount;
-
-    $transactionModel->update($transactionId, [
-        'paid_amount'      => $newPaid,
-        'remaining_amount' => $newRemaining,
-        'updated_at'       => date("Y-m-d H:i:s")
-    ]);
-
-
-    //--------------------------------------------
-    //  CREATE NEW INVOICE FOR THIS PAYMENT
-    //--------------------------------------------
-    
-    $invoiceModel->insert([
-        'transaction_id' => $transactionId,
-        'invoice_no'     => 'INV-' . str_pad($transactionId . '-' . time(), 6, '0', STR_PAD_LEFT),
-        'client_id'      => $transaction['client_id'],
-        'customer_id'    => $transaction['customer_id'],
-        'amount'         => $payAmount,
-        'gst_amount'     => $gstAmount,
-        'grand_total'    => $grandTotal,
-        'gst_enabled'    => $gstEnabled,
-        'invoice_type'   => ($newRemaining == 0) ? 'Final Invoice' : 'Payment Invoice',
-        'status'         => ($newRemaining == 0) ? 'Paid' : 'Partial',
-        'created_at'     => date("Y-m-d H:i:s"),
-    ]);
-    
-    //--------------------------------------------
-
-
-    // Add payment history
-    $historyModel->insert([
-        'transaction_id' => $transactionId,
-        'user_id'        => $transaction['user_id'],
-        'client_id'      => $transaction['client_id'],
-        'customer_id'    => $transaction['customer_id'],
-        'amount'         => $payAmount,
-        'before_paid_amount' => $transaction['paid_amount'],
-        'after_paid_amount' => $newPaid,
-        'payment_method' => $this->request->getPost('payment_method'),
-        'created_at'     => date("Y-m-d H:i:s"),
-        'remark'         => $this->request->getPost('remark')
-    ]);
-
-    $redirectPath = (session()->get('role') === 'admin') ? 'admin/transaction-list' : 'user/transaction-list';
-
-    return redirect()->to(base_url($redirectPath))->with('success', 'Payment received and invoice generated.');
-}
 
 
 
