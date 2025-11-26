@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\BanksModel;
 use App\Models\InvoiceModel;
 use App\Models\TransactionModel;
 use App\Models\ClientModel;
+use App\Models\CompanyInfoModel;
 use App\Models\CustomerModel;
+use App\Models\TermsModel;
 
 class InvoiceController extends BaseController
 {
@@ -13,12 +16,12 @@ class InvoiceController extends BaseController
     /** STEP 1: Preview page showing GST selection + invoice information */
     public function preview($transactionId)
     {
-        $tModel       = new \App\Models\TransactionModel();
-        $clientModel  = new \App\Models\ClientModel();
-        $customerModel = new \App\Models\CustomerModel();
-        $compnayInfoModel = new \App\Models\CompanyInfoModel();
-        $termsModel = new \App\Models\TermsModel();
-        $bankModel=new \App\Models\BanksModel();
+        $tModel       = new TransactionModel();
+        $clientModel  = new ClientModel();
+        $customerModel = new CustomerModel();
+        $compnayInfoModel = new CompanyInfoModel();
+        $termsModel = new TermsModel();
+        $bankModel=new BanksModel();
 
         $transaction = $tModel->find($transactionId);
 
