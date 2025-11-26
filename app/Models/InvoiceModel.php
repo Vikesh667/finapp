@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -12,43 +11,31 @@ class InvoiceModel extends Model
     protected $allowedFields = [
         'transaction_id',
         'invoice_no',
-        'client_id',
+        'invoice_date',
+        'company_id',
         'customer_id',
-
-        // Amount + GST
-        'amount',
-        'gst_percentage',
-        'gst_amount',
-        'grand_total',
-        'gst_enabled',
-        'gst_number',
-
-        // Payment Details
+        'client_id',
+        'base_amount',
         'paid_amount',
         'remaining_amount',
-
-        // Invoice Metadata
-        'invoice_type',     // Proforma | Payment | Final
-        'status',           // Pending | Partial | Paid
-        'currency',         // Optional: INR
-        'round_off',        // Optional
-
-        'created_at',
-        'updated_at'
+        'total_code',
+        'rate',
+        'code',
+        'remark',
+        'gst_applied',
+        'gst_number',
+        'igst',
+        'cgst',
+        'sgst',
+        'grand_total',
+        'seller_state_code',
+        'customer_state_code',
+        'bank_id',
+        'hsn_code',
+        'hsn_description',
+        'amount_in_word',
+        'terms'
     ];
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-
-    protected $orderBy = 'id DESC';
-
-    public function getInvoiceDetails($invoiceId)
-    {
-        return $this->select('invoices.*, customers.name AS customer_name, clients.name AS client_name')
-            ->join('customers', 'customers.id = invoices.customer_id', 'left')
-            ->join('clients', 'clients.id = invoices.client_id', 'left')
-            ->where('invoices.id', $invoiceId)
-            ->first();
-    }
 }
