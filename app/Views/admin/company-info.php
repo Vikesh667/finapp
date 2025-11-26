@@ -215,7 +215,7 @@
             </div>
         </div>
         <!-- ================= TERMS & CONDITIONS SECTION ================= -->
-
+ 
         <div class="section p-2 mt-4">
             <div class="card">
                 <div class="card-header">
@@ -245,7 +245,39 @@
                 </div>
             </div>
         </div>
+        <div class="section p-2 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="m-0">Bank Details</h5>
+                </div>
+                <?php if (session()->getFlashdata('success')): ?>
+                    <div class="alert alert-success m-2"><?= session()->getFlashdata('success') ?></div>
+                <?php endif; ?>
+    
+                <div class="card-body">
+                    <form action="<?= base_url('admin/save-banks') ?>" method="post">
+                        <label class="form-label">Bank Name</label>
+                        <input type='text' name="bank_name" class="form-control"  placeholder="Enter bank name" value="<?= esc($banks['bank_name']) ?>">
+                        <label class="form-label">Account holder Name</label>
+                        <input type='text' name="account_holder_name" class="form-control"  placeholder="Enter Account holder name" value="<?= esc($banks['account_holder_name']) ?>">
+                        <label class="form-label">Account No</label>
+                        <input type='number' name="account_no" class="form-control"  placeholder="Enter account number" value="<?= esc($banks['account_no']) ?>">
+                        <label class="form-label">IFSC Code</label>
+                        <input type='text' name="ifsc_code" class="form-control"  placeholder="Enter IFSC code" value="<?= esc($banks['ifsc_code']) ?>">
 
+                        <button class="btn btn-primary mt-3 w-100">
+                            <ion-icon name="save-outline"></ion-icon> Save Account Details
+                        </button>
+                    </form>
+
+                    <?php if (!empty($latestTerms)): ?>
+                        <div class="mt-3 small text-muted">
+                            Last Updated: <?= $latestTerms['updated_at'] ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
 
     <?= view('sidebar'); ?>

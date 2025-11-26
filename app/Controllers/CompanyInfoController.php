@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BanksModel;
 use App\Models\CityModel;
 use App\Models\CompanyInfoModel;
 use App\Models\CountryModel;
@@ -13,10 +14,10 @@ class CompanyInfoController extends BaseController
     {
         $companyModel = new \App\Models\CompanyInfoModel();
         $termsModel   = new \App\Models\TermsModel();
-
+        $bankModel= new BanksModel();
         $data['companies']   = $companyModel->findAll();
         $data['latestTerms'] = $termsModel->orderBy('id', 'DESC')->first();
-
+        $data['banks']       = $bankModel->first();
         return view('admin/company-info', $data);
     }
 
@@ -70,8 +71,20 @@ class CompanyInfoController extends BaseController
     {
         $termsModel = new \App\Models\TermsModel();
         $content = $this->request->getPost('terms_content');
-        $termsModel->update(1,['content' => $content]); // stores version
+        $termsModel->update(1, ['content' => $content]); // stores version
 
         return redirect()->to('/admin/company-manage')->with('success', 'Terms Updated Successfully!');
+    }
+    public function save_bank_details()
+    {
+        $bankModel = new BanksModel();
+        $data = [
+            'bank_name' => $this->request->getPost('bank_name'),
+            'account_holder_name' => $this->request->getPost('account_holder_name'),
+            'account_no' => $this->request->getPost('account_no'),
+            'ifsc_code' => $this->request->getPost('ifsc_code')
+        ];
+        $bankModel->update(1,$data);
+        return redirect()->to('/admin/company-manage')->with('success','Bank details save Successfully!');
     }
 }

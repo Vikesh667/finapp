@@ -18,6 +18,8 @@ class InvoiceController extends BaseController
         $customerModel = new \App\Models\CustomerModel();
         $compnayInfoModel = new \App\Models\CompanyInfoModel();
         $termsModel = new \App\Models\TermsModel();
+        $bankModel=new \App\Models\BanksModel();
+
         $transaction = $tModel->find($transactionId);
 
         if (!$transaction) {
@@ -83,9 +85,11 @@ class InvoiceController extends BaseController
             'grand_total'      => $grandTotal,
             'seller_state_code' => $sellerStateCode,
             'customer_state_code' => $customerStateCode,
+            'banks'               => $bankModel->first(),
 
         ];
         $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";
+
         return view('transaction/invoice', compact('invoice'));
     }
 

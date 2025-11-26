@@ -87,7 +87,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->post('save-company-info', 'CompanyInfoController::save');
   $routes->get('get-companies', 'CompanyInfoController::getCompanies');
   $routes->post('save-terms', 'CompanyInfoController::save_terms');
-
+  $routes->post('save-banks', 'CompanyInfoController::save_bank_details');
 
   // --- APP SETTINGS ---
 

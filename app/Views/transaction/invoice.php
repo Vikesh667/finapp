@@ -27,6 +27,8 @@
             margin: auto;
             background: #fff;
             box-sizing: border-box;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
 
 
@@ -108,7 +110,8 @@
                     <?= nl2br(esc($company['address'])) ?>
                 </div>
                 <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
-                <strong>State:</strong> <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
+                <strong>State:</strong> <?= esc($company['state']) ?> <br>
+                <strong>State Code : </strong><?= esc($invoice['seller_state_code']) ?>
             </div>
 
             <!-- RIGHT Logo + Label -->
@@ -117,7 +120,7 @@
 
                 <?php if (!empty($company['logo'])): ?>
                     <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
-                        style="width:320px; max-width:100%; height:95px; object-fit:contain; border:1px solid #ccc; padding:4px; border-radius:4px;">
+                        style="width:320px; max-width:100%; height:110px; object-fit:contain; border:1px solid #ccc; padding:4px; border-radius:4px;">
                 <?php else: ?>
                     <img src="https://via.placeholder.com/320x95">
                 <?php endif; ?>
@@ -131,12 +134,7 @@
             <tr>
                 <td><b>Invoice No:</b> <?= $invoice['invoice_no'] ?></td>
                 <td><b>Date:</b> <?= date("d-m-Y", strtotime($invoice['date'])) ?></td>
-            </tr>
-            <tr>
                 <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST)' : 'Invoice (Without GST)' ?></td>
-                <td><b>Customer State:</b> <?= esc($invoice['customer']['state']) ?> |
-                    <b>Code:</b> <?= esc($invoice['customer_state_code']) ?>
-                </td>
             </tr>
         </table>
 
@@ -150,6 +148,9 @@
                     <b><?= esc($invoice['customer']['name']) ?></b><br>
                     <?= nl2br(esc($invoice['customer']['address'])) ?><br>
                     <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?: 'Not Registered' ?>
+                </td>
+                <td><b> State:</b> <?= esc($invoice['customer']['state']) ?> |
+                    <b>State Code:</b> <?= esc($invoice['customer_state_code']) ?>
                 </td>
             </tr>
         </table>
@@ -179,7 +180,7 @@
             <tr>
                 <td width="55%">
                     <strong>Terms & Conditions:</strong><br>
-                    <div style="font-size:12px; line-height:17px; white-space:pre-line;">
+                    <div style="font-size:12px; line-height:12px; white-space:pre-line;">
                         <?= nl2br(esc($invoice['terms'])) ?>
                     </div>
                 </td>
@@ -209,14 +210,6 @@
                             <td>Total Invoice</td>
                             <td class="right"><?= number_format($invoice['grand_total'], 2) ?></td>
                         </tr>
-                        <tr>
-                            <td>Paid</td>
-                            <td class="right"><?= number_format($invoice['paid_amount'], 2) ?></td>
-                        </tr>
-                        <tr class="bold">
-                            <td>Balance Due</td>
-                            <td class="right"><b><?= number_format($invoice['remaining_amount'], 2) ?></b></td>
-                        </tr>
                     </table>
                 </td>
             </tr>
@@ -227,18 +220,57 @@
             <tr>
                 <td width="60%">
                     <strong>Bank Details:</strong><br>
-                    <div style="font-size:12px; line-height:17px; white-space:pre-line;">
-
+                    <div style="font-size:12px; line-height:17px;">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <tr>
+                                <td style="font-weight:bold; width:140px;">Bank Name:</td>
+                                <td><?= esc($invoice['banks']['bank_name']) ?></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Bank Holder Name:</td>
+                                <td><?= esc($invoice['banks']['account_holder_name']) ?></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Account No.:</td>
+                                <td><?= esc($invoice['banks']['account_no']) ?></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">IFSC:</td>
+                                <td><?= esc($invoice['banks']['ifsc_code']) ?></td>
+                            </tr>
+                        </table>
                     </div>
+
+
+
                 </td>
 
                 <td width="40%" class="center">
-                    <div style="border:1px dashed #555; width:140px; height:85px;
-                            margin:auto; display:flex; align-items:center; justify-content:center;">
-                        STAMP
+                    <div style="width:200px; height:120px;
+                margin:auto; display:flex; flex-direction:column;
+                align-items:center; justify-content:center;">
+
+                        <span style="font-size:10px; margin-bottom:4px;">
+                            For VMIT Technologies PVT LTD
+                        </span>
+
+                        <div style="position:relative; width:100px; height:60px;">
+                            <!-- Stamp -->
+                            <img src="<?= base_url('assets/img/vmit-stamp.jpg') ?>"
+                                alt="Stamp"
+                                style="width:100px; opacity:0.92;">
+
+                            <!-- Signature overlapping -->
+                            <img src="<?= base_url('assets/img/vmit-sign.png') ?>"
+                                alt="Signature"
+                                style="width:85px; position:absolute;right:70px; top:16px">
+                        </div>
                     </div>
+
                     <br><b>Authorized Signatory</b>
                 </td>
+
+
             </tr>
         </table>
 
