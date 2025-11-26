@@ -1,278 +1,6 @@
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Tax Invoice</title>
-
-    <style>
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            font-size: 13px;
-        }
-
-        .page-border {
-            width: 100%;
-            height: auto;
-            border: 1px solid #000;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 5px;
-            text-align: left;
-        }
-
-        th {
-            background: #f5f5f5;
-            font-weight: bold;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .no-border td,
-        .no-border th {
-            border: none !important;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
-        .stamp {
-            border: 1px dashed #444;
-            width: 110px;
-            height: 70px;
-            text-align: center;
-            padding-top: 25px;
-            margin: auto;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            margin-top: 10px;
-            font-style: italic;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="page-border">
-
-        <div class="title">TAX INVOICE</div>
-
-       
-        <table>
-            <tr>
-                <td width="70%">
-                    <b>VMIT Technologies Pvt Ltd</b><br>
-                    24/2 Ramball Yadav Chawl, Gautam Nagar,<br>
-                    Thane West - 400604, India<br>
-                   <strong> GSTIN: 27AAGCV4108B1ZO</strong>
-                </td>
-                <td class="center">
-                    ORIGINAL FOR RECIPIENT<br><br>
-                    <img src="https://via.placeholder.com/90" height="90">
-                </td>
-            </tr>
-        </table>
-
-       
-        <table>
-            <tr>
-                <td><b>Invoice No:</b> INV-001</td>
-                <td><b>Date:</b> 17-Jul-2025</td>
-            </tr>
-            <tr>
-                <td><b>State Code:</b> 27 (Maharashtra)</td>
-                <td><b>Mode:</b> B2B</td>
-            </tr>
-        </table>
-
-       
-        <table>
-            <tr>
-                <th>Bill To</th>
-            </tr>
-            <tr>
-                <td>
-                    AXIOMA SMART GADGETS Pvt Ltd <br>
-                    GHAR ROAD BHAGWATI COMPLEX,F4, <br>
-                     Meerut,250001,Uttar Pradesh,<br>
-                     NA FIRST FLOOR,Retail Business <br>
-                   <strong> GSTIN: 24ABCD1234K9Z1</strong>
-                </td>
-            </tr>
-        </table>
-
-       
-        <table style="margin-top:10px;">
-            <tr>
-                <th>Sr</th>
-                <th>HSN | SAC CODE</th>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Unit Price</th>
-                <th>Rate</th>
-                <th>Amount (₹)</th>
-            </tr>
-            <tr>
-                <td class="center">1</td>
-                <td>998314</td>
-                <td>Software License</td>
-                <td class="center">26331</td>
-                <td class="right">38.00</td>
-                <td class="rigth"></td>
-                <td class="right">100,000.00</td>
-            </tr>
-        </table>
-
-        <table style="width:100%; margin-top:10px; border-collapse: collapse;">
-            <tr>
-              
-                <td style="width:60%; border:1px solid #000; padding:10px; vertical-align:top;">
-                    <strong>Terms & Conditions:</strong>
-                    <ul style="margin:5px 0 0 15px; padding:0; line-height:18px;">
-                        <li>No refunds after activation.</li>
-                        <li>Invoice valid only after full payment.</li>
-                        <li>Warranty applicable as per service plan.</li>
-                        <li>Support available via email or ticket only.</li>
-                        <li>All disputes subject to Thane jurisdiction.</li>
-                    </ul>
-                </td>
-
-                
-                <td style="width:40%; border:1px solid #000; padding:0;">
-                    <table style="width:100%; border-collapse:collapse;">
-                        <tr>
-                            <th style="border:1px solid #000; padding:6px;">Description</th>
-                            <th style="border:1px solid #000; padding:6px; text-align:right;">Amount (₹)</th>
-                        </tr>
-
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;">Total</td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;">₹100,000.00</td>
-                        </tr>
-
-                        
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;">CGST (9%)</td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;">₹9,000.00</td>
-                        </tr>
-
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;">SGST (9%)</td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;">₹9,000.00</td>
-                        </tr>
-
-
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;">IGST (18%)</td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;">₹0.00</td>
-                        </tr>
-
-
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;">Round Off</td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;">₹0.00</td>
-                        </tr>
-
-                        <tr style="background:#f5f5f5; font-weight:bold;">
-                            <td style="border:1px solid #000; padding:6px;"><strong>Total Due</strong></td>
-                            <td style="border:1px solid #000; padding:6px; text-align:right;"><strong>₹118,000.00</strong></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-
-        <table style="width:100%; margin-top:10px; border-collapse: collapse;">
-            <tr>
-
-               
-                <td style="width:65%; border:1px solid #000; padding:0; vertical-align:top;">
-                    <table style="width:100%; border-collapse:collapse;">
-                        <tr>
-                            <th colspan="2" style="border:1px solid #000; padding:6px; background:#f5f5f5; text-align:center;">
-                                BANK DETAILS
-                            </th>
-                        </tr>
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;"><strong>Bank Name</strong></td>
-                            <td style="border:1px solid #000; padding:6px;">Kotak Mahindra Bank</td>
-                        </tr>
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;"><strong>Account Holder</strong></td>
-                            <td style="border:1px solid #000; padding:6px;"> VMIT Technologies Pvt Ltd</td>
-                        </tr>
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;"><strong>Account Number</strong></td>
-                            <td style="border:1px solid #000; padding:6px;">123456789012</td>
-                        </tr>
-                        <tr>
-                            <td style="border:1px solid #000; padding:6px;"><strong>IFSC Code</strong></td>
-                            <td style="border:1px solid #000; padding:6px;">KKBK0001234</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="border:1px solid #000; padding:6px;">
-                                <strong>Amount in Words:</strong> One Lakh Eighteen Thousand Only
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-
-              
-                <td style="width:35%; border:1px solid #000; text-align:center; vertical-align:top; padding:15px;">
-                    <div style="border:1px dashed #444; width:130px; height:90px; margin:0 auto; display:flex; justify-content:center; align-items:center;">
-                        STAMP
-                    </div>
-                    <br>
-                    <strong>Authorized Signature</strong>
-                </td>
-            </tr>
-        </table>
-
-
-        <div class="footer">Thank you for your business.</div>
-
-    </div>
-
-</body>
-
-</html> -->
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Invoice <?= $invoice['invoice_no'] ?></title>
 
@@ -287,190 +15,313 @@
             font-size: 13px;
             margin: 0;
             padding: 0;
+            background: #eee;
         }
 
         .page {
             border: 1px solid #000;
             padding: 10px;
-            max-width: 800px;
+            width: 100%;
+            max-width: 710px;
+            /* 👈 Final safe width for HTML2PDF (A4) */
             margin: auto;
-            margin-top: 40px;
-            margin-bottom: 40px;
+            background: #fff;
+            box-sizing: border-box;
         }
 
-        h2 { margin: 5px 0 15px 0; }
+
+        /* Prevent cut during PDF export */
+        html,
+        body {
+            height: auto !important;
+            overflow: visible !important;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #000;
             padding: 6px;
             vertical-align: top;
         }
 
-        .center { text-align: center; }
-        .right { text-align: right; }
-        .bold { font-weight: bold; }
+        .center {
+            text-align: center;
+        }
 
-        /* ---- Responsive Fix ---- */
-        @media screen and (max-width: 768px) {
+        .right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /* ---------- Responsive UI ---------- */
+        @media screen and (max-width: 780px) {
             .top-grid {
-                display: block;
+                display: block !important;
             }
 
-            .company-block, .logo-block {
+            .company-block,
+            .logo-block {
                 width: 100% !important;
                 text-align: center !important;
+                margin-bottom: 12px;
             }
 
-            table, th, td {
-                font-size: 12px;
-            }
-
-            td div {
-                max-width: 100% !important;
+            table,
+            th,
+            td {
+                font-size: 11.5px;
             }
         }
 
-        /* --- Print Mode Always Fixed Layout --- */
+        /* Hide buttons in print mode */
         @media print {
-            .top-grid { display: grid; grid-template-columns: 70% 30%; }
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
-<div class="page">
 
-    <h2 class="center">TAX INVOICE</h2>
+    <div id="invoicePage" class="page">
 
-    <?php $company = $invoice['company']; ?>
+        <h2 class="center">TAX INVOICE</h2>
+        <?php $company = $invoice['company']; ?>
 
-    <!-- Top Header Area (Responsive Grid) -->
-    <div class="top-grid" style="display:grid; grid-template-columns:70% 30%; gap:10px;">
-        
-        <!-- LEFT -->
-        <div class="company-block" style="line-height:18px;">
-            <strong style="font-size:18px;"><?= esc($company['company_name']) ?></strong><br>
+        <!-- ─────────── Top 2 Column ─────────── -->
+        <div class="top-grid" style="display:grid; grid-template-columns:60% 35%; gap:10px; align-items:start;">
 
-            <div style="max-width:220px; word-wrap:break-word;">
-                <?= nl2br(esc($company['address'])) ?>
+            <!-- LEFT Company Info -->
+            <div class="company-block" style="line-height:18px;">
+                <strong style="font-size:18px;"><?= esc($company['company_name']) ?></strong><br>
+                <div style="max-width:280px; word-wrap:break-word;">
+                    <?= nl2br(esc($company['address'])) ?>
+                </div>
+                <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
+                <strong>State:</strong> <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
             </div>
 
-            <strong>GSTIN:</strong> <?= esc($company['gst_number']) ?><br>
-            <strong>State:</strong>
-            <?= esc($company['state']) ?> (<?= esc($invoice['seller_state_code']) ?>)
+            <!-- RIGHT Logo + Label -->
+            <div class="logo-block" style="text-align:center;">
+                <strong style="display:block; margin-bottom:6px;">ORIGINAL FOR RECIPIENT</strong>
+
+                <?php if (!empty($company['logo'])): ?>
+                    <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
+                        style="width:320px; max-width:100%; height:95px; object-fit:contain; border:1px solid #ccc; padding:4px; border-radius:4px;">
+                <?php else: ?>
+                    <img src="https://via.placeholder.com/320x95">
+                <?php endif; ?>
+            </div>
+
         </div>
 
-        <!-- RIGHT -->
-        <div class="logo-block center">
-            <strong>ORIGINAL FOR RECIPIENT</strong><br><br>
 
-            <?php if (!empty($company['logo'])): ?>
-                <img src="<?= base_url('assets/uploads/company/' . $company['logo']) ?>"
-                     width="90" height="90" style="object-fit:contain;border:1px solid #ddd;padding:5px;border-radius:6px;">
-            <?php else: ?>
-                <img src="https://via.placeholder.com/90">
-            <?php endif; ?>
+        <!-- ─────────── Invoice Info ─────────── -->
+        <table>
+            <tr>
+                <td><b>Invoice No:</b> <?= $invoice['invoice_no'] ?></td>
+                <td><b>Date:</b> <?= date("d-m-Y", strtotime($invoice['date'])) ?></td>
+            </tr>
+            <tr>
+                <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST)' : 'Invoice (Without GST)' ?></td>
+                <td><b>Customer State:</b> <?= esc($invoice['customer']['state']) ?> |
+                    <b>Code:</b> <?= esc($invoice['customer_state_code']) ?>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ─────────── Customer Details ─────────── -->
+        <table>
+            <tr>
+                <th colspan="2">Bill To</th>
+            </tr>
+            <tr>
+                <td>
+                    <b><?= esc($invoice['customer']['name']) ?></b><br>
+                    <?= nl2br(esc($invoice['customer']['address'])) ?><br>
+                    <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?: 'Not Registered' ?>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ─────────── Item Table ─────────── -->
+        <table>
+            <tr>
+                <th>Sr</th>
+                <th>HSN/SAC</th>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Rate (₹)</th>
+                <th>Amount (₹)</th>
+            </tr>
+            <tr>
+                <td class="center">1</td>
+                <td>998314</td>
+                <td><?= esc($invoice['remark']) ?></td>
+                <td class="center"><?= $invoice['total_code'] ?></td>
+                <td class="right"><?= number_format($invoice['rate'], 2) ?></td>
+                <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
+            </tr>
+        </table>
+
+        <!-- ─────────── Terms Left + Amount Right ─────────── -->
+        <table>
+            <tr>
+                <td width="55%">
+                    <strong>Terms & Conditions:</strong><br>
+                    <div style="font-size:12px; line-height:17px; white-space:pre-line;">
+                        <?= nl2br(esc($invoice['terms'])) ?>
+                    </div>
+                </td>
+                <td width="45%">
+                    <table style="margin:0;">
+                        <tr>
+                            <th>Description</th>
+                            <th class="right">Amount (₹)</th>
+                        </tr>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td>CGST (9%)</td>
+                            <td class="right"><?= number_format($invoice['cgst'], 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td>SGST (9%)</td>
+                            <td class="right"><?= number_format($invoice['sgst'], 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td>IGST (18%)</td>
+                            <td class="right"><?= number_format($invoice['igst'], 2) ?></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Total Invoice</td>
+                            <td class="right"><?= number_format($invoice['grand_total'], 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Paid</td>
+                            <td class="right"><?= number_format($invoice['paid_amount'], 2) ?></td>
+                        </tr>
+                        <tr class="bold">
+                            <td>Balance Due</td>
+                            <td class="right"><b><?= number_format($invoice['remaining_amount'], 2) ?></b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ─────────── Bank Left + Stamp Right ─────────── -->
+        <table>
+            <tr>
+                <td width="60%">
+                    <strong>Bank Details:</strong><br>
+                    <div style="font-size:12px; line-height:17px; white-space:pre-line;">
+
+                    </div>
+                </td>
+
+                <td width="40%" class="center">
+                    <div style="border:1px dashed #555; width:140px; height:85px;
+                            margin:auto; display:flex; align-items:center; justify-content:center;">
+                        STAMP
+                    </div>
+                    <br><b>Authorized Signatory</b>
+                </td>
+            </tr>
+        </table>
+
+        <p class="center" style="margin-top:10px; font-size:12px;">
+            <i>Thank you for choosing <?= esc($company['company_name']) ?>!</i>
+        </p>
+
+        <!-- ─────────── Buttons bottom ─────────── -->
+        <div class="center no-print" style="margin-top:18px;">
+            <button id="downloadPDF"
+                style="background:#0066ff; color:#fff; padding:9px 16px;
+                       border-radius:6px; border:none;">
+                📄 Download Invoice
+            </button>
+            <button onclick="shareWhatsApp()"
+                style="background:#25D366; color:#fff; padding:9px 16px;
+                       border-radius:6px; border:none; margin-left:8px;">
+                💬 WhatsApp Share
+            </button>
         </div>
     </div>
 
 
-    <table>
-        <tr>
-            <td><b>Invoice No:</b> <?= $invoice['invoice_no'] ?></td>
-            <td><b>Date:</b> <?= date("d-m-Y", strtotime($invoice['date'])) ?></td>
-        </tr>
+    <!-- JS for PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-        <tr>
-            <td><b>Invoice Type:</b> <?= $invoice['gst_applied'] ? 'Tax Invoice (GST Applicable)' : 'Invoice (Without GST)' ?></td>
-            <td><b>State:</b> <?= esc($invoice['customer']['state']) ?> |
-                <strong>State Code:</strong> <?= $invoice['customer_state_code'] ?? 'N/A' ?>
-            </td>
-        </tr>
-    </table>
+    <script>
+        document.getElementById("downloadPDF").addEventListener("click", function() {
+            const invoice = document.getElementById("invoicePage");
 
+            const opt = {
+                margin: 0,
+                filename: "Invoice_<?= $invoice['invoice_no'] ?>.pdf",
+                image: {
+                    type: "jpeg",
+                    quality: 1
+                },
+                html2canvas: {
+                    scale: 3,
+                    useCORS: true
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait"
+                }
+            };
 
-    <table>
-        <tr><th colspan="2">Bill To</th></tr>
-        <tr>
-            <td>
-                <b><?= esc($invoice['customer']['name']) ?></b><br>
-                <?= nl2br(esc($invoice['customer']['address'])) ?><br>
+            // Hide buttons during PDF render
+            document.querySelectorAll(".no-print").forEach(el => el.style.display = "none");
 
-                <?php if (!empty($invoice['gst_number'])): ?>
-                    <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?>
-                <?php else: ?>
-                    <b>Customer GSTIN:</b> Not Registered
-                <?php endif; ?>
-            </td>
-        </tr>
-    </table>
+            html2pdf(invoice, {
+                margin: [8, 6, 8, 6], // top, left, bottom, right
+                filename: "Invoice_<?= $invoice['invoice_no'] ?>.pdf",
+                image: {
+                    type: "jpeg",
+                    quality: 1
+                },
+                html2canvas: {
+                    scale: 3,
+                    useCORS: true,
+                    scrollY: 0, // 👈 FIX TOP CUT
+                    scrollX: 0
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait"
+                },
+                pagebreak: {
+                    mode: ["avoid-all", "css", "legacy"], // 👈 PREVENT CUTTING MID ROW/TABLE
+                }
+            }).save();
 
+        });
 
-    <table>
-        <tr>
-            <th>Sr</th>
-            <th>HSN/SAC</th>
-            <th>Description</th>
-            <th>Qty</th>
-            <th>Rate (₹)</th>
-            <th>Amount (₹)</th>
-        </tr>
+        /* WhatsApp Share */
+        function shareWhatsApp() {
+            const msg = `📄 Invoice Ready\nInvoice No: <?= $invoice['invoice_no'] ?>\nAmount: ₹<?= number_format($invoice['grand_total'], 2) ?>\n🔗 ${window.location.href}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+        }
+    </script>
 
-        <tr>
-            <td class="center">1</td>
-            <td>998314</td>
-            <td><?= esc($invoice['remark'] ?? 'Service Charges') ?></td>
-            <td class="center"><?= $invoice['total_code'] ?></td>
-            <td class="right"><?= number_format($invoice['rate'], 2) ?></td>
-            <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
-        </tr>
-    </table>
-
-
-    <table>
-        <tr><th>Description</th><th class="right">Amount (₹)</th></tr>
-
-        <tr><td>Subtotal</td><td class="right"><?= number_format($invoice['base_amount'], 2) ?></td></tr>
-        <tr><td>CGST (9%)</td><td class="right"><?= number_format($invoice['cgst'] ?? 0, 2) ?></td></tr>
-        <tr><td>SGST (9%)</td><td class="right"><?= number_format($invoice['sgst'] ?? 0, 2) ?></td></tr>
-        <tr><td>IGST (18%)</td><td class="right"><?= number_format($invoice['igst'] ?? 0, 2) ?></td></tr>
-
-        <tr class="bold"><td>Total Invoice Amount</td><td class="right"><?= number_format($invoice['grand_total'], 2) ?></td></tr>
-        <tr><td>Amount Paid</td><td class="right"><?= number_format($invoice['paid_amount'], 2) ?></td></tr>
-        <tr><td><b>Balance Due</b></td><td class="right"><b><?= number_format($invoice['remaining_amount'], 2) ?></b></td></tr>
-    </table>
-
-
-    <table>
-        <tr>
-            <td width="60%">
-                <strong>Terms & Conditions:</strong><br>
-                <div style="font-size:12px;white-space:pre-line;">
-                    <?=(esc($invoice['terms'])) ?>
-                </div>
-            </td>
-
-            <td class="center">
-                <div style="border:1px dashed #444;width:120px;height:70px;margin:auto;display:flex;align-items:center;justify-content:center;">
-                    STAMP
-                </div>
-                <br><b>Authorized Signatory</b>
-            </td>
-        </tr>
-    </table>
-
-
-    <p class="center" style="margin-top:10px;font-size:12px;">
-        <i>Thank you for choosing <?= esc($company['company_name']) ?>!</i>
-    </p>
-
-</div>
 </body>
+
 </html>
