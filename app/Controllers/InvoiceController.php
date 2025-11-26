@@ -8,6 +8,7 @@ use App\Models\TransactionModel;
 use App\Models\ClientModel;
 use App\Models\CompanyInfoModel;
 use App\Models\CustomerModel;
+use App\Models\HSNCodeModel;
 use App\Models\TermsModel;
 
 class InvoiceController extends BaseController
@@ -22,6 +23,7 @@ class InvoiceController extends BaseController
         $compnayInfoModel = new CompanyInfoModel();
         $termsModel = new TermsModel();
         $bankModel=new BanksModel();
+        $hsnCodeModel= new HSNCodeModel();
 
         $transaction = $tModel->find($transactionId);
 
@@ -89,6 +91,7 @@ class InvoiceController extends BaseController
             'seller_state_code' => $sellerStateCode,
             'customer_state_code' => $customerStateCode,
             'banks'               => $bankModel->first(),
+            'hsn_code'           =>$transaction['hsn_code']
 
         ];
         $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";

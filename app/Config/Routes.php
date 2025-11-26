@@ -88,7 +88,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('get-companies', 'CompanyInfoController::getCompanies');
   $routes->post('save-terms', 'CompanyInfoController::save_terms');
   $routes->post('save-banks', 'CompanyInfoController::save_bank_details');
-
+  $routes->get('get-hsncode','CompanyInfoController::hsn_code');
   // --- APP SETTINGS ---
 
   $routes->get('app-settings', 'SettingController::settings');

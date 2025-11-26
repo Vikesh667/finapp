@@ -392,6 +392,12 @@
                                     <option value="">Loading...</option>
                                 </select>
                             </div>
+                             <div class="form-group mb-2">
+                                <label class="form-label">Select HSN/ASC Code</label>
+                                <select id="hsnSelect" name="hsn_code" class="form-control" required>
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
                             <div class="form-group mb-2">
                                 <label class="form-label d-block">GSTIN</label>
 
@@ -632,23 +638,6 @@
 
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-
-            const gstSelect = document.getElementById("gst_applied");
-            const gstWrapper = document.getElementById("gst_number_wrapper");
-            const gstInput = document.getElementById("gst_number");
-
-            gstSelect.addEventListener("change", function() {
-                if (this.value === "1") {
-                    gstWrapper.style.display = "block";
-                    gstInput.setAttribute("required", "required");
-                } else {
-                    gstWrapper.style.display = "none";
-                    gstInput.removeAttribute("required");
-                    gstInput.value = "";
-                }
-            });
-        });
     </script>
 
 

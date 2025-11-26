@@ -167,7 +167,7 @@
             </tr>
             <tr>
                 <td class="center">1</td>
-                <td>998314</td>
+                <td><?= esc($invoice['hsn_code']) ?></td>
                 <td><?= esc($invoice['remark']) ?></td>
                 <td class="center"><?= $invoice['total_code'] ?></td>
                 <td class="right"><?= number_format($invoice['rate'], 2) ?></td>

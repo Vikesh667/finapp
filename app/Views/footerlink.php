@@ -426,12 +426,12 @@
                 const stateSelect = document.getElementById('stateSelect');
                 const citySelect = document.getElementById('citySelect');
                 const companySelect = document.getElementById('companySelect');
-
+                const hsnSelect = document.getElementById('hsnSelect')
                 /* -------------------------
                    🔹 LOAD COMPANIES ALWAYS
                 --------------------------*/
                 companySelect.innerHTML = `<option value="">Loading...</option>`;
-
+                hsnSelect.innerHTML = `<option value="">Loading...</option>`;
                 let companyApi = role === 'admin' ?
                     "<?= base_url('admin/get-companies') ?>" :
                     "<?= base_url('user/get-companies') ?>";
@@ -457,6 +457,29 @@
                     .catch(() => {
                         companySelect.innerHTML = `<option value="">Error loading companies</option>`;
                     });
+
+                fetch("<?= base_url('admin/get-hsncode') ?>")
+                    .then(res => res.json())
+                    .then(hsnCodes => {
+
+                        if (!hsnCodes.length) {
+                            hsnSelect.innerHTML = `<option value="">No HSN Code Found</option>`;
+                            return;
+                        }
+
+                        hsnSelect.innerHTML = `<option value="">Select HSN Code</option>`;
+
+                        hsnCodes.forEach(item => {
+                            hsnSelect.innerHTML += `
+                <option value="${item.id}">
+                    ${item.code}
+                </option>`;
+                        });
+                    })
+                    .catch(() => {
+                        hsnSelect.innerHTML = `<option value="">Error Loading HSN Code</option>`;
+                    });
+
 
 
                 /* --------------------------------------------------

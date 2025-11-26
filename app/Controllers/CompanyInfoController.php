@@ -6,6 +6,7 @@ use App\Models\BanksModel;
 use App\Models\CityModel;
 use App\Models\CompanyInfoModel;
 use App\Models\CountryModel;
+use App\Models\HSNCodeModel;
 use App\Models\StateModel;
 
 class CompanyInfoController extends BaseController
@@ -14,7 +15,7 @@ class CompanyInfoController extends BaseController
     {
         $companyModel = new \App\Models\CompanyInfoModel();
         $termsModel   = new \App\Models\TermsModel();
-        $bankModel= new BanksModel();
+        $bankModel = new BanksModel();
         $data['companies']   = $companyModel->findAll();
         $data['latestTerms'] = $termsModel->orderBy('id', 'DESC')->first();
         $data['banks']       = $bankModel->first();
@@ -84,7 +85,14 @@ class CompanyInfoController extends BaseController
             'account_no' => $this->request->getPost('account_no'),
             'ifsc_code' => $this->request->getPost('ifsc_code')
         ];
-        $bankModel->update(1,$data);
-        return redirect()->to('/admin/company-manage')->with('success','Bank details save Successfully!');
+        $bankModel->update(1, $data);
+        return redirect()->to('/admin/company-manage')->with('success', 'Bank details save Successfully!');
+    }
+
+    public function hsn_code()
+    {
+        $hsnCodeModel = new HSNCodeModel();
+        $hsncode = $hsnCodeModel->findAll();
+        return $this->response->setJson($hsncode);
     }
 }
