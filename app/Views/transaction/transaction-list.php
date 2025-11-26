@@ -217,9 +217,9 @@
 
                                             <small><?= $percentPaid ?>% Paid</small>
                                         </td>
-
-
-
+                                          <div class="actionButton">
+                                        
+                                          </div>
                                         <td class="text-center">
                                             <div>
                                                 <?php if ($transaction['remaining_amount'] > 0): ?>
@@ -247,8 +247,8 @@
                                                 <?php endif; ?>
                                             </form>
                                             <a href="<?= base_url('admin/invoice/preview/' . $transaction['id']) ?>"
-                                                class="btn btn-warning btn-sm">
-                                                Generate Invoice
+                                                class="btn btn-warning btn-sm mt-3">
+                                                 Invoice
                                             </a>
 
 

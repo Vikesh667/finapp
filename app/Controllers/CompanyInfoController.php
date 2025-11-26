@@ -86,7 +86,7 @@ class CompanyInfoController extends BaseController
             'ifsc_code' => $this->request->getPost('ifsc_code')
         ];
         $bankModel->update(1, $data);
-        return redirect()->to('/admin/company-manage')->with('success', 'Bank details save Successfully!');
+        return redirect()->to('/admin/company-manage')->with('Success', 'Bank details save Successfully!');
     }
 
     public function hsn_code()
@@ -94,5 +94,13 @@ class CompanyInfoController extends BaseController
         $hsnCodeModel = new HSNCodeModel();
         $hsncode = $hsnCodeModel->findAll();
         return $this->response->setJson($hsncode);
+    }
+    public function save_hsncode()
+    {
+        $hsnCodeModel = new HSNCodeModel();
+        $hsncode = $this->request->getPost('hsn_code');
+           $hsnCodeModel->insert(['code'=>$hsncode]);
+           return redirect()->to('/admin/company-manage')->with('Success', 'Hsn code is store successfully!');
+
     }
 }
