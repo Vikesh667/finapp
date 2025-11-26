@@ -232,7 +232,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select User</label>
                                     <div class="input-group">
-                                        <select name="user_id" id="userSelect" class="form-control" required>
+                                        <select name="user_id" id="userSelect_customer" class="form-control" required>
                                             <option value="">Loading users...</option>
                                         </select>
                                     </div>
@@ -241,7 +241,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Client</label>
                                     <div class="input-group">
-                                        <select name="client_id" id="clientSelects" class="form-control" required>
+                                        <select name="client_id" id="clientSelect_customer" class="form-control" required>
                                             <option value="">Select user first</option>
                                         </select>
                                     </div>
@@ -255,7 +255,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Client</label>
                                     <div class="input-group">
-                                        <select name="client_id" id="clientSelects" class="form-control" required>
+                                        <select name="client_id" id="clientSelect_customer" class="form-control" required>
                                             <option value="">Loading clients...</option>
                                         </select>
                                     </div>
@@ -331,7 +331,14 @@
                                     <textarea name="address" class="form-control" placeholder="Enter address" required></textarea>
                                 </div>
                             </div>
+                            <div class="form-group basic mb-3">
+                                <label class="label">GST Number</label>
+                                <div class="input-group">
+                                    <input name="gst_number" class="form-control"
+                                        placeholder="27AAPFU0939F1ZV">
 
+                                </div>
+                            </div>
                             <div class="form-group basic mt-4">
                                 <button type="submit" class="btn btn-primary btn-block btn-lg">
                                     <ion-icon name="person-add-outline"></ion-icon> Add Client

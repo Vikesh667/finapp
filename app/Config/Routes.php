@@ -88,8 +88,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('get-companies', 'CompanyInfoController::getCompanies');
   $routes->post('save-terms', 'CompanyInfoController::save_terms');
   $routes->post('save-banks', 'CompanyInfoController::save_bank_details');
-  $routes->get('get-hsncode','CompanyInfoController::hsn_code');
-  $routes->post('save-hsncode','CompanyInfoController::save_hsncode');
+  $routes->get('get-hsncode', 'CompanyInfoController::hsn_code');
+  $routes->post('save-hsncode', 'CompanyInfoController::save_hsncode');
   // --- APP SETTINGS ---
 
   $routes->get('app-settings', 'SettingController::settings');
@@ -146,7 +146,11 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('change-password', 'AuthController::changed_password');
   $routes->post('update-password', 'AuthController::save_password');
   $routes->get('login-history', 'AuthController::loging_history');
+  $routes->get('get-companies', 'CompanyInfoController::getCompanies');
+  $routes->get('get-hsncode', 'CompanyInfoController::hsn_code');
 });
+
+
 
 // ==================================
 // SHARED UPLOAD ROUTE (if needed globally)

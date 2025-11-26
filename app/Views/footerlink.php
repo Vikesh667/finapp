@@ -120,115 +120,191 @@
                 });
             });
 
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener("DOMContentLoaded", function() {
+
                 const role = "<?= $role ?>";
                 const userId = "<?= $userId ?>";
-                const userSelect = document.getElementById('userSelect');
-                const clientSelect = document.getElementById('clientSelectt');
-                const customerSelect = document.getElementById('customerSelect');
+
+                /* ==========================
+                   🔹 Reusable functions
+                ========================== */
+                function loadClients(userId, target) {
+                    const url = role === "admin" ?
+                        `<?= base_url('admin/get-clients/') ?>${userId}` :
+                        `<?= base_url('user/get-clients/') ?>${userId}`;
+
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(list => {
+                            target.innerHTML = '<option value="">-- Select Client --</option>';
+                            list.forEach(c => {
+                                target.innerHTML += `<option value="${c.id}">${c.company_name}</option>`;
+                            });
+                        });
+                }
+
+                function loadCustomers(clientId, target) {
+                    const url = role === "admin" ?
+                        `<?= base_url('admin/get-customers/') ?>${clientId}` :
+                        `<?= base_url('user/get-customers/') ?>${clientId}`;
+
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(list => {
+                            target.innerHTML = '<option value="">-- Select Customer --</option>';
+                            list.forEach(ct => {
+                                target.innerHTML += `<option value="${ct.id}">${ct.name}</option>`;
+                            });
+                        });
+                }
+
+
+                function loadCountries(target) {
+                    fetch("<?= base_url('admin/get-countries') ?>")
+                        .then(res => res.json())
+                        .then(list => {
+                            target.innerHTML = '<option value="">Select Country</option>';
+                            list.forEach(c => target.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+                        });
+                }
+
+                function loadStates(countryId, target) {
+                    fetch(`<?= base_url('admin/get-states/') ?>${countryId}`)
+                        .then(res => res.json())
+                        .then(list => {
+                            target.innerHTML = '<option value="">Select State</option>';
+                            list.forEach(s => target.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+                        });
+                }
+
+                function loadCities(stateId, target) {
+                    fetch(`<?= base_url('admin/get-cities/') ?>${stateId}`)
+                        .then(res => res.json())
+                        .then(list => {
+                            target.innerHTML = '<option value="">Select City</option>';
+                            list.forEach(ct => target.innerHTML += `<option value="${ct.id}">${ct.name}</option>`);
+                        });
+                }
+
+                /* =====================================================
+                   🔥 1) ADD TRANSACTION MODAL
+                   (NO COUNTRY/STATE/CITY — BUT LOAD COMPANIES + HSN)
+                ===================================================== */
                 $('#addtransactionModal').on('show.bs.modal', function() {
 
-                    //  For Admin - Load Users
-                    if (role === 'admin') {
+                    const modal = this;
+
+                    const userSel = modal.querySelector("#userSelect_transaction");
+                    const clientSel = modal.querySelector("#clientSelect_transaction");
+                    const customerSel = modal.querySelector("#customerSelect_transaction");
+                    const companySelect = modal.querySelector("#companySelect");
+                    const hsnSelect = modal.querySelector("#hsnSelect");
+
+                    /* Load Companies (same for admin and user) */
+                    /* ⭐ Load Companies for both admin & user */
+                    const companyUrl = role === "admin" ?
+                        "<?= base_url('admin/get-companies') ?>" :
+                        "<?= base_url('user/get-companies') ?>";
+
+                    fetch(companyUrl)
+                        .then(res => res.json())
+                        .then(list => {
+                            companySelect.innerHTML = '<option value="">Select Company</option>';
+                            list.forEach(c => {
+                                companySelect.innerHTML += `<option value="${c.id}">${c.company_name}</option>`;
+                            });
+                        })
+                        .catch(() => {
+                            companySelect.innerHTML = '<option value="">Error loading companies</option>';
+                        });
+
+
+                    /* ⭐ Load HSN Code for both admin & user */
+                    const hsnUrl = role === "admin" ?
+                        "<?= base_url('admin/get-hsncode') ?>" :
+                        "<?= base_url('user/get-hsncode') ?>";
+
+                    fetch(hsnUrl)
+                        .then(res => res.json())
+                        .then(list => {
+                            hsnSelect.innerHTML = '<option value="">Select HSN Code</option>';
+                            list.forEach(h => {
+                                hsnSelect.innerHTML += `<option value="${h.id}">${h.code}</option>`;
+                            });
+                        })
+                        .catch(() => {
+                            hsnSelect.innerHTML = '<option value="">Error loading HSN</option>';
+                        });
+
+                    /* ------------------ ADMIN LOGIN FLOW ------------------ */
+                    if (role === "admin") {
+                        // Load all users
                         fetch("<?= base_url('admin/get-users') ?>")
                             .then(res => res.json())
                             .then(users => {
-                                userSelect.innerHTML = '<option value="">-- Select User --</option>';
-                                users.forEach(user => {
-                                    userSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
-                                });
-                            })
-                            .catch(() => {
-                                userSelect.innerHTML = '<option value="">Error loading users</option>';
+                                userSel.innerHTML = '<option value="">-- Select User --</option>';
+                                users.forEach(u => userSel.innerHTML += `<option value="${u.id}">${u.name}</option>`);
                             });
 
-                        // When Admin selects a User → Load their Clients
-                        userSelect.addEventListener('change', function() {
-                            const selectedUserId = this.value;
-                            if (!selectedUserId) {
-                                clientSelect.innerHTML = '<option value="">Select user first</option>';
-                                customerSelect.innerHTML = '<option value="">Select client first</option>';
-                                return;
-                            }
-
-                            fetch(`<?= base_url('admin/get-clients/') ?>${selectedUserId}`)
-                                .then(res => res.json())
-                                .then(clients => {
-                                    clientSelect.innerHTML = '<option value="">-- Select Client --</option>';
-                                    clients.forEach(client => {
-                                        clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    clientSelect.innerHTML = '<option value="">Error loading clients</option>';
-                                });
-                        });
-
-                        // When Admin selects a Client → Load their Customers
-                        clientSelect.addEventListener('change', function() {
-                            const selectedClientId = this.value;
-
-                            if (!selectedClientId) {
-                                customerSelect.innerHTML = '<option value="">Select client first</option>';
-                                return;
-                            }
-
-                            fetch(`http://localhost/finapp/admin/get-customers/${selectedClientId}`)
-                                .then(res => res.json())
-                                .then(customers => {
-                                    console.log(customers);
-                                    customerSelect.innerHTML = '<option value="">-- Select Customer --</option>';
-                                    customers.forEach(customer => {
-                                        customerSelect.innerHTML += `<option value="${customer.id}">${customer.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    customerSelect.innerHTML = '<option value="">Error loading customers</option>';
-                                });
-                        });
+                        // When admin selects user → load clients
+                        userSel.onchange = () => loadClients(userSel.value, clientSel);
                     }
 
-                    // 👤 For User - Load only their Clients
-                    if (role === 'user') {
-                        console.log('Fetching clients for user:', userId); // ✅ check if this appears
-
-                        fetch(`<?= base_url('user/get-clients/') ?>${userId}`)
-
-                            .then(res => res.json())
-                            .then(clients => {
-                                clientSelect.innerHTML = '<option value="">-- Select Client --</option>';
-                                clients.forEach(client => {
-                                    clientSelect.innerHTML += `<option value="${client.id}">${client.name}</option>`;
-                                });
-                            })
-                            .catch(() => {
-                                clientSelect.innerHTML = '<option value="">Error loading clients</option>';
-                            });
-
-                        // When User selects a Client → Load their Customers
-                        clientSelect.addEventListener('change', function() {
-                            const selectedClientId = this.value;
-                            if (!selectedClientId) {
-                                customerSelect.innerHTML = '<option value="">Select client first</option>';
-                                return;
-                            }
-
-                            fetch(`<?= base_url('user/get-customers/') ?>${selectedClientId}`)
-                                .then(res => res.json())
-                                .then(customers => {
-                                    customerSelect.innerHTML = '<option value="">-- Select Customer --</option>';
-                                    customers.forEach(customer => {
-                                        customerSelect.innerHTML += `<option value="${customer.id}">${customer.name}</option>`;
-                                    });
-                                })
-                                .catch(() => {
-                                    customerSelect.innerHTML = '<option value="">Error loading customers</option>';
-                                });
-                        });
+                    /* ------------------ USER LOGIN FLOW ------------------ */
+                    if (role === "user") {
+                        // Load only logged-in user's clients automatically
+                        loadClients(userId, clientSel);
                     }
+
+                    /* Client → Customer (common for both admin & user) */
+                    clientSel.onchange = () => loadCustomers(clientSel.value, customerSel);
 
                 });
+
+
+                /* =====================================================
+                   🔥 2) ADD CUSTOMER MODAL (HAS COUNTRY / STATE / CITY)
+                ===================================================== */
+                $('#addCustomerModal').on('show.bs.modal', function() {
+
+                    const modal = this;
+
+                    const userSel = modal.querySelector("#userSelect_customer");
+                    const clientSel = modal.querySelector("#clientSelect_customer");
+                    const customerSel = modal.querySelector("#customerSelect_customer");
+
+                    const country = modal.querySelector("#countrySelect");
+                    const state = modal.querySelector("#stateSelect");
+                    const city = modal.querySelector("#citySelect");
+
+                    /* COUNTRY → STATE → CITY */
+                    loadCountries(country);
+                    country.onchange = () => loadStates(country.value, state);
+                    state.onchange = () => loadCities(state.value, city);
+
+                    /* USER → CLIENT → CUSTOMER */
+                    if (role === "admin") {
+                        fetch("<?= base_url('admin/get-users') ?>")
+                            .then(res => res.json())
+                            .then(users => {
+                                userSel.innerHTML = '<option value="">-- Select User --</option>';
+                                users.forEach(u => userSel.innerHTML += `<option value="${u.id}">${u.name}</option>`);
+                            });
+
+                        userSel.onchange = () => loadClients(userSel.value, clientSel);
+                    }
+
+                    if (role === "user") {
+                        loadClients(userId, clientSel);
+                    }
+
+                    clientSel.onchange = () => loadCustomers(clientSel.value, customerSel);
+                });
+
             });
+
+
+
 
             function calculateTotalAmount() {
                 const noOfCodes = parseInt($('#noOfCodes').val()) || 0;
@@ -415,130 +491,6 @@
 
 
             });
-
-            document.addEventListener('DOMContentLoaded', function() {
-
-                const role = "<?= $role ?>";
-                const userId = "<?= $userId ?>";
-                const userSelect = document.getElementById('userSelect');
-                const clientSelect = document.getElementById('clientSelect');
-                const countrySelect = document.getElementById('countrySelect');
-                const stateSelect = document.getElementById('stateSelect');
-                const citySelect = document.getElementById('citySelect');
-                const companySelect = document.getElementById('companySelect');
-                const hsnSelect = document.getElementById('hsnSelect')
-                /* -------------------------
-                   🔹 LOAD COMPANIES ALWAYS
-                --------------------------*/
-                companySelect.innerHTML = `<option value="">Loading...</option>`;
-                hsnSelect.innerHTML = `<option value="">Loading...</option>`;
-                let companyApi = role === 'admin' ?
-                    "<?= base_url('admin/get-companies') ?>" :
-                    "<?= base_url('user/get-companies') ?>";
-
-                fetch(companyApi)
-                    .then(res => res.json())
-                    .then(companies => {
-
-                        if (!companies.length) {
-                            companySelect.innerHTML = `<option value="">No companies found</option>`;
-                            return;
-                        }
-
-                        companySelect.innerHTML = `<option value="">Select Company</option>`;
-
-                        companies.forEach(company => {
-                            companySelect.innerHTML += `
-                    <option value="${company.id}">
-                        ${company.company_name}
-                    </option>`;
-                        });
-                    })
-                    .catch(() => {
-                        companySelect.innerHTML = `<option value="">Error loading companies</option>`;
-                    });
-
-                fetch("<?= base_url('admin/get-hsncode') ?>")
-                    .then(res => res.json())
-                    .then(hsnCodes => {
-
-                        if (!hsnCodes.length) {
-                            hsnSelect.innerHTML = `<option value="">No HSN Code Found</option>`;
-                            return;
-                        }
-
-                        hsnSelect.innerHTML = `<option value="">Select HSN Code</option>`;
-
-                        hsnCodes.forEach(item => {
-                            hsnSelect.innerHTML += `
-                <option value="${item.id}">
-                    ${item.code}
-                </option>`;
-                        });
-                    })
-                    .catch(() => {
-                        hsnSelect.innerHTML = `<option value="">Error Loading HSN Code</option>`;
-                    });
-
-
-
-                /* --------------------------------------------------
-                   🔹 The remaining logic should stay inside modal load
-                ---------------------------------------------------*/
-                $('#addCustomerModal').on('show.bs.modal', function() {
-
-                    if (role === 'admin') {
-
-                        // Load Users
-                        fetch("<?= base_url('admin/get-users') ?>")
-                            .then(res => res.json())
-                            .then(users => {
-                                userSelect.innerHTML = '<option value="">-- Select User --</option>';
-                                users.forEach(user => {
-                                    userSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
-                                });
-                            });
-
-                        // Load Countries
-                        fetch("<?= base_url('admin/get-countries') ?>")
-                            .then(res => res.json())
-                            .then(countries => {
-                                countrySelect.innerHTML = '<option value="">Select Country</option>';
-                                countries.forEach(c => {
-                                    countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                                });
-                            });
-
-                    }
-
-                    if (role === 'user') {
-
-                        // Load clients assigned to logged-in user
-                        fetch(`<?= base_url('user/get-clients/') ?>${userId}`)
-                            .then(res => res.json())
-                            .then(clients => {
-                                clientSelect.innerHTML = '<option value="">-- Select Client --</option>';
-                                clients.forEach(client => {
-                                    clientSelect.innerHTML += `<option value="${client.id}">${client.company_name}</option>`;
-                                });
-                            });
-
-                        // Load Countries
-                        fetch("<?= base_url('user/get-countries') ?>")
-                            .then(res => res.json())
-                            .then(countries => {
-                                countrySelect.innerHTML = '<option value="">Select Country</option>';
-                                countries.forEach(c => {
-                                    countrySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                                });
-                            });
-
-                    }
-
-                });
-
-            });
-
 
             <?php if (session()->getFlashdata('success')): ?>
                 Swal.fire({

@@ -294,7 +294,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select User</label>
                                     <div class="input-group">
-                                        <select name="user_id" id="userSelect" class="form-control" required>
+                                        <select name="user_id" id="userSelect_transaction" class="form-control" required>
                                             <option value="">Loading users...</option>
                                         </select>
                                     </div>
@@ -303,7 +303,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Client</label>
                                     <div class="input-group">
-                                        <select name="client_id" id="clientSelectt" class="form-control" required>
+                                        <select name="client_id" id="clientSelect_transaction" class="form-control" required>
                                             <option value="">Select user first</option>
                                         </select>
                                     </div>
@@ -311,7 +311,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Customer</label>
                                     <div class="input-group">
-                                        <select name="customer_id" id="customerSelect" class="form-control" required>
+                                        <select name="customer_id" id="customerSelect_transaction" class="form-control" required>
                                             <option value="">Select user first</option>
                                         </select>
                                     </div>
@@ -324,7 +324,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Client</label>
                                     <div class="input-group">
-                                        <select name="client_id" id="clientSelectt" class="form-control" required>
+                                        <select name="client_id" id="clientSelect_transaction" class="form-control" required>
                                             <option value="">Loading clients...</option>
                                         </select>
                                     </div>
@@ -332,7 +332,7 @@
                                 <div class="form-group basic mb-3">
                                     <label class="label">Select Customer</label>
                                     <div class="input-group">
-                                        <select name="customer_id" id="customerSelect" class="form-control" required>
+                                        <select name="customer_id" id="customerSelect_transaction" class="form-control" required>
                                             <option value="">Select user first</option>
                                         </select>
                                     </div>
