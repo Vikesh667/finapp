@@ -105,45 +105,47 @@ class InvoiceController extends BaseController
         ];
         $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";
 
+
         $invoiceModel = new InvoiceModel();
 
-$invoiceData = [
-    'transaction_id'       => $transactionId,
-    'invoice_no'           => $transaction['recipt_no'],
-    'invoice_date'         => $transaction['created_at'],
-    'company_id'           => $transaction['company_id'],
-    'customer_id'          => $transaction['customer_id'],
-    'client_id'            => $transaction['client_id'],
-    'base_amount'          => $baseAmount,
-    'paid_amount'          => $transaction['paid_amount'],
-    'remaining_amount'     => $transaction['remaining_amount'],
-    'total_code'           => $transaction['total_code'],
-    'rate'                 => $transaction['rate'],
-    'code'                 => $transaction['code'],
-    'remark'               => $transaction['remark'],
-    'gst_applied'          => $gstApplied,
-    'gst_number'           => $transaction['gst_number'],
-    'igst'                 => $igst,
-    'cgst'                 => $cgst,
-    'sgst'                 => $sgst,
-    'grand_total'          => $grandTotal,
-    'seller_state_code'    => $sellerStateCode,
-    'customer_state_code'  => $customerStateCode,
-    'bank_id'              => $bankModel->first()['id'] ?? null,
-    'hsn_code'             => $hsnData['hsn_code']      ?? null,
-    'hsn_description'      => $hsnData['description']   ?? null,
-    'amount_in_word'       => $amountWord,
-    'terms'                => $storedTerms['content'] ?? "Terms not available."
-];
+        $invoiceData = [
+            'transaction_id'       => $transactionId,
+            'invoice_no'           => $transaction['recipt_no'],
+            'invoice_date'         => $transaction['created_at'],
+            'company_id'           => $transaction['company_id'],
+            'customer_id'          => $transaction['customer_id'],
+            'client_id'            => $transaction['client_id'],
+            'base_amount'          => $baseAmount,
+            'paid_amount'          => $transaction['paid_amount'],
+            'remaining_amount'     => $transaction['remaining_amount'],
+            'total_code'           => $transaction['total_code'],
+            'rate'                 => $transaction['rate'],
+            'code'                 => $transaction['code'],
+            'remark'               => $transaction['remark'],
+            'gst_applied'          => $gstApplied,
+            'gst_number'           => $transaction['gst_number'],
+            'igst'                 => $igst,
+            'cgst'                 => $cgst,
+            'sgst'                 => $sgst,
+            'grand_total'          => $grandTotal,
+            'seller_state_code'    => $sellerStateCode,
+            'customer_state_code'  => $customerStateCode,
+            'bank_id'              => $bankModel->first()['id'] ?? null,
+            'hsn_code'             => $hsnData['hsn_code']      ?? null,
+            'hsn_description'      => $hsnData['description']   ?? null,
+            'amount_in_word'       => $amountWord,
+            'terms'                => $storedTerms['content'] ?? "Terms not available."
+        ];
 
-// Insert or update: 1 invoice per transaction
-$existing = $invoiceModel->where('transaction_id', $transactionId)->first();
-if ($existing) {
-    $invoiceModel->update($existing['id'], $invoiceData);
-    $invoiceId = $existing['id'];
-} else {
-    $invoiceId = $invoiceModel->insert($invoiceData);
-}
+        // Insert or update: 1 invoice per transaction
+        $existing = $invoiceModel->where('transaction_id', $transactionId)->first();
+        if ($existing) {
+            $invoiceModel->update($existing['id'], $invoiceData);
+            $invoiceId = $existing['id'];
+        } else {
+            $invoiceId = $invoiceModel->insert($invoiceData);
+        }
+        // --- Update GST values back into transactions table ---
 
         return view('transaction/invoice', compact('invoice'));
     }
