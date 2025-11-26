@@ -229,7 +229,7 @@
                         .then(list => {
                             hsnSelect.innerHTML = '<option value="">Select HSN Code</option>';
                             list.forEach(h => {
-                                hsnSelect.innerHTML += `<option value="${h.id}">${h.code}</option>`;
+                                hsnSelect.innerHTML += `<option value="${h.id}">${h.hsn_code}(${h.description})</option>`;
                             });
                         })
                         .catch(() => {
@@ -301,6 +301,16 @@
                     clientSel.onchange = () => loadCustomers(clientSel.value, customerSel);
                 });
 
+                $('#addUserModel').on('show.bs.modal', function() {
+                    const modal = this;
+                    const country = modal.querySelector("#countrySelect");
+                    const state = modal.querySelector("#stateSelect");
+                    const city = modal.querySelector("#citySelect");
+
+                    loadCountries(country);
+                    country.onchange = () => loadStates(country.value, state);
+                    state.onchange = () => loadCities(state.value, city);
+                })
             });
 
 

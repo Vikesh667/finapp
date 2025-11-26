@@ -149,7 +149,7 @@
                     <?= nl2br(esc($invoice['customer']['address'])) ?><br>
                     <b>Customer GSTIN:</b> <?= $invoice['gst_number'] ?: 'Not Registered' ?>
                 </td>
-                <td><b> State:</b> <?= esc($invoice['customer']['state']) ?> |
+                <td><b> State:</b> <?= esc($invoice['customer']['state']) ?> <br>
                     <b>State Code:</b> <?= esc($invoice['customer_state_code']) ?>
                 </td>
             </tr>
@@ -167,11 +167,11 @@
             </tr>
             <tr>
                 <td class="center">1</td>
-                <td><?= esc($invoice['hsn_code']) ?></td>
-                <td><?= esc($invoice['remark']) ?></td>
+                <td class="center"><?= esc($invoice['hsn_code']['hsn_code']) ?></td>
+                <td class="center"><?= esc($invoice['hsn_code']['description']) ?></td>
                 <td class="center"><?= $invoice['total_code'] ?></td>
-                <td class="right"><?= number_format($invoice['rate'], 2) ?></td>
-                <td class="right"><?= number_format($invoice['base_amount'], 2) ?></td>
+                <td class="center"><?= number_format($invoice['rate'], 2) ?></td>
+                <td class="center"><?= number_format($invoice['base_amount'], 2) ?></td>
             </tr>
         </table>
 
@@ -213,6 +213,10 @@
                     </table>
                 </td>
             </tr>
+            <tr>
+                <td><b>Amount In Word</b></td>
+                <td><b><?= $invoice['amount_in_word'] ?></b></td>
+            </tr>
         </table>
 
         <!-- ─────────── Bank Left + Stamp Right ─────────── -->
@@ -250,8 +254,8 @@
                 margin:auto; display:flex; flex-direction:column;
                 align-items:center; justify-content:center;">
 
-                        <span style="font-size:10px; margin-bottom:4px;">
-                            For VMIT Technologies PVT LTD
+                        <span style="font-size:12px; margin-bottom:4px;">
+                            <b> For VMIT Technologies PVT LTD</b>
                         </span>
 
                         <div style="position:relative; width:100px; height:60px;">

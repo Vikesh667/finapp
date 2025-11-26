@@ -2,7 +2,7 @@
 
 <body>
   <!-- Full Page Loader -->
- 
+
 
   <div class="appHeader bg-primary text-light">
 
@@ -44,7 +44,7 @@
           <h5>User List</h5>
           <div class="right-section">
             <div class="add">
-              <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#depositActionSheet">
+              <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addUserModel">
                 <ion-icon name="add-outline"></ion-icon>
                 <span>Add User</span>
               </a>
@@ -154,7 +154,7 @@
     </div>
   </div>
 
-  <div class="modal fade action-sheet" id="depositActionSheet" tabindex="-1" role="dialog">
+  <div class="modal fade action-sheet" id="addUserModel" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
 
@@ -223,10 +223,14 @@
               </div>
 
               <!-- Country -->
+
               <div class="form-group basic mb-3">
                 <label class="label">Country</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" name="country" value="<?= old('country') ?>" placeholder="Enter country" required>
+                  <select name="country" id="countrySelect" class="form-control" required>
+                    <option value="">Select Country</option>
+                  </select>
+
                 </div>
                 <?php if (isset($errors['country'])): ?>
                   <span class="text-danger"><?= esc($errors['country']) ?></span>
@@ -237,7 +241,9 @@
               <div class="form-group basic mb-3">
                 <label class="label">State</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" name="state" value="<?= old('state') ?>" placeholder="Enter state" required>
+                  <select name="state" id="stateSelect" class="form-control" required>
+                    <option value="">Select State</option>
+                  </select>
                 </div>
                 <?php if (isset($errors['state'])): ?>
                   <span class="text-danger"><?= esc($errors['state']) ?></span>
@@ -248,13 +254,14 @@
               <div class="form-group basic mb-3">
                 <label class="label">City</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" name="city" value="<?= old('city') ?>" placeholder="Enter city" required>
+                  <select name="city" id="citySelect" class="form-control" required>
+                    <option value="">Select City</option>
+                  </select>
                 </div>
                 <?php if (isset($errors['city'])): ?>
                   <span class="text-danger"><?= esc($errors['city']) ?></span>
                 <?php endif; ?>
-              </div>
-
+              </div> 
               <!-- Password -->
               <div class="form-group basic mb-3">
                 <label class="label">Password</label>

@@ -17,13 +17,14 @@ class InvoiceController extends BaseController
     /** STEP 1: Preview page showing GST selection + invoice information */
     public function preview($transactionId)
     {
+        helper('number');
         $tModel       = new TransactionModel();
         $clientModel  = new ClientModel();
         $customerModel = new CustomerModel();
         $compnayInfoModel = new CompanyInfoModel();
         $termsModel = new TermsModel();
-        $bankModel=new BanksModel();
-        $hsnCodeModel= new HSNCodeModel();
+        $bankModel = new BanksModel();
+        $hsnCodeModel = new HSNCodeModel();
 
         $transaction = $tModel->find($transactionId);
 
@@ -69,6 +70,13 @@ class InvoiceController extends BaseController
 
         $grandTotal = $baseAmount + $igst + $cgst + $sgst;
 
+        $grandTotal = str_replace(',', '', $grandTotal);  // remove commas
+        $grandTotal = floatval($grandTotal);              // convert to number
+
+        $amountWord = numberToWordsIndian($grandTotal);
+
+        $hsnCode = trim($transaction['hsn_code']);  // remove extra spaces
+        $hsnData = $hsnCodeModel->where('hsn_code', $hsnCode)->first();
         $invoice = [
             'invoice_no'       => $transaction['recipt_no'],
             'date'             => $transaction['created_at'],
@@ -91,7 +99,8 @@ class InvoiceController extends BaseController
             'seller_state_code' => $sellerStateCode,
             'customer_state_code' => $customerStateCode,
             'banks'               => $bankModel->first(),
-            'hsn_code'           =>$transaction['hsn_code']
+            'hsn_code'           => $hsnData,
+            'amount_in_word'   => $amountWord
 
         ];
         $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";

@@ -98,9 +98,13 @@ class CompanyInfoController extends BaseController
     public function save_hsncode()
     {
         $hsnCodeModel = new HSNCodeModel();
-        $hsncode = $this->request->getPost('hsn_code');
-           $hsnCodeModel->insert(['code'=>$hsncode]);
-           return redirect()->to('/admin/company-manage')->with('Success', 'Hsn code is store successfully!');
+         $this->request->getPost('hsn_code');
+        
+           $hsnCodeModel->insert([
+            'code'=>$this->request->getPost('hsn_code'),
+            'description'=>$this->request->getPost('description')
+        ]);
+          return redirect()->to('/admin/company-manage')->with('Success', 'Hsn code is store successfully!');
 
     }
 }

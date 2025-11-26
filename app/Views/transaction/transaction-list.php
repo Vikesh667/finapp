@@ -217,9 +217,9 @@
 
                                             <small><?= $percentPaid ?>% Paid</small>
                                         </td>
-                                          <div class="actionButton">
-                                        
-                                          </div>
+                                        <div class="actionButton">
+
+                                        </div>
                                         <td class="text-center">
                                             <div>
                                                 <?php if ($transaction['remaining_amount'] > 0): ?>
@@ -248,7 +248,7 @@
                                             </form>
                                             <a href="<?= base_url('admin/invoice/preview/' . $transaction['id']) ?>"
                                                 class="btn btn-warning btn-sm mt-3">
-                                                 Invoice
+                                                Invoice
                                             </a>
 
 
@@ -392,7 +392,7 @@
                                     <option value="">Loading...</option>
                                 </select>
                             </div>
-                             <div class="form-group mb-2">
+                            <div class="form-group mb-2">
                                 <label class="form-label">Select HSN/ASC Code</label>
                                 <select id="hsnSelect" name="hsn_code" class="form-control" required>
                                     <option value="">Loading...</option>
@@ -402,16 +402,20 @@
                                 <label class="form-label d-block">GSTIN</label>
 
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_yes" value="1" required>
-                                    <label class="form-check-label" for="gst_yes">With GST</label>
+                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_igst" value="igst" required>
+                                    <label class="form-check-label" for="gst_igst">With IGST</label>
                                 </div>
 
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_no" value="0" required>
-                                    <label class="form-check-label" for="gst_no">Without GST</label>
+                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_cgst_sgst" value="cgst_sgst" required>
+                                    <label class="form-check-label" for="gst_cgst_sgst">With (CGST (9%) + SGST (9%))</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_none" value="none" required>
+                                    <label class="form-check-label" for="gst_none">Without GST</label>
                                 </div>
                             </div>
-
 
                             <div class="form-group basic mb-3">
                                 <label class="label">Remark</label>
@@ -637,7 +641,6 @@
                 });
 
         });
-
     </script>
 
 

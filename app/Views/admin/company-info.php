@@ -282,8 +282,9 @@
                         <label class="form-label">HSN Code</label>
                         <input type="text" name="hsn_code" class="form-control"
                             placeholder="Enter HSN Code"
-                            value="<?= isset($edit['code']) ? $edit['code'] : '' ?>">
-
+                            value="<?= isset($edit['hsn_code']) ? $edit['hsn_code'] : '' ?>">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" placeholder="Enter HSN Code" maxlength="150"><?= isset($edit['hsn_code']) ? $edit['hsn_code'] : '' ?></textarea>
                         <button class="btn btn-primary mt-3 w-100">
                             <ion-icon name="save-outline"></ion-icon>
                             <?= isset($edit) ? 'Update Code' : 'Save Code' ?>
