@@ -392,6 +392,19 @@
                                     <option value="">Loading...</option>
                                 </select>
                             </div>
+                            <div class="form-group mb-2">
+                                <label class="form-label d-block">GSTIN</label>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_yes" value="1" required>
+                                    <label class="form-check-label" for="gst_yes">With GST</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gst_applied" id="gst_no" value="0" required>
+                                    <label class="form-check-label" for="gst_no">Without GST</label>
+                                </div>
+                            </div>
 
 
                             <div class="form-group basic mb-3">
