@@ -70,8 +70,7 @@ class CompanyInfoController extends BaseController
     {
         $termsModel = new \App\Models\TermsModel();
         $content = $this->request->getPost('terms_content');
-
-        $termsModel->insert(['content' => $content]); // stores version
+        $termsModel->update(1,['content' => $content]); // stores version
 
         return redirect()->to('/admin/company-manage')->with('success', 'Terms Updated Successfully!');
     }

@@ -44,7 +44,7 @@ class InvoiceController extends BaseController
             $result2 = $query2->getRow();
             $customerStateCode = $result2 ? $result2->state_code : null;
         }
-        $storedTerms = $termsModel->find($transaction['terms_id']);
+        $storedTerms = $termsModel->first();
         // GST Calculation Logic
         $gstApplied  = (int)$transaction['gst_applied'];
         $baseAmount  = (float)$transaction['total_amount'];

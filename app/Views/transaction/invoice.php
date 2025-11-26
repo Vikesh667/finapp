@@ -294,6 +294,8 @@
             padding: 10px;
             max-width: 800px;
             margin: auto;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
 
         h2 { margin: 5px 0 15px 0; }
@@ -302,6 +304,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+
         }
 
         th, td {
@@ -450,7 +453,7 @@
             <td width="60%">
                 <strong>Terms & Conditions:</strong><br>
                 <div style="font-size:12px;white-space:pre-line;">
-                    <?= nl2br(esc($invoice['terms'])) ?>
+                    <?=(esc($invoice['terms'])) ?>
                 </div>
             </td>
 
