@@ -140,6 +140,7 @@
 
         <!-- ─────────── Customer Details ─────────── -->
         <table>
+
             <tr>
                 <th colspan="2">Bill To</th>
             </tr>
@@ -167,8 +168,13 @@
             </tr>
             <tr>
                 <td class="center">1</td>
-                <td class="center"><?= esc($invoice['hsn_code']['hsn_code']) ?></td>
-                <td class="center"><?= esc($invoice['hsn_code']['description']) ?></td>
+
+                <?php $hsn = $invoice['hsn_code']; ?>
+
+                <td class="center"><?= is_array($hsn) ? esc($hsn['hsn_code']) : esc($hsn) ?></td>
+                <td class="center"><?= is_array($hsn) ? esc($hsn['description']) : '-' ?></td>
+
+
                 <td class="center"><?= $invoice['total_code'] ?></td>
                 <td class="center"><?= number_format($invoice['rate'], 2) ?></td>
                 <td class="center"><?= number_format($invoice['base_amount'], 2) ?></td>

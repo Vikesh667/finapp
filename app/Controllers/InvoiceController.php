@@ -18,13 +18,15 @@ class InvoiceController extends BaseController
     public function preview($transactionId)
     {
         helper('number');
-        $tModel       = new TransactionModel();
-        $clientModel  = new ClientModel();
-        $customerModel = new CustomerModel();
+        $tModel           = new TransactionModel();
+        $clientModel      = new ClientModel();
+        $customerModel    = new CustomerModel();
         $compnayInfoModel = new CompanyInfoModel();
-        $termsModel = new TermsModel();
-        $bankModel = new BanksModel();
-        $hsnCodeModel = new HSNCodeModel();
+        $termsModel       = new TermsModel();
+        $bankModel        = new BanksModel();
+        $hsnCodeModel     = new HSNCodeModel();
+        $invoiceModel     = new InvoiceModel();
+        $db               = \Config\Database::connect();
 
         $transaction = $tModel->find($transactionId);
 
@@ -32,82 +34,86 @@ class InvoiceController extends BaseController
             return redirect()->back()->with('error', 'Transaction not found.');
         }
 
-        $db = \Config\Database::connect();
-
-        // ===== Company =====
-        $company = $compnayInfoModel->find($transaction['company_id']);
-        $stateId = $company['state'];
-        $query = $db->query('SELECT state_code FROM states WHERE name = ?', [$company['state']]);
-
-        $result = $query->getRow();
-        $sellerStateCode = $result ? $result->state_code : null;
-
-        // ===== Customer =====
+        // Linked data
+        $company  = $compnayInfoModel->find($transaction['company_id']);
         $customer = $customerModel->find($transaction['customer_id']);
+        $client   = $clientModel->find($transaction['client_id']);
+        $banks    = $bankModel->first();
+        $terms    = $termsModel->first();
 
-        $customerStateCode = null;
-        if ($customer && isset($customer['state'])) {
-            $custStateId = $customer['state'];
-            $query2 = $db->query('SELECT state_code FROM states WHERE name = ?', [$custStateId]);
-            $result2 = $query2->getRow();
-            $customerStateCode = $result2 ? $result2->state_code : null;
+        // Seller State + Code
+        $sellerState      = $company['state'] ?? null;
+        $sellerStateCode  = null;
+        if (!empty($sellerState)) {
+            $row = $db->query("SELECT state_code FROM states WHERE name = ?", [$sellerState])->getRow();
+            $sellerStateCode = $row->state_code ?? null;
         }
-        $storedTerms = $termsModel->first();
-        // GST Calculation Logic
-        $gstApplied  = (int)$transaction['gst_applied'];
+
+        // Buyer State + Code
+        $buyerState      = $customer['state'] ?? null;
+        $buyerStateCode  = null;
+        if (!empty($buyerState)) {
+            $row2 = $db->query("SELECT state_code FROM states WHERE name = ?", [$buyerState])->getRow();
+            $buyerStateCode = $row2->state_code ?? null;
+        }
+
+        // HSN Code
+        $hsnData = null;
+        if (!empty($transaction['hsn_code'])) {
+            $hsnData = $hsnCodeModel->where('hsn_code', trim($transaction['hsn_code']))->first();
+        }
+
+        // Already saved GST values
         $baseAmount  = (float)$transaction['total_amount'];
-
-        $igst = $cgst = $sgst = 0;
-
-        if ($gstApplied) {
-            if ($sellerStateCode != $customerStateCode) {
-                $igst = round($baseAmount * 0.18, 2);
-            } else {
-                $cgst = round($baseAmount * 0.09, 2);
-                $sgst = round($baseAmount * 0.09, 2);
-            }
-        }
-
-        $grandTotal = $baseAmount + $igst + $cgst + $sgst;
-
-        $grandTotal = str_replace(',', '', $grandTotal);  // remove commas
-        $grandTotal = floatval($grandTotal);              // convert to number
-
+        $igst        = (float)$transaction['igst'];
+        $cgst        = (float)$transaction['cgst'];
+        $sgst        = (float)$transaction['sgst'];
+        $grandTotal  = (float)$transaction['grand_total'];
+        $gstType     = $transaction['gst_type'] ?? 'none';
         $amountWord = numberToWordsIndian($grandTotal);
 
-        $hsnCode = trim($transaction['hsn_code']);  // remove extra spaces
-        $hsnData = $hsnCodeModel->where('hsn_code', $hsnCode)->first();
+        // Invoice array → passed to view
         $invoice = [
-            'invoice_no'       => $transaction['recipt_no'],
-            'date'             => $transaction['created_at'],
-            'client'           => $clientModel->find($transaction['client_id']),
-            'customer'         => $customer,
-            'company'          => $company,
-            'base_amount'      => $baseAmount,
-            'paid_amount'      => $transaction['paid_amount'],
-            'remaining_amount' => $transaction['remaining_amount'],
-            'total_code'       => $transaction['total_code'],
-            'rate'             => $transaction['rate'],
-            'code'             => $transaction['code'],
-            'remark'           => $transaction['remark'],
-            'gst_applied'      => $gstApplied,
-            'gst_number'       => $transaction['gst_number'],
-            'igst'             => $igst,
-            'cgst'             => $cgst,
-            'sgst'             => $sgst,
-            'grand_total'      => $grandTotal,
+            'invoice_no'        => $transaction['recipt_no'],
+            'date'              => $transaction['created_at'],
+            'client'            => $client,
+            'customer'          => $customer,
+            'company'           => $company,
+            'base_amount'       => $baseAmount,
+            'paid_amount'       => $transaction['paid_amount'],
+            'remaining_amount'  => $transaction['remaining_amount'],
+            'total_code'        => $transaction['total_code'],
+            'rate'              => $transaction['rate'],
+            'code'              => $transaction['code'],
+            'remark'            => $transaction['remark'],
+
+            // GST
+            'gst_applied'       => $transaction['gst_applied'],
+            'gst_type'          => $gstType,
+            'gst_number'        => $transaction['gst_number'],
+            'igst'              => $igst,
+            'cgst'              => $cgst,
+            'sgst'              => $sgst,
+            'grand_total'       => $grandTotal,
+
+            // States
+            'seller_state'      => $sellerState,
             'seller_state_code' => $sellerStateCode,
-            'customer_state_code' => $customerStateCode,
-            'banks'               => $bankModel->first(),
-            'hsn_code'           => $hsnData,
-            'amount_in_word'   => $amountWord
+            'buyer_state'       => $buyerState,
+            'customer_state_code'  => $buyerStateCode,
 
+            // HSN
+            'hsn_code'          => $hsnData,
+            'amount_in_word'    => $amountWord,
+
+            // Bank & Terms
+            'banks'             => $banks,
+            'terms'             => $terms['content'] ?? "Terms not available."
         ];
-        $invoice['terms'] = $storedTerms ? $storedTerms['content'] : "Terms not available.";
 
-
-        $invoiceModel = new InvoiceModel();
-
+        /**
+         * Save invoice in invoice table (1 per transaction)
+         */
         $invoiceData = [
             'transaction_id'       => $transactionId,
             'invoice_no'           => $transaction['recipt_no'],
@@ -122,50 +128,31 @@ class InvoiceController extends BaseController
             'rate'                 => $transaction['rate'],
             'code'                 => $transaction['code'],
             'remark'               => $transaction['remark'],
-            'gst_applied'          => $gstApplied,
+            'gst_applied'          => $transaction['gst_applied'],
+            'gst_type'             => $gstType,
             'gst_number'           => $transaction['gst_number'],
             'igst'                 => $igst,
             'cgst'                 => $cgst,
             'sgst'                 => $sgst,
             'grand_total'          => $grandTotal,
-            'seller_state_code'    => $sellerStateCode,
-            'customer_state_code'  => $customerStateCode,
-            'bank_id'              => $bankModel->first()['id'] ?? null,
+            'bank_id'              => $banks['id'] ?? null,
             'hsn_code'             => $hsnData['hsn_code']      ?? null,
             'hsn_description'      => $hsnData['description']   ?? null,
             'amount_in_word'       => $amountWord,
-            'terms'                => $storedTerms['content'] ?? "Terms not available."
+            'terms'                => $terms['content'] ?? "Terms not available."
         ];
 
-        // Insert or update: 1 invoice per transaction
         $existing = $invoiceModel->where('transaction_id', $transactionId)->first();
         if ($existing) {
             $invoiceModel->update($existing['id'], $invoiceData);
-            $invoiceId = $existing['id'];
         } else {
-            $invoiceId = $invoiceModel->insert($invoiceData);
+            $invoiceModel->insert($invoiceData);
         }
-        $dataToUpdate = [
-            'igst'        => $igst,
-            'cgst'        => $cgst,
-            'sgst'        => $sgst,
-            'grand_total' => $grandTotal,
-        ];
-
-        $tModel->update($transactionId, $dataToUpdate);
-        // update only once if not already saved
-        if (
-            empty($transaction['igst']) &&
-            empty($transaction['cgst']) &&
-            empty($transaction['sgst']) &&
-            empty($transaction['grand_total'])
-        ) {
-            $tModel->update($transactionId, $dataToUpdate);
-        }
-
 
         return view('transaction/invoice', compact('invoice'));
     }
+
+
 
 
 
@@ -183,7 +170,6 @@ class InvoiceController extends BaseController
 
         // Get user selection
         $gstApplied = (int)$this->request->getPost('gst_applied');
-        print_r($gstApplied); die;
         $gstNumber  = ($gstApplied ? $this->request->getPost('gst_number') : null);
 
         // Calculations

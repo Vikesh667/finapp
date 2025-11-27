@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\CompanyInfoModel;
+use App\Models\CustomerModel;
+use App\Models\HSNCodeModel;
 use App\Models\TransactionHistoryModal;
 use App\Models\TransactionModel;
 
@@ -61,24 +64,83 @@ class TransactionController extends BaseController
     {
         $transactionModel = new TransactionModel();
         $historyModel     = new \App\Models\TransactionHistoryModal();
+        $companyInfoModel = new CompanyInfoModel();
+        $customerModel    = new CustomerModel();
+        $hsnCodeModel     = new HSNCodeModel();
 
         $clientId   = (int)$this->request->getPost('client_id');
         $customerId = (int)$this->request->getPost('customer_id');
         $userId     = (int)$this->request->getPost('user_id');
         $paidAmount = (float)$this->request->getPost('paid_amount');
-        $receiptNo  = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
+        $baseAmount = (float)$this->request->getPost('total_amount');
+        $companyId  = (int)$this->request->getPost('company_id');
         $loggedIn   = session()->get('user_id');
+        $hsnId =   $this->request->getPost('hsn_code');
+        $hsnCode = $hsnCodeModel
+            ->select('hsn_code')
+            ->where('id', $hsnId)
+            ->get()
+            ->getRow('hsn_code');
+
+        $receiptNo  = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
 
         if (!$clientId || !$customerId) {
             return redirect()->back()->with('error', 'Please select a client and customer.');
         }
 
-        $totalAmount  = (float) $this->request->getPost('total_amount');
+        // Fetch company and customer
+        $company  = $companyInfoModel->find($companyId);
+        $customer = $customerModel->find($customerId);
 
-        // Store GST flag but don't calculate
-        $gstApplied = (int)$this->request->getPost('gst_applied');
-        $gstNumber  = ($gstApplied) ? $this->request->getPost('gst_number') : null;
+        if (!$company || !$customer) {
+            return redirect()->back()->with('error', 'Company or customer not found.');
+        }
 
+        // Customer GST number from DB
+        $customerGstNumber = $customer['gst_number'] ?? null;
+
+        // Form GST selection: igst / cgst_sgst / none
+        $gstType = $this->request->getPost('gst_applied');
+
+        // Apply GST only if customer has GST number AND user selected GST
+        if (!empty($customerGstNumber) && $gstType !== 'none') {
+            $gstApplied = 1;                // GST enabled
+            $gstNumber  = $customerGstNumber;
+        } else {
+            $gstApplied = 0;                // GST disabled
+            $gstType    = 'none';
+            $gstNumber  = null;
+        }
+
+        // Get state code for IGST / CGST+SGST decision
+        $db = \Config\Database::connect();
+        $sellerStateCode = $customerStateCode = null;
+
+        if (!empty($company['state'])) {
+            $row = $db->query("SELECT state_code FROM states WHERE name = ?", [$company['state']])->getRow();
+            $sellerStateCode = $row->state_code ?? null;
+        }
+
+        if (!empty($customer['state'])) {
+            $row = $db->query("SELECT state_code FROM states WHERE name = ?", [$customer['state']])->getRow();
+            $customerStateCode = $row->state_code ?? null;
+        }
+
+        // GST Calculation
+        $igst = $cgst = $sgst = 0;
+        if ($gstApplied) {
+            if ($gstType === "igst" || ($sellerStateCode !== $customerStateCode)) {
+                $igst = round($baseAmount * 0.18, 2);
+            } elseif ($gstType === "cgst_sgst") {
+                $cgst = round($baseAmount * 0.09, 2);
+                $sgst = round($baseAmount * 0.09, 2);
+            }
+        }
+
+        // Final amount
+        $grandTotal = $baseAmount + $igst + $cgst + $sgst;
+
+        // Save transaction
         $data = [
             'user_id'          => $userId,
             'client_id'        => $clientId,
@@ -86,16 +148,21 @@ class TransactionController extends BaseController
             'code'             => $this->request->getPost('code'),
             'rate'             => $this->request->getPost('rate'),
             'extra_code'       => $this->request->getPost('extra_code'),
-            'total_amount'     => $totalAmount, // NO GST added here
+            'total_amount'     => $baseAmount,
+            'igst'             => $igst,
+            'cgst'             => $cgst,
+            'sgst'             => $sgst,
+            'grand_total'      => $grandTotal,
             'paid_amount'      => $paidAmount,
-            'remaining_amount' => $totalAmount - $paidAmount,
+            'remaining_amount' => $grandTotal - $paidAmount,
             'total_code'       => $this->request->getPost('total_code'),
             'gst_applied'      => $gstApplied,
+            'gst_type'         => $gstType,
             'gst_number'       => $gstNumber,
             'created_by'       => $loggedIn,
             'recipt_no'        => $receiptNo,
-            'company_id'      => $this->request->getPost('company_id'),
-            'hsn_code'       => $this->request->getPost('hsn_code'),
+            'company_id'       => $companyId,
+            'hsn_code'         => $hsnCode,
             'remark'           => $this->request->getPost('remark')
         ];
 
@@ -105,6 +172,7 @@ class TransactionController extends BaseController
 
         $transactionId = $transactionModel->insert($data);
 
+        // Insert payment history
         if ($paidAmount > 0) {
             $historyModel->insert([
                 'user_id'            => $userId,
@@ -125,8 +193,10 @@ class TransactionController extends BaseController
             : 'user/transaction-list';
 
         return redirect()->to(base_url($redirectPath))
-            ->with('success', 'Transaction saved. Invoice ready for GST generation.');
+            ->with('success', 'Transaction saved successfully. Invoice is ready.');
     }
+
+
 
     public function getTransaction($id)
     {
