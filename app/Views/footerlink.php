@@ -564,6 +564,96 @@
                 });
             });
         </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                const userSelect = document.getElementById("userSelect_transaction");
+                const clientSelect = document.getElementById("clientForTransactionsSelect");
+                const customerSelect = document.getElementById("customerTransactionsSelect");
+
+                // 1️⃣ Admin selects USER → Load CLIENTS of that user
+                if (userSelect) {
+                    userSelect.addEventListener("change", function() {
+                        let userId = this.value;
+                        clientSelect.innerHTML = '<option>Loading...</option>';
+                        customerSelect.innerHTML = '<option>Select Customer</option>';
+
+                        fetch(`<?= base_url('admin/get-clients/') ?>${userId}`)
+                            .then(res => res.json())
+                            .then(list => {
+                                clientSelect.innerHTML = '<option value="">Select Client</option>';
+                                list.forEach(c => {
+                                    clientSelect.innerHTML += `<option value="${c.id}">${c.company_name}</option>`;
+                                });
+                            });
+                    });
+                }
+
+                // 2️⃣ Admin selects CLIENT → Load CUSTOMERS for selected user + client
+                if (clientSelect) {
+                    clientSelect.addEventListener("change", function() {
+                        let clientId = this.value;
+                        let userId = userSelect ? userSelect.value : "<?= session()->get('user_id') ?>";
+
+                        customerSelect.innerHTML = '<option>Loading...</option>';
+
+                        fetch(`<?= base_url('admin/get-customers') ?>?client_id=${clientId}&user_id=${userId}`)
+                            .then(res => res.json())
+                            .then(list => {
+                                customerSelect.innerHTML = '<option value="">Select Customer</option>';
+                                list.forEach(c => {
+                                    customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                                });
+                            });
+                    });
+                }
+
+            });
+
+
+            document.getElementById("dateFilter").addEventListener("change", function() {
+                const show = this.value === "custom";
+                document.getElementById("fromDateBox").style.display = show ? "block" : "none";
+                document.getElementById("toDateBox").style.display = show ? "block" : "none";
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const reassignButtons = document.querySelectorAll('.reassign-btn');
+                const userSelect = document.getElementById('modalUserSelect');
+                const customerIdInput = document.getElementById('modalCustomerId');
+                const customerNameInput = document.getElementById('modalCustomerName');
+
+                reassignButtons.forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const customerId = button.dataset.customerId;
+                        const customerName = button.dataset.customerName;
+                        const clientId = button.dataset.clientId;
+
+                        // Fill modal data
+                        customerIdInput.value = customerId;
+                        customerNameInput.value = customerName;
+                        userSelect.innerHTML = '<option value="">Loading...</option>';
+
+                        // Fetch users under same client
+                        try {
+                            const res = await fetch(`<?= base_url('admin/get-client-users/') ?>${clientId}`);
+                            const users = await res.json();
+                            userSelect.innerHTML = '<option value="">-- Select User --</option>';
+                            users.forEach(u => {
+                                const option = document.createElement('option');
+                                option.value = u.id;
+                                option.textContent = u.name;
+                                userSelect.appendChild(option);
+                            });
+                        } catch (error) {
+                            console.error('Error loading users:', error);
+                            userSelect.innerHTML = '<option value="">Error loading users</option>';
+                        }
+                    });
+                });
+            });
+        </script>
         </body>
 
         </html>

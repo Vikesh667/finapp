@@ -7,6 +7,7 @@ use App\Models\CustomerModel;
 use App\Models\HSNCodeModel;
 use App\Models\TransactionHistoryModal;
 use App\Models\TransactionModel;
+use App\Models\UserModel;
 
 class TransactionController extends BaseController
 {
@@ -26,18 +27,17 @@ class TransactionController extends BaseController
     public function transaction_list()
     {
         $transactionModel = new TransactionModel();
-
+        $userModel= new UserModel();
         $filters = [
-            'keyword'     => $this->request->getGet('search'),
-            'client_id'   => $this->request->getGet('client_id'),
-            'customer_id' => $this->request->getGet('customer_id'),
-            'status'      => $this->request->getGet('status'),
-            'min_amount'  => $this->request->getGet('min_amount'),
-            'max_amount'  => $this->request->getGet('max_amount'),
-            'from_date'   => $this->request->getGet('from_date'),
-            'to_date'     => $this->request->getGet('to_date'),
-            'license_key' => $this->request->getGet('license_key'),
+            'keyword'      => $this->request->getGet('search'),
+            'client_id'    => $this->request->getGet('client_id'),
+            'customer_id'  => $this->request->getGet('customer_id'),
+            'status'       => $this->request->getGet('status'),
+            'date_filter'  => $this->request->getGet('date_filter'), // ⭐ Add this
+            'from_date'    => $this->request->getGet('from_date'),
+            'to_date'      => $this->request->getGet('to_date'),
         ];
+
 
         $userRole = session()->get('role');
         $userId   = session()->get('user_id');
@@ -51,10 +51,10 @@ class TransactionController extends BaseController
         $data['clients'] = model('ClientModel')->findAll();
         $userId = ($userRole === 'admin')  ? "created_by" : session()->get('user_id');
         $data['customers'] = model('CustomerModel')->where('user_id', $userId)->findAll();
-
+ 
         // For form to remember filters
         $data['filters'] = $filters;
-
+        $data['users'] =$userModel->findAll();
         return view('transaction/transaction-list', $data);
     }
 
@@ -229,62 +229,62 @@ class TransactionController extends BaseController
     }
 
 
-   public function payNow()
-{
-    $transactionId = $this->request->getPost('transaction_id');
-    $payAmount     = (float) $this->request->getPost('pay_amount');
+    public function payNow()
+    {
+        $transactionId = $this->request->getPost('transaction_id');
+        $payAmount     = (float) $this->request->getPost('pay_amount');
 
-    $transactionModel = new TransactionModel();
-    $historyModel     = new TransactionHistoryModal();
-    
-    $transaction = $transactionModel->find($transactionId);
+        $transactionModel = new TransactionModel();
+        $historyModel     = new TransactionHistoryModal();
 
-    if (!$transaction) {
-        return redirect()->back()->with('error', 'Transaction not found.');
+        $transaction = $transactionModel->find($transactionId);
+
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found.');
+        }
+
+        if ($payAmount <= 0) {
+            return redirect()->back()->with('error', 'Invalid payment amount.');
+        }
+
+        if ($payAmount > $transaction['remaining_amount']) {
+            return redirect()->back()->with('error', 'Pay amount cannot exceed remaining amount.');
+        }
+
+        // NEW TOTALS
+        $newPaid      = $transaction['paid_amount'] + $payAmount;
+        $newRemaining = $transaction['remaining_amount'] - $payAmount;
+
+        // UPDATE TRANSACTION
+        $transactionModel->update($transactionId, [
+            'paid_amount'      => $newPaid,
+            'remaining_amount' => $newRemaining,
+            'updated_at'       => date("Y-m-d H:i:s")
+        ]);
+
+        // ADD PAYMENT HISTORY
+        $historyModel->insert([
+            'transaction_id'     => $transactionId,
+            'user_id'            => $transaction['user_id'],
+            'client_id'          => $transaction['client_id'],
+            'customer_id'        => $transaction['customer_id'],
+            'amount'             => $payAmount,
+            'before_paid_amount' => $transaction['paid_amount'],
+            'after_paid_amount'  => $newPaid,
+            'payment_method'     => $this->request->getPost('payment_method'),
+            'created_at'         => date("Y-m-d H:i:s"),
+            'remark'             => $this->request->getPost('remark')
+        ]);
+
+
+
+        $redirectPath = session()->get('role') === 'admin'
+            ? 'admin/transaction-list'
+            : 'user/transaction-list';
+
+        return redirect()->to(base_url($redirectPath))
+            ->with('success', 'Payment received successfully.');
     }
-
-    if ($payAmount <= 0) {
-        return redirect()->back()->with('error', 'Invalid payment amount.');
-    }
-
-    if ($payAmount > $transaction['remaining_amount']) {
-        return redirect()->back()->with('error', 'Pay amount cannot exceed remaining amount.');
-    }
-
-    // NEW TOTALS
-    $newPaid      = $transaction['paid_amount'] + $payAmount;
-    $newRemaining = $transaction['remaining_amount'] - $payAmount;
-
-    // UPDATE TRANSACTION
-    $transactionModel->update($transactionId, [
-        'paid_amount'      => $newPaid,
-        'remaining_amount' => $newRemaining,
-        'updated_at'       => date("Y-m-d H:i:s")
-    ]);
-
-    // ADD PAYMENT HISTORY
-    $historyModel->insert([
-        'transaction_id'     => $transactionId,
-        'user_id'            => $transaction['user_id'],
-        'client_id'          => $transaction['client_id'],
-        'customer_id'        => $transaction['customer_id'],
-        'amount'             => $payAmount,
-        'before_paid_amount' => $transaction['paid_amount'],
-        'after_paid_amount'  => $newPaid,
-        'payment_method'     => $this->request->getPost('payment_method'),
-        'created_at'         => date("Y-m-d H:i:s"),
-        'remark'             => $this->request->getPost('remark')
-    ]);
-
-   
-
-    $redirectPath = session()->get('role') === 'admin'
-        ? 'admin/transaction-list'
-        : 'user/transaction-list';
-
-    return redirect()->to(base_url($redirectPath))
-        ->with('success', 'Payment received successfully.');
-}
 
 
 
