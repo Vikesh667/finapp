@@ -73,25 +73,38 @@
 
     <!-- App Capsule -->
     <div id="appCapsule">
-
         <!-- Wallet Card -->
         <div class="section wallet-card-section pt-1">
             <div class="wallet-card">
-                <!-- Total Business Overview -->
-                <div class="balance">
+
+                <div class="balance" style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
+
+                    <!-- LEFT SIDE : OVERALL TOTAL -->
                     <div class="left">
                         <span class="title">Total Business Value</span>
-                        <h1 class="total">₹ <?= esc(number_format($totalAmount, 2)) ?></h1>
+                        <h1 class="total">
+                            ₹ <?= esc(number_format($totals['overall_amount'], 2)) ?>
+                        </h1>
                         <p class="small text-muted">Including all client transactions</p>
                     </div>
-                    <div class="right">
-                        <a href="<?= base_url('transactions/add') ?>" class="button">
-                            <ion-icon name="add-circle-outline"></ion-icon>
-                        </a>
+
+                    <!-- RIGHT SIDE : WITH GST / WITHOUT GST -->
+                    <div class="right" style="text-align:right; font-size:15px;">
+                        <p class="mb-1">
+                            <strong>With GST:</strong><br>
+                            ₹ <?= esc(number_format($totals['amount_with_gst'], 2)) ?>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Without GST:</strong><br>
+                            ₹ <?= esc(number_format($totals['amount_without_gst'], 2)) ?>
+                        </p>
                     </div>
+
                 </div>
+
             </div>
         </div>
+
 
         <!-- Stats -->
         <!-- Ionicons -->

@@ -145,7 +145,24 @@ class InvoiceController extends BaseController
         } else {
             $invoiceId = $invoiceModel->insert($invoiceData);
         }
-        // --- Update GST values back into transactions table ---
+        $dataToUpdate = [
+            'igst'        => $igst,
+            'cgst'        => $cgst,
+            'sgst'        => $sgst,
+            'grand_total' => $grandTotal,
+        ];
+
+        $tModel->update($transactionId, $dataToUpdate);
+        // update only once if not already saved
+        if (
+            empty($transaction['igst']) &&
+            empty($transaction['cgst']) &&
+            empty($transaction['sgst']) &&
+            empty($transaction['grand_total'])
+        ) {
+            $tModel->update($transactionId, $dataToUpdate);
+        }
+
 
         return view('transaction/invoice', compact('invoice'));
     }
@@ -166,6 +183,7 @@ class InvoiceController extends BaseController
 
         // Get user selection
         $gstApplied = (int)$this->request->getPost('gst_applied');
+        print_r($gstApplied); die;
         $gstNumber  = ($gstApplied ? $this->request->getPost('gst_number') : null);
 
         // Calculations

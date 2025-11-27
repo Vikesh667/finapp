@@ -23,8 +23,8 @@ class Home extends BaseController
         $totalTransactions = $transactionModel->countAllResults();
 
         $totalAmount = $transactionModel->selectSum('total_amount')->get()->getRow()->total_amount ?? 0;
-        $totalPaid = $transactionModel->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
 
+        $totalPaid = $transactionModel->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
 
         $totalRemaining = $transactionModel->selectSum('remaining_amount')->get()->getRow()->remaining_amount ?? 0;
 
@@ -93,6 +93,20 @@ class Home extends BaseController
             ? (($today - $yesterday) / $yesterday) * 100
             : 100;
 
+
+
+            $totals = $transactionModel
+    ->select("
+        SUM(CASE WHEN gst_applied = 1 THEN grand_total ELSE 0 END) AS amount_with_gst,
+        SUM(CASE WHEN gst_applied = 0 THEN total_amount ELSE 0 END) AS amount_without_gst,
+        SUM(
+            CASE
+                WHEN gst_applied = 1 THEN grand_total
+                ELSE total_amount
+            END
+        ) AS overall_amount
+    ", false)
+    ->first();
         return view('index', [
             'totalTransactions'   => $totalTransactions,
             'totalAmount'         => $totalAmount,
@@ -117,6 +131,7 @@ class Home extends BaseController
             'today'       => $today,
             'yesterday'   => $yesterday,
             'dayChange'   => $dayChange,
+            'totals'      => $totals
 
         ]);
     }
