@@ -1,22 +1,8 @@
 <?= view('header'); ?>
 
 <body>
-    <div class="appHeader bg-primary text-light">
-        <div class="left">
-            <a href="#" class="headerButton" data-bs-toggle="modal" data-bs-target="#sidebarPanel">
-                <ion-icon name="menu-outline"></ion-icon>
-            </a>
-        </div>
-        <div class="pageTitle">
-            <img src="<?= base_url('assets/img/logo.png'); ?>" alt="logo" class="logo">
-        </div>
-        <div class="right">
-            <ion-icon class="icon" name="settings-outline"></ion-icon>
-        </div>
-    </div>
-
+   <?php echo view('topHeader');?>
     <div id="appCapsule">
-
         <!-- Title -->
         <div class="section mt-3 text-center">
             <h3>Company Information</h3>
@@ -29,8 +15,6 @@
                 <?= session()->getFlashdata('success'); ?>
             </div>
         <?php endif; ?>
-
-
         <!-- FORM -->
         <div class="section p-2">
             <div class="card">

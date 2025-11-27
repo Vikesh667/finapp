@@ -8372,3 +8372,16 @@ body.dark-mode .cookies-box {
     background: #eef4ff;
     border-color: #aac6ff;
 }
+
+@media(max-width:768px) {
+    .user-list-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .user-list-header .right-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

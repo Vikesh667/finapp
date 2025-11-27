@@ -1,5 +1,7 @@
 <?php echo view('header'); ?>
-
+ <?php 
+ $role=session()->get('role');
+ ?>
 <body>
   <?php echo view('topHeader');?>
     <div id="appCapsule" class="full-height">

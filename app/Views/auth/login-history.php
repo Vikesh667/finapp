@@ -3,39 +3,8 @@
 <!-- BEGIN appCapsule -->
 
 <body>
-    <div class="appHeader bg-primary text-light">
-
-        <?php
-        $session = session();
-        $userName = $session->get('user_name');
-        $profileImage = $session->get('profile_image');
-        $firstLetter = strtoupper(substr($userName, 0, 1));
-        ?>
-        <div class="left">
-            <a href="#" class="headerButton" data-bs-toggle="modal" data-bs-target="#sidebarPanel">
-                <ion-icon name="menu-outline"></ion-icon>
-            </a>
-        </div>
-        <div class="pageTitle">
-            <img src="assets/img/logo.png" alt="logo" class="logo">
-        </div>
-        <div class="right">
-            <a href="<?= base_url('admin/app-notifications') ?>" class="headerButton">
-                <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                <span class="badge badge-danger">4</span>
-            </a>
-            <a href="<?= base_url('admin/app-settings') ?>" class="headerButton">
-                <img
-                    src="<?= base_url('assets/uploads/logos/' . $profileImage) ?>"
-                    alt="avatar"
-                    class="rounded-circle shadow"
-                    style="width:32px; height:32px; object-fit:cover; object-position:center;">
-                <span class="badge badge-danger">6</span>
-            </a>
-        </div>
-    </div>
+    <?php echo view('topHeader');?>
     <div id="appCapsule">
-
         <div class="container mt-4">
 
             <div class="d-flex justify-content-between align-items-center mb-3">

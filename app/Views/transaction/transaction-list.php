@@ -1,9 +1,10 @@
 <?php echo view('header'); ?>
-   <?php 
-    $role=session()->get('role');
-    ?>
+<?php
+$role = session()->get('role');
+?>
+
 <body>
-    <?php echo view('topHeader');?>
+    <?php echo view('topHeader'); ?>
     <div id="appCapsule" class="full-height">
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
@@ -18,13 +19,16 @@
                         </div>
                     </div>
                 </div>
-                <form method="GET" class="card p-3 mb-3 shadow-sm">
-                    <div class="row">
-                        <?php if (session()->get('role') === 'admin'): ?>
+                <form method="GET" class="card p-3 mb-3 shadow-sm border-0">
 
-                            <!-- 1️⃣ Select User -->
-                            <div class="col-md-2 col-6 mb-2">
-                                <label>User</label>
+                    <h6 class="fw-bold mb-3"><ion-icon name="funnel-outline"></ion-icon> Filter Transactions</h6>
+
+                    <div class="row g-2 align-items-end">
+
+                        <?php if (session()->get('role') === 'admin'): ?>
+                            <!-- User -->
+                            <div class="col-md-2 col-6">
+                                <label class="form-label">User</label>
                                 <select id="userSelect_transaction" name="user_id" class="form-select">
                                     <option value="">Select User</option>
                                     <?php foreach ($users as $u): ?>
@@ -32,48 +36,32 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                        <?php endif; ?>
 
-                            <!-- 2️⃣ Select Client -->
-                            <div class="col-md-2 col-6 mb-2">
-                                <label>Client</label>
-                                <select id="clientForTransactionsSelect" name="client_id" class="form-select">
-                                    <option value="">Select Client</option>
-                                </select>
-                            </div>
-
-                            <!-- 3️⃣ Select Customer -->
-                            <div class="col-md-2 col-6 mb-2">
-                                <label>Customer</label>
-                                <select id="customerTransactionsSelect" name="customer_id" class="form-select">
-                                    <option value="">Select Customer</option>
-                                </select>
-                            </div>
-
-                        <?php else: ?>
-
-                            <!-- USER LOGIN VIEW (only select client → customer auto filter) -->
-                            <div class="col-md-2 col-6 mb-2">
-                                <label>Client</label>
-                                <select id="clientForTransactionsSelect" name="client_id" class="form-select">
-                                    <option value="">Select Client</option>
+                        <!-- Client -->
+                        <div class="col-md-2 col-6">
+                            <label class="form-label">Client</label>
+                            <select id="clientForTransactionsSelect" name="client_id" class="form-select">
+                                <option value="">Select Client</option>
+                                <?php if (session()->get('role') !== 'admin'): ?>
                                     <?php foreach ($clients as $c): ?>
                                         <option value="<?= $c['id'] ?>"><?= $c['company_name'] ?></option>
                                     <?php endforeach; ?>
-                                </select>
-                            </div>
+                                <?php endif; ?>
+                            </select>
+                        </div>
 
-                            <div class="col-md-2 col-6 mb-2">
-                                <label>Customer</label>
-                                <select id="customerTransactionsSelect" name="customer_id" class="form-select">
-                                    <option value="">Select Customer</option>
-                                </select>
-                            </div>
+                        <!-- Customer -->
+                        <div class="col-md-2 col-6">
+                            <label class="form-label">Customer</label>
+                            <select id="customerTransactionsSelect" name="customer_id" class="form-select">
+                                <option value="">Select Customer</option>
+                            </select>
+                        </div>
 
-                        <?php endif; ?>
-
-
-                        <div class="col-md-2 col-6 mb-2">
-                            <label>Status</label>
+                        <!-- Status -->
+                        <div class="col-md-2 col-6">
+                            <label class="form-label">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All</option>
                                 <option value="paid" <?= ($filters['status'] == 'paid') ? 'selected' : '' ?>>Paid</option>
@@ -81,27 +69,47 @@
                             </select>
                         </div>
 
-                        <!-- ⭐ Date Filter UI (Same as screenshot) -->
-                        <div class="col-md-2 col-6 mb-2">
-                            <label>Date Filter</label>
+                        <!-- Date Filter -->
+                        <div class="col-md-2 col-6">
+                            <label class="form-label">Date</label>
                             <select id="dateFilter" name="date_filter" class="form-select">
                                 <option value="">All Time</option>
-                                <option value="today" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'today') ? 'selected' : '' ?>>Today</option>
-                                <option value="yesterday" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'yesterday') ? 'selected' : '' ?>>Yesterday</option>
-                                <option value="this_week" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'this_week') ? 'selected' : '' ?>>Current Week</option>
-                                <option value="last_week" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'last_week') ? 'selected' : '' ?>>Previous Week</option>
-                                <option value="this_month" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'this_month') ? 'selected' : '' ?>>Current Month</option>
-                                <option value="last_month" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'last_month') ? 'selected' : '' ?>>Previous Month</option>
-                                <option value="custom" <?= (!empty($filters['date_filter']) && $filters['date_filter'] == 'custom') ? 'selected' : '' ?>>Date Range</option>
+                                <option value="today" <?= ($filters['date_filter'] == 'today') ? 'selected' : '' ?>>Today</option>
+                                <option value="yesterday" <?= ($filters['date_filter'] == 'yesterday') ? 'selected' : '' ?>>Yesterday</option>
+                                <option value="this_week" <?= ($filters['date_filter'] == 'this_week') ? 'selected' : '' ?>>This Week</option>
+                                <option value="last_week" <?= ($filters['date_filter'] == 'last_week') ? 'selected' : '' ?>>Last Week</option>
+                                <option value="this_month" <?= ($filters['date_filter'] == 'this_month') ? 'selected' : '' ?>>This Month</option>
+                                <option value="last_month" <?= ($filters['date_filter'] == 'last_month') ? 'selected' : '' ?>>Last Month</option>
+                                <option value="custom" <?= ($filters['date_filter'] == 'custom') ? 'selected' : '' ?>>Date Range</option>
                             </select>
-                            <div class="col-md-12 mt-2">
-                                <button class="btn btn-primary">Filter</button>
-                                <a href="<?= (session()->get('role') === 'admin') ? base_url('admin/transaction-list') : base_url('user/transaction-list') ?>"
-                                    class="btn btn-secondary">Reset</a>
-                            </div>
                         </div>
+
+                        <!-- From/To date (only when custom is selected) -->
+                        <div class="col-md-2 col-6" id="fromDateBox" style="display: <?= ($filters['date_filter'] == 'custom') ? 'block' : 'none' ?>;">
+                            <label class="form-label">From</label>
+                            <input type="date" name="from_date" value="<?= $filters['from_date'] ?? '' ?>" class="form-control">
+                        </div>
+
+                        <div class="col-md-2 col-6" id="toDateBox" style="display: <?= ($filters['date_filter'] == 'custom') ? 'block' : 'none' ?>;">
+                            <label class="form-label">To</label>
+                            <input type="date" name="to_date" value="<?= $filters['to_date'] ?? '' ?>" class="form-control">
+                        </div>
+
+                        <!-- Filter / Reset -->
+                        <div class="col-12 col-md-3 mt-2 d-flex gap-2 justify-content-md-end">
+                            <button class="btn btn-primary flex-fill">
+                                <ion-icon name="search-outline"></ion-icon> Apply
+                            </button>
+                            <a href="<?= (session()->get('role') === 'admin') ? base_url('admin/transaction-list') : base_url('user/transaction-list') ?>"
+                                class="btn btn-secondary flex-fill">
+                                <ion-icon name="refresh-outline"></ion-icon> Refresh
+                            </a>
+                        </div>
+
                     </div>
+
                 </form>
+
 
 
                 <div class="table-responsive">
@@ -171,40 +179,56 @@
                                             <small><?= $percentPaid ?>% Paid</small>
                                         </td>
                                         <td class="text-center">
-                                            <div class="actionButton">
+                                            <div class="d-flex flex-wrap justify-content-center gap-2">
+
                                                 <?php if ($transaction['remaining_amount'] > 0): ?>
+                                                    <!-- Pay Now -->
                                                     <a href="#"
-                                                        class="btn btn-primary edit-transaction"
-                                                        data-id="<?= $transaction['id'] ?>">
+                                                        class="btn btn-sm btn-outline-primary edit-transaction"
+                                                        data-id="<?= $transaction['id'] ?>"
+                                                        title="Pay Now"
+                                                        data-bs-toggle="tooltip">
                                                         <ion-icon name="card-outline"></ion-icon>
                                                     </a>
                                                 <?php endif; ?>
 
-                                                <a href=""
-                                                    class="btn btn-info view-transaction mt-3"
-                                                    data-view-id="<?= $transaction['id'] ?>">
+                                                <!-- View -->
+                                                <a href="#"
+                                                    class="btn btn-sm btn-outline-info view-transaction"
+                                                    data-view-id="<?= $transaction['id'] ?>"
+                                                    title="View Transaction"
+                                                    data-bs-toggle="tooltip">
                                                     <ion-icon name="eye-outline"></ion-icon>
                                                 </a>
 
+                                                <!-- Delete -->
                                                 <?php
                                                 $deleteUrl = ($role === 'admin')
                                                     ? base_url('admin/transaction-delete/' . $transaction['id'])
                                                     : base_url('user/transaction-delete/' . $transaction['id']);
                                                 ?>
-                                                <form method="post" action="<?= $deleteUrl ?>" style="display:inline;">
-                                                    <?php if ($transaction['remaining_amount'] == 0): ?>
-                                                        <button type="submit" class="btn-icon delete" onclick="return confirm('Are you sure?')">
+                                                <?php if ($transaction['remaining_amount'] == 0): ?>
+                                                    <form method="post" action="<?= $deleteUrl ?>" onsubmit="return confirm('Are you sure?')">
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            title="Delete"
+                                                            data-bs-toggle="tooltip">
                                                             <ion-icon name="trash-outline"></ion-icon>
                                                         </button>
-                                                    <?php endif; ?>
-                                                </form>
+                                                    </form>
+                                                <?php endif; ?>
 
+                                                <!-- Invoice -->
                                                 <a href="<?= base_url('admin/invoice/preview/' . $transaction['id']) ?>"
-                                                    class="btn btn-warning btn-sm mt-3">
-                                                    Invoice
+                                                    class="btn btn-sm btn-outline-warning"
+                                                    title="Invoice"
+                                                    data-bs-toggle="tooltip">
+                                                    <ion-icon name="document-text-outline"></ion-icon>
                                                 </a>
+
                                             </div>
                                         </td>
+
 
                                     </tr>
                                 <?php endforeach; ?>
@@ -216,12 +240,12 @@
             </div>
         </div>
     </div>
-    <?php echo view('transaction/addtransaction');?>
+    <?php echo view('transaction/addtransaction'); ?>
 
     <!-- Edit Transaction Modal -->
-    <?php echo view('transaction/pay-now');?>
+    <?php echo view('transaction/pay-now'); ?>
     <!-- Invoice Modal -->
-     <?php echo view('transaction/transactionPaymentHistory');?>
+    <?php echo view('transaction/transactionPaymentHistory'); ?>
     <?php echo view('sidebar'); ?>
     <?php echo view('bottomMenu'); ?>
     <?php echo view('footerlink'); ?>

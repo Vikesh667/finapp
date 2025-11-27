@@ -2,12 +2,6 @@
 
 <body>
 
-    <!-- loader -->
-    <!-- <div id="loader">
-        <img src="assets/img/loading-icon.png" alt="icon" class="loading-icon">
-    </div> -->
-    <!-- * loader -->
-
     <!-- App Header -->
     <div class="appHeader no-border transparent position-absolute">
         <div class="left">
