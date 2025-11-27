@@ -229,80 +229,63 @@ class TransactionController extends BaseController
     }
 
 
-    public function payNow()
-    {
-        $transactionId = $this->request->getPost('transaction_id');
-        $payAmount     = (float) $this->request->getPost('pay_amount');
-        $gstEnabled    = (int) $this->request->getPost('gst_enabled');
+   public function payNow()
+{
+    $transactionId = $this->request->getPost('transaction_id');
+    $payAmount     = (float) $this->request->getPost('pay_amount');
 
-        $transactionModel = new TransactionModel();
-        $invoiceModel     = new \App\Models\InvoiceModel();
-        $historyModel     = new TransactionHistoryModal();
+    $transactionModel = new TransactionModel();
+    $historyModel     = new TransactionHistoryModal();
+    
+    $transaction = $transactionModel->find($transactionId);
 
-        $transaction = $transactionModel->find($transactionId);
-
-        if (!$transaction) {
-            return redirect()->back()->with('error', 'Transaction not found.');
-        }
-
-        if ($payAmount > $transaction['remaining_amount']) {
-            return redirect()->back()->with('error', 'Pay amount exceeds remaining amount.');
-        }
-
-        // GST Calculation for the payment being made now
-        $gstAmount  = $gstEnabled ? round($payAmount * 0.18, 2) : 0;
-        $grandTotal = $payAmount + $gstAmount;
-
-        // Update transaction totals
-        $newPaid      = $transaction['paid_amount'] + $payAmount;
-        $newRemaining = $transaction['remaining_amount'] - $payAmount;
-
-        $transactionModel->update($transactionId, [
-            'paid_amount'      => $newPaid,
-            'remaining_amount' => $newRemaining,
-            'updated_at'       => date("Y-m-d H:i:s")
-        ]);
-
-
-        //--------------------------------------------
-        //  CREATE NEW INVOICE FOR THIS PAYMENT
-        //--------------------------------------------
-
-        $invoiceModel->insert([
-            'transaction_id' => $transactionId,
-            'invoice_no'     => 'INV-' . str_pad($transactionId . '-' . time(), 6, '0', STR_PAD_LEFT),
-            'client_id'      => $transaction['client_id'],
-            'customer_id'    => $transaction['customer_id'],
-            'amount'         => $payAmount,
-            'gst_amount'     => $gstAmount,
-            'grand_total'    => $grandTotal,
-            'gst_enabled'    => $gstEnabled,
-            'invoice_type'   => ($newRemaining == 0) ? 'Final Invoice' : 'Payment Invoice',
-            'status'         => ($newRemaining == 0) ? 'Paid' : 'Partial',
-            'created_at'     => date("Y-m-d H:i:s"),
-        ]);
-
-        //--------------------------------------------
-
-
-        // Add payment history
-        $historyModel->insert([
-            'transaction_id' => $transactionId,
-            'user_id'        => $transaction['user_id'],
-            'client_id'      => $transaction['client_id'],
-            'customer_id'    => $transaction['customer_id'],
-            'amount'         => $payAmount,
-            'before_paid_amount' => $transaction['paid_amount'],
-            'after_paid_amount' => $newPaid,
-            'payment_method' => $this->request->getPost('payment_method'),
-            'created_at'     => date("Y-m-d H:i:s"),
-            'remark'         => $this->request->getPost('remark')
-        ]);
-
-        $redirectPath = (session()->get('role') === 'admin') ? 'admin/transaction-list' : 'user/transaction-list';
-
-        return redirect()->to(base_url($redirectPath))->with('success', 'Payment received and invoice generated.');
+    if (!$transaction) {
+        return redirect()->back()->with('error', 'Transaction not found.');
     }
+
+    if ($payAmount <= 0) {
+        return redirect()->back()->with('error', 'Invalid payment amount.');
+    }
+
+    if ($payAmount > $transaction['remaining_amount']) {
+        return redirect()->back()->with('error', 'Pay amount cannot exceed remaining amount.');
+    }
+
+    // NEW TOTALS
+    $newPaid      = $transaction['paid_amount'] + $payAmount;
+    $newRemaining = $transaction['remaining_amount'] - $payAmount;
+
+    // UPDATE TRANSACTION
+    $transactionModel->update($transactionId, [
+        'paid_amount'      => $newPaid,
+        'remaining_amount' => $newRemaining,
+        'updated_at'       => date("Y-m-d H:i:s")
+    ]);
+
+    // ADD PAYMENT HISTORY
+    $historyModel->insert([
+        'transaction_id'     => $transactionId,
+        'user_id'            => $transaction['user_id'],
+        'client_id'          => $transaction['client_id'],
+        'customer_id'        => $transaction['customer_id'],
+        'amount'             => $payAmount,
+        'before_paid_amount' => $transaction['paid_amount'],
+        'after_paid_amount'  => $newPaid,
+        'payment_method'     => $this->request->getPost('payment_method'),
+        'created_at'         => date("Y-m-d H:i:s"),
+        'remark'             => $this->request->getPost('remark')
+    ]);
+
+   
+
+    $redirectPath = session()->get('role') === 'admin'
+        ? 'admin/transaction-list'
+        : 'user/transaction-list';
+
+    return redirect()->to(base_url($redirectPath))
+        ->with('success', 'Payment received successfully.');
+}
+
 
 
 

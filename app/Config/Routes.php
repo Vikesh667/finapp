@@ -41,7 +41,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('client-list', 'ClientController::client_list');
   $routes->get('get-users', 'UserController::getUsers');
   $routes->get('get-clients/(:num)', 'ClientController::getClientsByUser/$1');
-  $routes->get('get-customers/(:num)', 'CustomerController::getCustomers/$1');
+  $routes->get('get-customers', 'CustomerController::getCustomers');
   $routes->post('client/add', 'ClientController::add_client');
   $routes->get('client/edit-client/(:num)', 'ClientController::edit_client/$1');
   $routes->post('client/update', 'ClientController::update_client');
@@ -120,7 +120,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   // --- CUSTOMER MANAGEMENT ---
   $routes->get('get-users', 'UserController::getUsers');
   $routes->get('get-clients/(:num)', 'ClientController::getClientsByUser/$1');
-  $routes->get('get-customers/(:num)', 'CustomerController::getCustomers/$1');
+  $routes->get('get-customers', 'CustomerController::getCustomers');
   $routes->get('/', 'CustomerController::customer_list');
   $routes->post('customer/add', 'CustomerController::add_customer');
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');

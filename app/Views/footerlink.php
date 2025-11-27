@@ -143,10 +143,14 @@
                         });
                 }
 
-                function loadCustomers(clientId, target) {
-                    const url = role === "admin" ?
-                        `<?= base_url('admin/get-customers/') ?>${clientId}` :
-                        `<?= base_url('user/get-customers/') ?>${clientId}`;
+                function loadCustomers(clientId, userId, target) {
+                    let url;
+
+                    if (role === "admin") {
+                        url = `<?= base_url('admin/get-customers') ?>?client_id=${clientId}&user_id=${userId}`;
+                    } else {
+                        url = `<?= base_url('user/get-customers') ?>?client_id=${clientId}`;
+                    }
 
                     fetch(url)
                         .then(res => res.json())
@@ -157,6 +161,7 @@
                             });
                         });
                 }
+
 
 
                 function loadCountries(target) {
@@ -257,7 +262,14 @@
                     }
 
                     /* Client → Customer (common for both admin & user) */
-                    clientSel.onchange = () => loadCustomers(clientSel.value, customerSel);
+                    if (role === "admin") {
+                        clientSel.onchange = () => loadCustomers(clientSel.value, userSel.value, customerSel);
+                    }
+
+                    if (role === "user") {
+                        clientSel.onchange = () => loadCustomers(clientSel.value, userId, customerSel);
+                    }
+
 
                 });
 

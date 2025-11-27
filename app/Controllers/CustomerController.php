@@ -131,12 +131,46 @@ class CustomerController extends BaseController
     }
 
     //  Get all customers of a client
-    public function getCustomers($clientId)
-    {
-        $customerModel = new CustomerModel();
-        $customers = $customerModel->where('client_id', $clientId)->findAll();
-        return $this->response->setJSON($customers);
+    
+  public function getCustomers()
+{
+    $session  = session();
+    $role     = $session->get('role');
+    $loggedIn = $session->get('user_id');
+    $customerModel = new CustomerModel();
+
+    // Get values from GET/POST
+    $clientId = $this->request->getGetPost('client_id');
+    $userId   = $this->request->getGetPost('user_id'); // only used when admin selects user
+
+    if (!$clientId) {
+        return $this->response->setJSON([]);
     }
+
+    if ($role === 'admin') {
+        // Admin chooses user manually
+        if (!$userId) {
+            return $this->response->setJSON([]); // stop if admin didn't select user
+        }
+
+        $customers = $customerModel
+                        ->where('client_id', $clientId)
+                        ->where('user_id', $userId)
+                        ->orderBy('name', 'ASC')
+                        ->findAll();
+    } else {
+        // Normal user: filter automatically by logged in user
+        $customers = $customerModel
+                        ->where('client_id', $clientId)
+                        ->where('user_id', $loggedIn)
+                        ->orderBy('name', 'ASC')
+                        ->findAll();
+    }
+        
+    return $this->response->setJSON($customers);
+}
+
+
 
     //  Get all users assigned to a specific client
     public function getClientUsers($clientId)
@@ -308,7 +342,7 @@ class CustomerController extends BaseController
             ->where('client_id', $clientId)
             ->where('user_id', $toUserId)
             ->findAll();
-            
+
         foreach ($movedCustomer as $cust) {
             $assignHistory->insert([
                 'customer_id' => $cust['id'],
@@ -329,10 +363,11 @@ class CustomerController extends BaseController
         return redirect()->back()->with('success', 'All customers reassigned successfully!');
     }
 
-    public function customer_assign_history(){
-        $customerReassignHistoryModel= new CustomerReassignHistoryModel();
-         $data['assign_history']=$customerReassignHistoryModel->getAllHistory();
-       
-        return view('customer/customer_reassign_history',$data);
+    public function customer_assign_history()
+    {
+        $customerReassignHistoryModel = new CustomerReassignHistoryModel();
+        $data['assign_history'] = $customerReassignHistoryModel->getAllHistory();
+
+        return view('customer/customer_reassign_history', $data);
     }
 }

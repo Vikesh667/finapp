@@ -139,6 +139,10 @@ class InvoiceController extends BaseController
             'hsn_code'             => $hsnData['hsn_code']      ?? null,
             'hsn_description'      => $hsnData['description']   ?? null,
             'amount_in_word'       => $amountWord,
+            'seller_state'      => $sellerState,
+            'seller_state_code' => $sellerStateCode,
+            'buyer_state'       => $buyerState,
+            'customer_state_code'  => $buyerStateCode,
             'terms'                => $terms['content'] ?? "Terms not available."
         ];
 
