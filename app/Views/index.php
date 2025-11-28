@@ -158,31 +158,6 @@
             </div>
 
             <!-- Row 5 -->
-            <div class="row mt-2">
-                <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="title fw-bold text-secondary">Average Transaction</div>
-                                <div class="value text-primary fs-5">₹<?= esc($averageTransaction) ?></div>
-                            </div>
-                            <ion-icon name="stats-chart-outline" class="fs-3 text-primary"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="title fw-bold text-secondary">Highest Transaction</div>
-                                <div class="value text-success fs-5">₹<?= esc($highestTransaction) ?></div>
-                            </div>
-                            <ion-icon name="trending-up-outline" class="fs-3 text-success"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- Row (This Month + Today) -->
             <!-- Row (This Month + Today) -->
             <div class="row mt-2">
@@ -352,9 +327,8 @@
         <!-- app footer -->
         <div class="appFooter">
             <div class="footer-title">
-                Copyright © Finapp 2021. All Rights Reserved.
+                Copyright © FINCLUB . All Rights Reserved.
             </div>
-            Bootstrap 5 based mobile template.
         </div>
         <!-- * app footer -->
 

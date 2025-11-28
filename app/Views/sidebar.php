@@ -160,16 +160,44 @@ $counter = $this->common->getcounter();
                                 <div class="in">Support</div>
                             </a>
                         </li>
-                        <li>
-                            <a href="<?= base_url('admin/login-history') ?>" class="item">
+                        <li class="has-submenu">
+                            <a href="javascript:void(0)" class="item submenu-toggle">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="time-outline"></ion-icon>
                                 </div>
-                                <div class="in">
-                                    Login History
-                                </div>
+                                <div class="in">History</div>
+                                <ion-icon name="chevron-down-outline" class="submenu-arrow"></ion-icon>
                             </a>
+
+                            <ul class="submenu">
+                                <li>
+                                    <a href="<?= base_url('admin/login-history') ?>" class="item">
+                                        <div class="icon-box ">
+                                            <ion-icon name="log-in-outline"></ion-icon>
+                                        </div>
+                                        <div class="in">Login History</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?= base_url('admin/client-assign-history') ?>" class="item">
+                                        <div class="icon-box ">
+                                            <ion-icon name="people-outline"></ion-icon>
+                                        </div>
+                                        <div class="in">Product Assign History</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?= base_url('admin/customer-assign-history') ?>" class="item">
+                                        <div class="icon-box">
+                                            <ion-icon name="person-add-outline"></ion-icon>
+                                        </div>
+                                        <div class="in">Client Assign History</div>
+                                    </a>
+                                </li>
+                            </ul>
+
                         </li>
+
 
                     <?php else: ?>
                         <li>

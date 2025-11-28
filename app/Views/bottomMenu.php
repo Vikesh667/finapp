@@ -16,13 +16,13 @@
     <a href="<?= base_url('admin/customer-list') ?>" class="item">
         <div class="col">
             <ion-icon name="people-outline"></ion-icon>
-            <strong>Customers</strong>
+            <strong>Clients</strong>
         </div>
     </a>
     <a href="<?= base_url('admin/client-list') ?>" class="item">
         <div class="col">
-            <ion-icon name="card-outline"></ion-icon>
-            <strong>Clients</strong>
+            <ion-icon name="bag-handle-outline"></ion-icon>
+            <strong>Products</strong>
         </div>
     </a>
     <a href="<?= base_url('admin/app-settings') ?>" class="item">

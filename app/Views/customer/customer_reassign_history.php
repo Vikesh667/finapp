@@ -40,9 +40,9 @@
 
         <div class="section full">
             <div class="card">
-                <div class="card-body p-0">
+                <div class="card-body p-5">
                     <div class="table-responsive" style="overflow-x: auto; white-space: nowrap;">
-                        <table class="table table-striped table-bordered mb-0">
+                          <table id="example" class="table table-modern">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>

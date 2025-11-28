@@ -643,6 +643,14 @@
                     });
                 });
             });
+            document.querySelectorAll(".submenu-toggle").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const parent = this.closest(".has-submenu");
+                    parent.classList.toggle("active");
+                    const submenu = parent.querySelector(".submenu");
+                    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+                });
+            });
         </script>
         <?php if (session()->getFlashdata('success')): ?>
             <script>
