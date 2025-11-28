@@ -1,9 +1,5 @@
 <!doctype html>
 <html lang="en">
-
-
-<!-- Mirrored from finapp.bragherstudio.com/view22/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Oct 2025 06:22:12 GMT -->
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport"
@@ -16,8 +12,9 @@
     <meta name="keywords"
         content="bootstrap, wallet, banking, finclub web App, cordova, phonegap, mobile, html, responsive" />
     <link rel="icon" type="image/png" href="assets/img/logo.png" sizes="32x32">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/192x192.png">
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <link rel="menifest" href="<?= base_url('assets/icon/menifest.json') ?>">
     <link rel="manifest" href="__manifest.json">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css">

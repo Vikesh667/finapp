@@ -21951,3 +21951,393 @@ WARNING - 2025-11-28 13:45:28 --> [DEPRECATED] Creation of dynamic property Code
 12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
 13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 19:16:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:16:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:17:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 13:47:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:07 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:13 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\transaction\transaction-list.php(249): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\transaction\\transaction-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('transaction/transaction-list', [], true)
+ 8 APPPATH\Controllers\TransactionController.php(58): view('transaction/transaction-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\TransactionController->transaction_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TransactionController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 13:47:16 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\user\list.php(82): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\user\\list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('user/list', [], true)
+ 8 APPPATH\Controllers\UserController.php(30): view('user/list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\UserController->user_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:19 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:22 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\client\client-list.php(128): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\client\\client-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('client/client-list', [], true)
+ 8 APPPATH\Controllers\ClientController.php(40): view('client/client-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->client_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:25 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\products\dashboard.php(238): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\products\\dashboard.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('products/dashboard', [], true)
+ 8 APPPATH\Controllers\ClientController.php(288): view('products/dashboard', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->single_client('2')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 13:47:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:49 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\products\dashboard.php(238): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\products\\dashboard.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('products/dashboard', [], true)
+ 8 APPPATH\Controllers\ClientController.php(288): view('products/dashboard', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->single_client('2')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:55 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\customer\customer-list.php(139): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\customer\\customer-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('customer/customer-list', [], true)
+ 8 APPPATH\Controllers\CustomerController.php(40): view('customer/customer-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\CustomerController->customer_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\CustomerController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:47:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:17:59 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\products\dashboard.php(238): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\products\\dashboard.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('products/dashboard', [], true)
+ 8 APPPATH\Controllers\ClientController.php(288): view('products/dashboard', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->single_client('2')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:03 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\client\client-list.php(128): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\client\\client-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('client/client-list', [], true)
+ 8 APPPATH\Controllers\ClientController.php(40): view('client/client-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->client_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:07 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\client\client-list.php(128): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\client\\client-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('client/client-list', [], true)
+ 8 APPPATH\Controllers\ClientController.php(40): view('client/client-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->client_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:09 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\client\client-list.php(128): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\client\\client-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('client/client-list', [], true)
+ 8 APPPATH\Controllers\ClientController.php(40): view('client/client-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->client_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:15 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\products\dashboard.php(238): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\products\\dashboard.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('products/dashboard', [], true)
+ 8 APPPATH\Controllers\ClientController.php(288): view('products/dashboard', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ClientController->single_client('1')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ClientController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:43 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\customer\customer-list.php(139): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\customer\\customer-list.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('customer/customer-list', [], true)
+ 8 APPPATH\Controllers\CustomerController.php(40): view('customer/customer-list', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\CustomerController->customer_list()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\CustomerController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:48:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:18:55 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:49:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:19:06 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:49:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:19:14 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 13:49:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:19:32 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 19:22:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:22:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:23:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:23:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:31:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:33:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:33:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:34:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:36:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:36:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:38:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:38:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:39:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:40:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:40:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:41:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:41:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:42:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:43:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:44:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:47:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:48:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:48:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:48:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:49:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:49:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 14:19:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:49:16 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 14:19:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 19:49:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 14:19:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:49:28 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 14:19:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:49:31 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-28 19:49:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-28 14:19:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2025-11-28 19:49:55 --> [DEPRECATED] Creation of dynamic property CodeIgniter\View\View::$common is deprecated in APPPATH\Views\sidebar.php on line 6.
+ 1 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\sidebar.php')
+ 2 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('sidebar', [], true)
+ 4 APPPATH\Views\index.php(352): view('sidebar')
+ 5 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\finapp\\app\\Views\\index.php')
+ 6 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('index', [], true)
+ 8 APPPATH\Controllers\Home.php(110): view('index', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
