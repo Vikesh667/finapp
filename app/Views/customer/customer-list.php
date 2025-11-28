@@ -5,51 +5,35 @@
     <div id="appCapsule" class="full-height dark-mode">
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
-                <div class="user-list-header">
-                    <h5>Client List</h5>
-                    <div class="select-client">
-                        <select name="client_id" id="clientSelect" style="width: 300px; padding: 8px; border-radius: 10px; border: 1px solid #ccc; font-size: 16px;">
-                            <option value="">Filter Client by Product</option>
-                            <?php foreach ($clients as $client): ?>
-                                <option value="<?= esc($client['id']) ?>"><?= esc($client['company_name']) ?>(<?= esc($client['name']) ?>)</option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div class="user-list-header premium-header">
+                    <h5><ion-icon name="people-circle-outline"></ion-icon> Client List</h5>
 
+                    <select name="client_id" id="clientSelect" class="client-select">
+                        <option value="">Filter Client by Product</option>
+                        <?php foreach ($clients as $client): ?>
+                            <option value="<?= esc($client['id']) ?>"><?= esc($client['company_name']) ?> (<?= esc($client['name']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
 
-                    <div class="right-section d-flex align-items-center gap-3">
-                        <a href="<?= base_url('admin/customer-list') ?>" class="btn btn-secondary">
-                            <ion-icon name="refresh-outline"></ion-icon>
-                            Refresh
+                    <div class="header-actions">
+                        <a href="<?= base_url('admin/customer-list') ?>" class="btn btn-reset">
+                            <ion-icon name="refresh-outline"></ion-icon> Refresh
                         </a>
 
-                        <!-- Add Client Button -->
-                        <div class="add">
-                            <a href="#"
-                                class="btn btn-success d-flex align-items-center gap-1 px-3 py-2"
-                                data-bs-toggle="modal" data-bs-target="#addCustomerModal"
-                                style="border-radius: 8px;">
-                                <ion-icon name="add-outline" style="font-size:18px;"></ion-icon>
-                                <span>Add Client</span>
-                            </a>
-                        </div>
-
-                        <!-- Reassign All Button -->
+                        <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                            <ion-icon name="add-circle-outline"></ion-icon> Add Client
+                        </a>
 
                         <?php if (session()->get('role') === 'admin'): ?>
-                            <button class="btn btn-primary d-flex align-items-center gap-1 px-3 py-2"
-                                data-bs-toggle="modal" data-bs-target="#bulkReassignModal"
-                                style="border-radius: 8px;">
-                                <ion-icon name="swap-horizontal-outline" style="font-size:18px;"></ion-icon>
-                                <span>Reassign All</span>
+                            <button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#bulkReassignModal">
+                                <ion-icon name="swap-horizontal-outline"></ion-icon> Reassign All
                             </button>
                         <?php endif; ?>
                     </div>
-
-
                 </div>
+
                 <div class="table-responsive">
-                   <table id="example" class="table table-modern">
+                    <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
@@ -86,7 +70,7 @@
                                                 ?>
 
                                                 <!-- Edit -->
-                                               
+
                                                 <!-- Transaction History -->
                                                 <a href="<?= base_url($actionUrlPath) ?>"
                                                     class="btn btn-sm btn-outline-secondary rounded-circle action-btn"

@@ -2,7 +2,7 @@
 
 <body>
     <!-- App Header -->
-    <?php echo view('topHeader');?>
+    <?php echo view('topHeader'); ?>
     <!-- * App Header -->
 
 
@@ -11,63 +11,50 @@
 
         <!-- Product Header Card -->
 
-        <div class="section pt-2">
-            <div
-                style="
-            width:100%;
-            background:#fff;
-            border-radius:18px;
-            padding:18px 20px;
-            box-shadow:0 4px 14px rgba(0,0,0,0.10);
-        ">
-                <div style="
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:20px;
-        ">
-                    <!-- LEFT SIDE: PRODUCT INFO -->
-                    <div style="flex:1;">
+        <div class="product-card premium-card mt-3">
+            <div class="row g-0 align-items-center">
 
-                        <div style="font-size:13px; opacity:0.7; margin-bottom:4px;">
-                            PRODUCT INFORMATION
-                        </div>
+                <!-- LEFT SIDE -->
+                <div class="col-md-8 p-4 d-flex flex-column justify-content-center">
+                    <div class="badge-title">
+                        <ion-icon name="information-circle-outline"></ion-icon> Product Information
+                    </div>
 
-                        <h2 style="margin:0; font-size:22px; font-weight:700;">
-                            <?= esc($product['company_name']) ?>
-                        </h2>
+                    <h2 class="product-title"><?= esc($product['company_name']) ?></h2>
 
-                        <div style="margin-top:10px; font-size:14px; line-height:1.6;">
-                            <div><strong>Owner:</strong> <?= esc($product['name']) ?></div>
-                            <div><strong>Email:</strong> <?= esc($product['email']) ?></div>
-                            <div>
+                    <div class="product-info-list mt-2">
+
+                        <p>
+                            <ion-icon name="person-circle-outline"></ion-icon>
+                            <strong>Owner:</strong> <?= esc($product['name']) ?>
+                        </p>
+
+                        <p>
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <strong>Email:</strong> <?= esc($product['email']) ?>
+                        </p>
+
+                        <?php if (!empty($product['url'])): ?>
+                            <p>
+                                <ion-icon name="link-outline"></ion-icon>
                                 <strong>Website:</strong>
-                                <a href="<?= esc($product['url']) ?>"
-                                    target="_blank"
-                                    style="color:#0d6efd; text-decoration:none;">
-                                    <?= esc($product['url']) ?>
-                                </a>
-                            </div>
-                        </div>
+                                <a href="<?= esc($product['url']) ?>" target="_blank"><?= esc($product['url']) ?></a>
+                            </p>
+                        <?php endif; ?>
 
                     </div>
+                </div>
 
-                    <!-- RIGHT SIDE: PRODUCT LOGO -->
-                    <div style="flex-shrink:0;">
-                        <img src="<?= base_url('assets/uploads/logos/' . $product['logo']) ?>"
-                            style="
-                        width:110px;
-                        height:110px;
-                        border-radius:16px;
-                        object-fit:cover;
-                        box-shadow:0 4px 14px rgba(0,0,0,0.18);
-                     ">
+                <!-- RIGHT SIDE: LOGO -->
+                <div class="col-md-4 p-3 d-flex justify-content-center align-items-center">
+                    <div class="logo-box">
+                        <img src="<?= base_url('assets/uploads/logos/' . $product['logo']) ?>" alt="logo">
                     </div>
-
                 </div>
 
             </div>
         </div>
+
 
         <!-- * Product Header Card -->
 
@@ -103,11 +90,11 @@
             <div class="row mt-2">
 
                 <div class="col-6">
-                    <a href="<?= base_url('admin/transaction-list?client_id=' .$product['id']) ?>">
-                    <div class="stat-box border rounded p-3 shadow-sm">
-                        <div class="title fw-bold text-secondary">Total Transactions</div>
-                        <div class="value text-success fs-5"><?= esc(count($transactions)) ?></div>
-                    </div>
+                    <a href="<?= base_url('admin/transaction-list?client_id=' . $product['id']) ?>">
+                        <div class="stat-box border rounded p-3 shadow-sm">
+                            <div class="title fw-bold text-secondary">Total Transactions</div>
+                            <div class="value text-success fs-5"><?= esc(count($transactions)) ?></div>
+                        </div>
                     </a>
                 </div>
                 <div class="col-6">

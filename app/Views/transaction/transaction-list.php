@@ -8,18 +8,18 @@ $role = session()->get('role');
     <div id="appCapsule" class="full-height">
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
-                <div class="user-list-header">
-                    <h5>Transaction List</h5>
-                    <div class="right-section">
-                        <div class="add">
-                            <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addtransactionModal">
-                                <ion-icon name="add-outline"></ion-icon>
-                                <span>Create Transaction</span>
-                            </a>
-                        </div>
+                <div class="user-list-header premium-header">
+                    <h5><ion-icon name="swap-horizontal-outline"></ion-icon> Transaction List</h5>
+
+                    <div class="header-actions">
+                        <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addtransactionModal">
+                            <ion-icon name="add-circle-outline"></ion-icon> Create Transaction
+                        </a>
                     </div>
                 </div>
-                <form method="GET" class="card p-3 mb-3 shadow-sm border-0">
+
+                <form method="GET" class="card p-3 mb-3 shadow-sm border-0 filter-card">
+
 
                     <h6 class="fw-bold mb-3"><ion-icon name="funnel-outline"></ion-icon> Filter Transactions</h6>
 
@@ -113,7 +113,7 @@ $role = session()->get('role');
 
 
                 <div class="table-responsive">
-                  <table id="example" class="table table-modern">
+                    <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>

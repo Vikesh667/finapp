@@ -7,21 +7,20 @@
     <div class="user-container">
       <div class="user-list">
         <!-- Header Section -->
-        <div class="user-list-header">
-          <h5>User List</h5>
-          <div class="right-section">
-            <div class="add">
-              <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addUserModel">
-                <ion-icon name="add-outline"></ion-icon>
-                <span>Add User</span>
-              </a>
-            </div>
+        <div class="user-list-header premium-header">
+          <h5><ion-icon name="people-outline"></ion-icon> User List</h5>
+
+          <div class="header-actions">
+            <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addUserModel">
+              <ion-icon name="add-circle-outline"></ion-icon> Add User
+            </a>
           </div>
         </div>
 
+
         <!-- User Table -->
         <div class="table-responsive">
-         <table id="example" class="table table-modern">
+          <table id="example" class="table table-modern">
             <thead>
               <tr>
                 <th>Sr.No</th>
@@ -45,7 +44,7 @@
                     <td><?= esc($user['email']) ?></td>
                     <td><?= esc($user['phone']) ?></td>
                     <td><?= esc($user['address']) ?></td>
-                    <td> <img src="<?= base_url('assets/uploads/logos/' . $user['profile_image']) ?>" alt="Logo" width="50">></td>
+                    <td> <img src="<?= base_url('assets/uploads/logos/' . $user['profile_image']) ?>" alt="Logo" width="50"></td>
                     <td class="text-center">
                       <div class="d-flex justify-content-center gap-2">
 

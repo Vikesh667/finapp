@@ -148,6 +148,11 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('login-history', 'AuthController::loging_history');
   $routes->get('get-companies', 'CompanyInfoController::getCompanies');
   $routes->get('get-hsncode', 'CompanyInfoController::hsn_code');
+
+
+  // user dashboard 
+  $routes->get('dashboard', 'UserController::dashboard');
+
 });
 
 

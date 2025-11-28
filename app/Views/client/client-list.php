@@ -8,41 +8,36 @@ $role = session()->get('role');
     <div id="appCapsule" class="full-height">
         <div class="user-container">
             <div class="user-list">
-                <div class="user-list-header">
-                    <h5>Product List</h5>
-                    <div class="select-client mb-2">
-                        <select name="user_id" id="userSelect" required
-                            class="form-select"
-                            style="border-radius: 10px;">
-                            <option value="">Filter Product By User</option>
-                            <?php foreach ($user as $u): ?>
-                                <?php if ($u['role'] === 'user'): ?>
-                                    <option value="<?= esc($u['id']) ?>"><?= esc($u['name']) ?></option>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div class="user-list-header premium-header">
+                    <h5><ion-icon name="cube-outline"></ion-icon> Product List</h5>
 
-
-
-                    <div class="right-section">
-                        <div class="add">
-                            <?php if ($role === 'admin'): ?>
-                                <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addClientModal">
-                                    <ion-icon name="add-outline"></ion-icon>
-                                    <span>Add Product</span>
-                                </a>
+                    <!-- Filter Product by User -->
+                    <select name="user_id" id="userSelect" required class="client-select">
+                        <option value="">Filter Product By User</option>
+                        <?php foreach ($user as $u): ?>
+                            <?php if ($u['role'] === 'user'): ?>
+                                <option value="<?= esc($u['id']) ?>"><?= esc($u['name']) ?></option>
                             <?php endif; ?>
-                        </div>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <!-- Right Side -->
+                    <div class="header-actions">
+                        <?php if ($role === 'admin'): ?>
+                            <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                <ion-icon name="add-circle-outline"></ion-icon> Add Product
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
+
                 <div class="table-responsive">
-                   <table id="example" class="table table-modern">
+                    <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
                                 <?php if (session()->get('role') === 'admin'): ?>
-                                    <th>CreatedBy</th>
+                                 <th>CreatedBy</th>
                                 <?php endif; ?>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -113,7 +108,6 @@ $role = session()->get('role');
 
                                             </div>
                                         </td>
-
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

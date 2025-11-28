@@ -1,6 +1,6 @@
 {
-    "name": "Finapp",
-    "short_name": "Finapp",
+    "name": "Finclub",
+    "short_name": "Finclub",
     "start_url": "http://localhost/finapp/",
     "display": "standalone",
     "scope" : "http://localhost/finapp/",
@@ -9,7 +9,7 @@
     "orientation": "portrait",
     "icons": [
         {
-            "src": "assets/img/icon/72x72.png",
+            "src": "assets/img/logo.png",
             "type": "image/png",
             "sizes": "72x72",
             "purpose": "any maskable"

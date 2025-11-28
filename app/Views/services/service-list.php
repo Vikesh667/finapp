@@ -1,27 +1,27 @@
 <?php echo view('header'); ?>
- <?php 
- $role=session()->get('role');
- ?>
+<?php
+$role = session()->get('role');
+?>
+
 <body>
-  <?php echo view('topHeader');?>
+    <?php echo view('topHeader'); ?>
     <div id="appCapsule" class="full-height">
         <div class="user-container">
             <div class="user-list">
-                <div class="user-list-header">
-                    <h5>Service List</h5>
-                    <div class="right-section">
-                        <div class="add">
-                            <?php if ($role === 'admin'): ?>
-                                <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addService">
-                                    <ion-icon name="add-outline"></ion-icon>
-                                    <span>Create Services</span>
-                                </a>
-                            <?php endif; ?>
-                        </div>
+                <div class="user-list-header premium-header">
+                    <h5><ion-icon name="layers-outline"></ion-icon> Service List</h5>
+
+                    <div class="header-actions">
+                        <?php if ($role === 'admin'): ?>
+                            <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addService">
+                                <ion-icon name="add-circle-outline"></ion-icon> Create Service
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
+
                 <div class="table-responsive">
-                     <table id="example" class="table table-modern">
+                    <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Name</th>

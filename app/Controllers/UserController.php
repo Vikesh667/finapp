@@ -287,4 +287,13 @@ class UserController extends Controller
 
         return redirect()->to(base_url($redirect))->with('success', 'Profile updated successfully.');
     }
+
+
+
+    // user dashboard
+    public function dashboard()
+{
+    return view('user/dashboard'); // your dashboard view file
+}
+
 }
