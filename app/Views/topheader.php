@@ -1,11 +1,12 @@
- <div class="appHeader bg-primary text-light">
+ <div class="appHeader  text-light " style="background-color: #C8A637;">
+
         <div class="left">
             <a href="#" class="headerButton" data-bs-toggle="modal" data-bs-target="#sidebarPanel">
                 <ion-icon name="menu-outline"></ion-icon>
             </a>
         </div>
         <div class="pageTitle">
-            <img src="assets/img/logo.png" alt="logo" class="logo">
+            <img src="<?= base_url('assets/img/logo.png') ?>" alt="logo" class="logo">
         </div>
         <div class="right">
             <?php
@@ -60,6 +61,4 @@
                 </a>
             <?php endif; ?>
         </div>
-
-
     </div>

@@ -60,21 +60,24 @@ class CustomerController extends BaseController
         $cityId = $this->request->getPost('city');
 
         $data['country'] = $countryModel->where('id', $countryId)->findColumn('name')[0] ?? null;
-        $data['state']  = $stateModel->where('id', $stateId)->findColumn('name')[0] ?? null;
-        $data['city']   = $cityModel->where('id', $cityId)->findColumn('name')[0] ?? null;
+        $data['state']   = $stateModel->where('id', $stateId)->findColumn('name')[0] ?? null;
+        $data['city']    = $cityModel->where('id', $cityId)->findColumn('name')[0] ?? null;
 
         $rules = $customerModel->getValidationRules();
         $messages = $customerModel->getValidationMessages();
 
         if (!$this->validate($rules, $messages)) {
-            return redirect()->back()->with('error', $this->validator->getErrors());
+            return redirect()
+                ->back()
+                ->with('error', implode("<br>", $this->validator->getErrors()))   // ⭐ FIXED
+                ->withInput();
         }
 
         $customerModel->saveCustomer($data, $userId, $clientId, $loggedUserId);
 
         return redirect()
             ->to(base_url($role === 'admin' ? 'admin/customer-list' : '/'))
-            ->with('success', 'Customer added successfully!');
+            ->with('success', 'client added successfully!');
     }
 
     public function edit_customer($id = null)
@@ -131,44 +134,44 @@ class CustomerController extends BaseController
     }
 
     //  Get all customers of a client
-    
-  public function getCustomers()
-{
-    $session  = session();
-    $role     = $session->get('role');
-    $loggedIn = $session->get('user_id');
-    $customerModel = new CustomerModel();
 
-    // Get values from GET/POST
-    $clientId = $this->request->getGetPost('client_id');
-    $userId   = $this->request->getGetPost('user_id'); // only used when admin selects user
+    public function getCustomers()
+    {
+        $session  = session();
+        $role     = $session->get('role');
+        $loggedIn = $session->get('user_id');
+        $customerModel = new CustomerModel();
 
-    if (!$clientId) {
-        return $this->response->setJSON([]);
-    }
+        // Get values from GET/POST
+        $clientId = $this->request->getGetPost('client_id');
+        $userId   = $this->request->getGetPost('user_id'); // only used when admin selects user
 
-    if ($role === 'admin') {
-        // Admin chooses user manually
-        if (!$userId) {
-            return $this->response->setJSON([]); // stop if admin didn't select user
+        if (!$clientId) {
+            return $this->response->setJSON([]);
         }
 
-        $customers = $customerModel
-                        ->where('client_id', $clientId)
-                        ->where('user_id', $userId)
-                        ->orderBy('name', 'ASC')
-                        ->findAll();
-    } else {
-        // Normal user: filter automatically by logged in user
-        $customers = $customerModel
-                        ->where('client_id', $clientId)
-                        ->where('user_id', $loggedIn)
-                        ->orderBy('name', 'ASC')
-                        ->findAll();
+        if ($role === 'admin') {
+            // Admin chooses user manually
+            if (!$userId) {
+                return $this->response->setJSON([]); // stop if admin didn't select user
+            }
+
+            $customers = $customerModel
+                ->where('client_id', $clientId)
+                ->where('user_id', $userId)
+                ->orderBy('name', 'ASC')
+                ->findAll();
+        } else {
+            // Normal user: filter automatically by logged in user
+            $customers = $customerModel
+                ->where('client_id', $clientId)
+                ->where('user_id', $loggedIn)
+                ->orderBy('name', 'ASC')
+                ->findAll();
+        }
+
+        return $this->response->setJSON($customers);
     }
-        
-    return $this->response->setJSON($customers);
-}
 
 
 

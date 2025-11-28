@@ -219,11 +219,14 @@
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td><b>Amount In Word</b></td>
-                <td><b><?= $invoice['amount_in_word'] ?></b></td>
+            <table>
+                <td><b>Amount In Word</b><strong>:</strong>
+                    <b><?= $invoice['amount_in_word'] ?></b>
+                </td>
+            </table>
             </tr>
         </table>
+
 
         <!-- ─────────── Bank Left + Stamp Right ─────────── -->
         <table>

@@ -171,7 +171,7 @@ class TransactionController extends BaseController
         }
 
         $transactionId = $transactionModel->insert($data);
-
+    
         // Insert payment history
         if ($paidAmount > 0) {
             $historyModel->insert([

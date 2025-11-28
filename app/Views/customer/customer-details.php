@@ -1,7 +1,7 @@
 <?php echo view('header'); ?>
 
 <body>
-   <?php echo view('topHeader');?>
+    <?php echo view('topHeader'); ?>
 
     <div id="appCapsule" class="pt-5 pb-4" style="margin-top: 60px;">
 
@@ -19,11 +19,14 @@
                             <p class="small text-muted"><ion-icon name="call-outline"></ion-icon> <?= esc($customer['phone']) ?></p>
                         </div>
                         <div class="ms-auto">
-                            <a href="<?= base_url('customer/edit/' . $customer['id']) ?>" class="btn btn-primary ">
-                                <ion-icon name="create-outline"></ion-icon> Edit
-                            </a>
-                            <a href="<?= base_url('customer/pdf/' . $customer['id']) ?>" class="btn btn-success">
-                                <ion-icon name="download-outline"></ion-icon> PDF
+                            <?php 
+                             $role=session()->get('role');
+                              $actionUrl = ($role === 'admin') ? ('admin/customer/edit/' . $customer['id']) : ('user/customer/edit/' . $customer['id']);
+                              ?>
+                            <a href="<?= base_url($actionUrl) ?>"
+                                class="btn btn-sm btn-outline-primary rounded-circle action-btn"
+                                title="Edit Customer">
+                                <ion-icon name="create-outline"></ion-icon>
                             </a>
                         </div>
                     </div>
@@ -151,7 +154,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                     <p class="mb-0">
+                                    <p class="mb-0">
                                         <strong> TransactionId:</strong>
                                         <?= esc($pay['transaction_id']) ?>
                                     </p>
@@ -163,7 +166,7 @@
                                         <strong> After Paid:</strong>
                                         <?= esc($pay['after_paid_amount']) ?>
                                     </p>
-                                     <p class="mb-0">
+                                    <p class="mb-0">
                                         <strong> Payment Method:</strong>
                                         <?= esc($pay['payment_method']) ?>
                                     </p>
@@ -171,8 +174,8 @@
                                         <strong>Date:</strong>
                                         <?= date('d M Y, h:i A', strtotime($pay['created_at'])) ?>
                                     </p>
-                                    
-                                   <hr>
+
+                                    <hr>
                                     <p>
                                         Remark: <?= esc($pay['remark']) ?>
                                     </p>

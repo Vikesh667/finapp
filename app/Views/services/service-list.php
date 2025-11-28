@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id='example' class="table table-striped table-bordered">
+                     <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Name</th>

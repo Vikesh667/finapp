@@ -9,7 +9,7 @@ $role = session()->get('role');
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
                 <div class="user-list-header">
-                    <h5>transaction List</h5>
+                    <h5>Transaction List</h5>
                     <div class="right-section">
                         <div class="add">
                             <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#addtransactionModal">
@@ -113,7 +113,7 @@ $role = session()->get('role');
 
 
                 <div class="table-responsive">
-                    <table id='example' class="table table-striped table-bordered">
+                  <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
@@ -138,17 +138,17 @@ $role = session()->get('role');
                                 foreach ($transactions as $index => $transaction):
                                 ?>
                                     <tr>
-                                        <td><?= $start + $index ?></td>
-                                        <td><?= esc($transaction['transfor_by']) ?></td>
-                                        <td><?= esc($transaction['code']) ?></td>
-                                        <td><?= esc($transaction['rate']) ?></td>
-                                        <td><?= esc($transaction['extra_code']) ?></td>
-                                        <td><?= esc($transaction['total_amount']) ?></td>
-                                        <td><?= esc($transaction['paid_amount']) ?></td>
-                                        <td><?= esc($transaction['remaining_amount']) ?></td>
-                                        <td><?= esc($transaction['total_code']) ?></td>
-                                        <td><?= esc($transaction['created_at']) ?></td>
-                                        <td><?= esc($transaction['remark']) ?></td>
+                                        <td data-label="Sr.No"><?= $start + $index ?></td>
+                                        <td data-label="Customer Name"><?= esc($transaction['transfor_by']) ?></td>
+                                        <td data-label="No Of Codes"><?= esc($transaction['code']) ?></td>
+                                        <td data-label="Rate per code"><?= esc($transaction['rate']) ?></td>
+                                        <td data-label="Free Code"><?= esc($transaction['extra_code']) ?></td>
+                                        <td data-label="Total Amount"><?= esc($transaction['total_amount']) ?></td>
+                                        <td data-label="Paid Amount"><?= esc($transaction['paid_amount']) ?></td>
+                                        <td data-label="Remaining Amount"><?= esc($transaction['remaining_amount']) ?></td>
+                                        <td data-label="Total Code"><?= esc($transaction['total_code']) ?></td>
+                                        <td data-label="Date"><?= esc($transaction['created_at']) ?></td>
+                                        <td data-label="Remark"><?= esc($transaction['remark']) ?></td>
                                         <td>
                                             <?php
                                             $paid = $transaction['total_amount'] - $transaction['remaining_amount'];

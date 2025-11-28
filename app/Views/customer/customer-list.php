@@ -1,7 +1,7 @@
 <?php echo view('header'); ?>
 
 <body>
-   <?php echo view('topHeader');?>
+    <?php echo view('topHeader'); ?>
     <div id="appCapsule" class="full-height dark-mode">
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
@@ -49,7 +49,7 @@
 
                 </div>
                 <div class="table-responsive">
-                    <table id='example' class="table table-striped table-bordered">
+                   <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
@@ -78,38 +78,42 @@
                                         <td><?= esc($customer['name']) ?></td>
                                         <td><?= esc($customer['device_type']) ?> </td>
                                         <td class="text-center">
-                                            <?php
-                                            $role = session()->get('role');
-                                            $actionUrl = ($role === 'admin')
-                                                ? ('admin/customer/edit/' . $customer['id'])
-                                                : ('user/customer/edit/' . $customer['id']);
-                                            ?>
-                                            <a href="<?= base_url($actionUrl) ?>" class="btn-icon edit" title="Edit User">
-                                                <ion-icon name="create-outline"></ion-icon>
-                                            </a>
-                                            <?php
-                                            $role = session()->get('role');
-                                            $actionUrlPath = ($role === 'admin')
-                                                ? ('admin/transaction-history/' . $customer['id'])
-                                                : ('user/transaction-history/' . $customer['id']);
-                                            $actionUrlPathDetails = ($role === 'admin')
-                                                ? ('admin/customer/customer-detail/' . $customer['id'])
-                                                : ('user/customer/customer-detail/' . $customer['id']);
-                                            ?>
+                                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                                <?php $role = session()->get('role');
+                                                $actionUrl = ($role === 'admin') ? ('admin/customer/edit/' . $customer['id']) : ('user/customer/edit/' . $customer['id']);
+                                                $actionUrlPath = ($role === 'admin') ? ('admin/transaction-history/' . $customer['id']) : ('user/transaction-history/' . $customer['id']);
+                                                $actionUrlPathDetails = ($role === 'admin') ? ('admin/customer/customer-detail/' . $customer['id']) : ('user/customer/customer-detail/' . $customer['id']);
+                                                ?>
 
-                                            <a href="<?= base_url($actionUrlPath) ?>" class="btn-icon edit " title="Transaction History">
-                                                <ion-icon name="document-text-outline"></ion-icon>
-                                            </a>
+                                                <!-- Edit -->
+                                               
+                                                <!-- Transaction History -->
+                                                <a href="<?= base_url($actionUrlPath) ?>"
+                                                    class="btn btn-sm btn-outline-secondary rounded-circle action-btn"
+                                                    title="Transaction History">
+                                                    <ion-icon name="document-text-outline"></ion-icon>
+                                                </a>
 
-                                            <a href="<?= base_url($actionUrlPathDetails) ?>" class="btn-icon  " title="Transaction History">
-                                                <ion-icon name="eye-outline"></ion-icon>
-                                            </a>
-                                            <form method="post" action="<?= base_url('admin/customer/delete/' . $customer['id']) ?>" style="display:inline;">
-                                                <button type="submit" class="btn-icon delete" onclick="return confirm('Are you sure?')">
-                                                    <i class="bi bi-unlock"></i>
-                                                </button>
-                                            </form>
+                                                <!-- View Details -->
+                                                <a href="<?= base_url($actionUrlPathDetails) ?>"
+                                                    class="btn btn-sm btn-outline-info rounded-circle action-btn"
+                                                    title="Customer Details">
+                                                    <ion-icon name="eye-outline"></ion-icon>
+                                                </a>
+
+                                                <!-- Delete -->
+                                                <form method="post" action="<?= base_url('admin/customer/delete/' . $customer['id']) ?>"
+                                                    onsubmit="return confirm('Are you sure?')" style="display:inline;">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger rounded-circle action-btn"
+                                                        title="Delete Customer">
+                                                        <ion-icon name="trash-outline"></ion-icon>
+                                                    </button>
+                                                </form>
+
+                                            </div>
                                         </td>
+
                                         <?php if (session()->get('role') === 'admin'): ?>
                                             <td class="text-center">
 
@@ -141,12 +145,12 @@
             </div>
         </div>
     </div>
-      <?php echo view('customer/add-customer');?>
-      <?php echo view('customer/customer-assign');?>
+    <?php echo view('customer/add-customer'); ?>
+    <?php echo view('customer/customer-assign'); ?>
     <!-- ✅ Reassign Customer Modal -->
-   
 
- 
+
+
 
     <?php echo view('sidebar'); ?>
     <?php echo view('bottomMenu'); ?>

@@ -6,10 +6,10 @@
         <div class="user-container">
             <div class="user-list mt-5 mb-5">
                 <div class="user-list-header">
-                    <h5>transaction History</h5>
+                    <h5>Transaction History</h5>
                 </div>
                 <div class="table-responsive">
-                    <table id='example' class="table table-striped table-bordered">
+                    <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>

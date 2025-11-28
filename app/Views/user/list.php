@@ -2,7 +2,7 @@
 
 <body>
   <!-- Full Page Loader -->
- <?php echo view('topHeader');?>
+  <?php echo view('topHeader'); ?>
   <div id="appCapsule" class="full-height">
     <div class="user-container">
       <div class="user-list">
@@ -21,7 +21,7 @@
 
         <!-- User Table -->
         <div class="table-responsive">
-          <table id='example' class="table table-striped table-bordered">
+         <table id="example" class="table table-modern">
             <thead>
               <tr>
                 <th>Sr.No</th>
@@ -47,19 +47,26 @@
                     <td><?= esc($user['address']) ?></td>
                     <td> <img src="<?= base_url('assets/uploads/logos/' . $user['profile_image']) ?>" alt="Logo" width="50">></td>
                     <td class="text-center">
-                      <!-- Edit Button -->
-                      <a href="<?= base_url('admin/user/edit/' . $user['id']) ?>" class="btn-icon edit" title="Edit User">
-                        <ion-icon name="create-outline"></ion-icon>
-                      </a>
+                      <div class="d-flex justify-content-center gap-2">
 
+                        <!-- Edit Button -->
+                        <a href="<?= base_url('admin/user/edit/' . $user['id']) ?>"
+                          class="btn btn-sm btn-outline-primary rounded-circle d-flex align-items-center justify-content-center action-btn"
+                          title="Edit User">
+                          <ion-icon name="create-outline"></ion-icon>
+                        </a>
 
-                      <!-- Delete Button -->
-                      <form method="post" action="<?= base_url('admin/user/delete/' . $user['id']) ?>" style="display:inline;">
-                        <button type="submit" class="btn-icon delete" onclick="return confirm('Are you sure?')">
-                          <ion-icon name="trash-outline"></ion-icon>
-                        </button>
-                      </form>
+                        <!-- Delete Button -->
+                        <form method="post" action="<?= base_url('admin/user/delete/' . $user['id']) ?>">
+                          <button type="submit"
+                            class="btn btn-sm btn-outline-danger rounded-circle d-flex align-items-center justify-content-center action-btn"
+                            onclick="return confirm('Are you sure?')"
+                            title="Delete User">
+                            <ion-icon name="trash-outline"></ion-icon>
+                          </button>
+                        </form>
 
+                      </div>
                     </td>
 
                   </tr>
@@ -71,8 +78,8 @@
       </div>
     </div>
   </div>
-   <?php echo view('user/add-user-modal');?>
- 
+  <?php echo view('user/add-user-modal'); ?>
+
   <?php echo view('sidebar'); ?>
   <?php echo view('bottomMenu'); ?>
   <?php echo view('footerlink'); ?>

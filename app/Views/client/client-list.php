@@ -37,7 +37,7 @@ $role = session()->get('role');
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id='example' class="table table-striped table-bordered">
+                   <table id="example" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
@@ -68,48 +68,54 @@ $role = session()->get('role');
                                         <td><?= esc($client['email']) ?></td>
                                         <td><?= esc($client['company_name']) ?></td>
 
-                                        <td><?= esc($client['url']) ?></td>
+                                        <td><a href="<?= esc($client['url']) ?>" target="_blank"><?= esc($client['url']) ?></a></td>
                                         <td>
                                             <img src="<?= base_url('assets/uploads/logos/' . $client['logo']) ?>" alt="Logo" width="50">
                                         </td>
 
                                         <td class="text-center">
-                                            <?php
-                                            $role = session()->get('role');
-                                            $editUrl = ($role === 'admin')
-                                                ? base_url('admin/client/edit-client/' . $client['id'])
-                                                : base_url('user/client/edit-client/' . $client['id']);
-                                            $deleteUrl = ($role === 'admin')
-                                                ? base_url('admin/client/delete/' . $client['id'])
-                                                : base_url('user/client/delete/' . $client['id']);
-                                            ?>
-                                            <a href="<?= $editUrl ?>" class="btn-icon edit" title="Edit Client">
-                                                <ion-icon name="create-outline"></ion-icon>
-                                            </a>
+                                            <div class="d-flex justify-content-center flex-wrap gap-2">
 
-                                            <!-- Delete Button -->
-                                            <form method="post" action="<?= $deleteUrl ?>" style="display:inline;">
-                                                <button type="submit" class="btn-icon delete" onclick="return confirm('Are you sure?')">
-                                                    <ion-icon name="trash-outline"></ion-icon>
+                                                <?php $role = session()->get('role');
+                                                $editUrl = ($role === 'admin') ? base_url('admin/client/edit-client/' . $client['id']) : base_url('user/client/edit-client/' . $client['id']);
+                                                $deleteUrl = ($role === 'admin') ? base_url('admin/client/delete/' . $client['id']) : base_url('user/client/delete/' . $client['id']); ?>
+                                                <!-- Edit -->
+                                                <a href="<?= $editUrl ?>"
+                                                    class="btn btn-sm btn-outline-primary rounded-circle action-btn"
+                                                    title="Edit Client">
+                                                    <ion-icon name="create-outline"></ion-icon>
+                                                </a>
+
+                                                <!-- Delete -->
+                                                <form method="post" action="<?= $deleteUrl ?>" onsubmit="return confirm('Are you sure?')">
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger rounded-circle action-btn"
+                                                        title="Delete Client">
+                                                        <ion-icon name="trash-outline"></ion-icon>
+                                                    </button>
+                                                </form>
+
+                                                <!-- Assign User -->
+                                                <button class="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-1 px-3"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#userModal"
+                                                    data-client-id="<?= esc($client['id']) ?>"
+                                                    title="Assign User">
+                                                    <i class="bi bi-person-plus"></i> Assign
                                                 </button>
-                                            </form>
-                                            <button
-                                                class="btn btn-sm btn-outline-primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#userModal"
-                                                data-client-id="<?= esc($client['id']) ?>">
-                                                <i class="bi bi-person-plus"></i> Assign User
-                                            </button>
 
-                                            <a href="<?= base_url('admin/product/' . $client['id']) ?>" class="btn bg-info">view</a>
+                                                <!-- View -->
+                                                <a href="<?= base_url('admin/product/' . $client['id']) ?>"
+                                                    class="btn btn-sm btn-warning rounded-pill px-3"
+                                                    title="View Client Products">
+                                                    View
+                                                </a>
+
+                                            </div>
                                         </td>
 
                                     </tr>
                                 <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted py-3">No users found</td>
-                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

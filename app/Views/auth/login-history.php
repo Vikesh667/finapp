@@ -21,9 +21,9 @@
                     <strong>User Login Activity</strong>
                 </div>
 
-                <div class="card-body p-0">
+                <div class="card-body p-10 mb-4">
                     <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
+                        <table id="example" class="table table-modern">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>

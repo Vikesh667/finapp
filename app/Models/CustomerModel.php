@@ -30,12 +30,8 @@ class CustomerModel extends Model
 
     protected $validationRules = [
         'name'     => 'required|alpha_space|min_length[3]|max_length[255]',
-        'email'    => 'required|valid_email',
+        'email'    => 'required|valid_email|is_unique[customers.email,id,{id}]',
         'phone'    => 'permit_empty|numeric|min_length[10]|max_length[15]',
-        'address'  => 'permit_empty|max_length[500]',
-        'country'  => 'permit_empty|max_length[100]',
-        'state'    => 'permit_empty|max_length[100]',
-        'city'     => 'permit_empty|max_length[100]',
     ];
 
     protected $validationMessages = [

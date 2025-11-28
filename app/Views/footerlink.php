@@ -513,16 +513,6 @@
 
 
             });
-
-            <?php if (session()->getFlashdata('success')): ?>
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    text: "<?= esc(session()->getFlashdata('success')) ?>",
-                    showConfirmButton: false,
-                    timer: 2500
-                }, 2000);
-            <?php endif; ?>
         </script>
 
 
@@ -654,6 +644,31 @@
                 });
             });
         </script>
+        <?php if (session()->getFlashdata('success')): ?>
+            <script>
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    text: "<?= esc(session()->getFlashdata('success')) ?>",
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            </script>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <script>
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    text: `<?= esc(session()->getFlashdata('error')) ?>`.replace(/\\n/g, "\n"),
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            </script>
+        <?php endif; ?>
+
+
         </body>
 
         </html>

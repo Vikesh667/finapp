@@ -23,6 +23,12 @@
             <h4>Fill the form to log in</h4>
         </div>
         <div class="section mb-5 p-2">
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= esc(session()->getFlashdata('error')) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
             <form action="<?= base_url('/login/authenticate') ?>" method="post">
                 <div class="card">
                     <div class="card-body pb-1">

@@ -33,7 +33,7 @@ class UserController extends Controller
         if (! $this->validate($model->getValidationRules(), $model->getValidationMessages())) {
             return redirect()
                 ->back()
-                ->with('error', $this->validator->getErrors())
+                ->with('error', implode("\n", $this->validator->getErrors())) // FIXED
                 ->withInput();
         }
 
@@ -41,11 +41,16 @@ class UserController extends Controller
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
         if ($model->insert($data)) {
-            return redirect()->to(base_url('admin/user-list'))->with('success', 'User added successfully.');
+            return redirect()
+                ->to(base_url('admin/user-list'))
+                ->with('success', 'User added successfully.');
         }
 
-        return redirect()->back()->with('error', 'Failed to add user. Please try again.');
+        return redirect()
+            ->back()
+            ->with('error', 'Failed to add user. Please try again.');
     }
+
 
 
     public function edit($id = null)

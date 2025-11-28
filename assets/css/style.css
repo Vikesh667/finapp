@@ -131,7 +131,8 @@ a:focus {
 }
 
 .appHeader .pageTitle .logo {
-    max-height: 24px
+    max-height: 50px;
+    
 }
 
 .appHeader.text-light {
@@ -154,7 +155,7 @@ a:focus {
 }
 
 .appHeader.bg-primary:before {
-    background: #6236FF !important
+    background: #c9c2e1 !important
 }
 
 .appHeader.bg-secondary:before {
@@ -5301,7 +5302,8 @@ textarea,
     content: "";
     display: block;
     height: 140px;
-    background: #6236FF
+    background: #C8A637
+
 }
 
 .wallet-card {
@@ -7542,7 +7544,7 @@ body.dark-mode .searchbox .close {
 body.dark-mode .searchbox .input-icon {
     color: #69587f
 }
-
+/* 
 body.dark-mode .table {
     color: #8f82a5
 }
@@ -7619,7 +7621,7 @@ body.dark-mode .table.bg-warning tbody tr:last-child th,
 body.dark-mode .table.bg-info tbody tr:last-child td,
 body.dark-mode .table.bg-info tbody tr:last-child th {
     border-bottom-color: transparent !important
-}
+} */
 
 body.dark-mode .nav-tabs.capsuled {
     background: rgba(45, 31, 59, 0.4)
@@ -7903,7 +7905,7 @@ body.dark-mode .cookies-box {
 .user-container {
     padding: 10px 20px 70px;
 }
-
+ 
 /* --- Page Title / Header --- */
 .user-list-header {
     display: flex;
@@ -7922,7 +7924,9 @@ body.dark-mode .cookies-box {
     font-weight: 600;
     margin: 0;
 }
-
+body.dark-mode .user-list-header h5{
+  color: #5D3CE4 !important;
+}
 .user-list-header .add .button {
     display: flex;
     align-items: center;
@@ -8384,4 +8388,107 @@ body.dark-mode .cookies-box {
         flex-direction: column;
         gap: 5px;
     }
+}.action-btn {
+    width: 36px;
+    height: 36px;
+    transition: 0.25s;
+    font-size: 18px;
+}
+
+.action-btn:hover {
+    transform: scale(1.12);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* 
+table
+*/
+/* 🌟 MAIN TABLE DESIGN */
+.table-modern {
+    border-radius: 10px;
+    overflow: hidden;
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+     border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.table-modern thead {
+    background: linear-gradient(45deg, #5b3cc4, #8a60ff);
+    color: #fff;
+}
+
+.table-modern thead th {
+    font-weight: 600;
+    padding: 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* 🔥 CELL BORDER + BOX STYLE */
+.table-modern td,
+.table-modern th {
+    padding: 12px 14px;
+    vertical-align: middle;
+    font-size: 14px;
+    white-space: nowrap;
+    border: 1px solid #e1d8f8;       /* BORDER ADDED */
+    background: #ffffff;
+     border: 1px solid #e1d8f8 !important;
+}
+
+/* Hover effect */
+.table-modern tbody tr {
+    transition: 0.25s;
+}
+.table-modern tbody tr:hover {
+    background: rgba(91, 60, 196, 0.07);
+    transform: scale(1.003);
+}
+
+/* Buttons and progress bar */
+.table-modern .btn {
+    padding: 5px 6px;
+}
+.table-modern .progress {
+    height: 8px;
+    border-radius: 5px;
+}
+
+/* 🧊 FIXED WIDTH FOR EVERY CELL */
+.table-modern td,
+.table-modern th {
+    min-width: 140px;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 📱 MOBILE — CARD STYLE ROW */
+
+
+/* 🌑 DARK MODE */
+body.dark-mode .table-modern {
+    background: #1f1929;
+    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .table-modern thead {
+    background: linear-gradient(45deg, #6d46d6, #9b79ff);
+}
+
+body.dark-mode .table-modern td,
+body.dark-mode .table-modern th {
+    border: 1px solid #3a2a50;
+    background: #2b223d;
+    color: #fff;
+}
+
+body.dark-mode .table-modern tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .table-modern tbody td::before {
+    color: #d6c7ff;
 }
