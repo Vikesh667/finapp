@@ -95,8 +95,8 @@ class Home extends BaseController
 
 
 
-            $totals = $transactionModel
-    ->select("
+        $totals = $transactionModel
+            ->select("
         SUM(CASE WHEN gst_applied = 1 THEN grand_total ELSE 0 END) AS amount_with_gst,
         SUM(CASE WHEN gst_applied = 0 THEN total_amount ELSE 0 END) AS amount_without_gst,
         SUM(
@@ -106,7 +106,7 @@ class Home extends BaseController
             END
         ) AS overall_amount
     ", false)
-    ->first();
+            ->first();
         return view('index', [
             'totalTransactions'   => $totalTransactions,
             'totalAmount'         => $totalAmount,

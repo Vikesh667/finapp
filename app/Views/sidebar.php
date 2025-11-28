@@ -43,13 +43,12 @@ $counter = $this->common->getcounter();
                 <ul class="listview flush transparent no-line image-listview">
 
                     <li>
-                        <a href="<?= base_url('/admin') ?>" class="item">
+                        <a href="<?=(session()->get('role')==='admin') ? base_url('/admin') :base_url('user') ?>" class="item">
                             <div class="icon-box bg-primary">
                                 <ion-icon name="pie-chart-outline"></ion-icon>
                             </div>
                             <div class="in">
                                 Overview
-                                <!-- <span class="badge badge-primary">10</span> -->
                             </div>
                         </a>
                     </li>

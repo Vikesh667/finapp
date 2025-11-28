@@ -6,6 +6,10 @@ use App\Models\UserModel;
 use App\Models\CountryModel;
 use App\Models\StateModel;
 use App\Models\CityModel;
+use App\Models\ClientModel;
+use App\Models\ClientUserModel;
+use App\Models\CustomerModel;
+use App\Models\TransactionModel;
 use CodeIgniter\Controller;
 
 class UserController extends Controller
@@ -292,8 +296,72 @@ class UserController extends Controller
 
     // user dashboard
     public function dashboard()
-{
-    return view('user/dashboard'); // your dashboard view file
-}
+    {
+        $clientModel = new ClientModel();
+        $clientUserModel = new ClientUserModel();
+        $customerModel = new CustomerModel();
+        $userModel = new UserModel();
+        $role = session()->get('role');
+        $userId = session()->get('user_id');
+        $transactionModel = new TransactionModel();
+        $clients = $clientModel->select('clients.id, clients.company_name, clients.name,clients.url,clients.logo,created_by')
+            ->join('client_users', 'client_users.client_id = clients.id', 'left')
+            ->groupStart()
+            ->where('clients.user_id', $userId)
+            ->orWhere('client_users.user_id', $userId)
+            ->groupEnd()
+            ->groupBy('clients.id')
+            ->orderBy('clients.company_name', 'ASC')
+            ->get()
+            ->getResultArray();
 
+
+
+        $totalCustomer = $customerModel->where('user_id', $userId)->countAllResults();
+        $transactionCount = $transactionModel->where('user_id', $userId)->countAllResults();
+        $totalPaid = $transactionModel->where('user_id', $userId)->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
+        $totalRemaining = $transactionModel->where('user_id', $userId)->selectSum('remaining_amount')->get()->getRow()->remaining_amount ?? 0;
+        $totalLienceKeys = $transactionModel->where('user_id', $userId)->selectSum('code')->get()->getRow()->code ?? 0;
+        $totalCode =  $transactionModel->where('user_id', $userId)->selectSum('code')->get()->getRow()->code ?? 0;
+        $extraCode =  $transactionModel->where('user_id', $userId)->selectSum('extra_code')->get()->getRow()->extra_code ?? 0;
+        $recentTransaction = $transactionModel->where('user_id', $userId)
+            ->select('recipt_no')
+            ->orderBy('created_at', 'DESC')
+            ->get(1)
+            ->getRow();
+        $recentFiveTransaction= $transactionModel->where('user_id',$userId)->orderBy('created_at','DESC')->findAll(5);
+        $recentTransactionCode = $recentTransaction->recipt_no ?? 'No Transactions Yet';
+        $totals = $transactionModel
+            ->select("
+        SUM(CASE WHEN gst_applied = 1 THEN grand_total ELSE 0 END) AS amount_with_gst,
+        SUM(CASE WHEN gst_applied = 0 THEN total_amount ELSE 0 END) AS amount_without_gst,
+        SUM(
+            CASE
+                WHEN gst_applied = 1 THEN grand_total
+                ELSE total_amount
+            END
+        ) AS overall_amount
+    ", false)
+         ->where('user_id',$userId)
+            ->first();
+
+ 
+
+        return view(
+            'user/dashboard',
+            [
+                'totals'=>$totals,
+                'clients' => $clients,
+                'totalTransactions' => $transactionCount,
+                'totalPaid' => $totalPaid,
+                'totalRemaining' => $totalRemaining,
+                'totalLicenseKeys' => $totalLienceKeys,
+                'totalCode' => $totalCode,
+                'extraCode' => $extraCode,
+                'recentTransactionCode' => $recentTransactionCode,
+                'totalCustomer' => $totalCustomer,
+                'recentFiveTransaction'=>$recentFiveTransaction
+            ]
+        );
+    }
 }

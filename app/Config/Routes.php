@@ -121,7 +121,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('get-users', 'UserController::getUsers');
   $routes->get('get-clients/(:num)', 'ClientController::getClientsByUser/$1');
   $routes->get('get-customers', 'CustomerController::getCustomers');
-  $routes->get('/', 'CustomerController::customer_list');
+  $routes->get('customer-list', 'CustomerController::customer_list');
   $routes->post('customer/add', 'CustomerController::add_customer');
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
 
@@ -151,7 +151,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
 
 
   // user dashboard 
-  $routes->get('dashboard', 'UserController::dashboard');
+  $routes->get('/', 'UserController::dashboard');
 
 });
 
