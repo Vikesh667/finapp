@@ -29,6 +29,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
 
   // --- USER MANAGEMENT ---
   $routes->get('user-list', 'UserController::user_list');
+  $routes->get('listData', 'UserController::user_list_data');
   $routes->post('user/add', 'UserController::add');
   $routes->get('user/edit/(:num)', 'UserController::edit/$1');
   $routes->post('user/update', 'UserController::update');
@@ -135,7 +136,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('get-countries', 'UserController::getCountry');
   $routes->get('get-states/(:num)', 'UserController::getStateByCountry/$1');
   $routes->get('get-cities/(:num)', 'UserController::getCityByState/$1');
-
+  $routes->get('customer-by-user/(:num)', 'CustomerController::getCustomersByUser/$1');
   // --- APP SETTINGS ---
   $routes->get('app-settings', 'SettingController::settings');
 

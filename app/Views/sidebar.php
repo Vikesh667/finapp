@@ -102,7 +102,7 @@ $counter = $this->common->getcounter();
                         <!-- Show only for User -->
                         <li>
 
-                            <a href="<?= base_url('/') ?>" class="item">
+                            <a href="<?= base_url('user/customer-list') ?>" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="person-outline"></ion-icon>
                                 </div>

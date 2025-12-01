@@ -17,17 +17,15 @@ class UserController extends Controller
 
     public function user_list()
     {
+        return view('user/list');   // HTML table page
+    }
+
+    public function user_list_data()
+    {
         $model = new UserModel();
-        $search = $this->request->getGet('search');
+        $users = $model->findAll();   // fetch ALL users
 
-        $builder = $model->searchUsers($search);
-        $data = [
-            'users'  => $builder->paginate(10, 'users'),
-            'pager'  => $model->pager,
-            'search' => $search,
-        ];
-
-        return view('user/list', $data);
+        return $this->response->setJSON(['users' => $users]);
     }
 
     public function add()
@@ -329,7 +327,7 @@ class UserController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get(1)
             ->getRow();
-        $recentFiveTransaction= $transactionModel->where('user_id',$userId)->orderBy('created_at','DESC')->findAll(5);
+        $recentFiveTransaction = $transactionModel->where('user_id', $userId)->orderBy('created_at', 'DESC')->findAll(5);
         $recentTransactionCode = $recentTransaction->recipt_no ?? 'No Transactions Yet';
         $totals = $transactionModel
             ->select("
@@ -342,15 +340,15 @@ class UserController extends Controller
             END
         ) AS overall_amount
     ", false)
-         ->where('user_id',$userId)
+            ->where('user_id', $userId)
             ->first();
 
- 
+
 
         return view(
             'user/dashboard',
             [
-                'totals'=>$totals,
+                'totals' => $totals,
                 'clients' => $clients,
                 'totalTransactions' => $transactionCount,
                 'totalPaid' => $totalPaid,
@@ -360,7 +358,7 @@ class UserController extends Controller
                 'extraCode' => $extraCode,
                 'recentTransactionCode' => $recentTransactionCode,
                 'totalCustomer' => $totalCustomer,
-                'recentFiveTransaction'=>$recentFiveTransaction
+                'recentFiveTransaction' => $recentFiveTransaction
             ]
         );
     }

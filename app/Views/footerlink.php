@@ -561,8 +561,13 @@
                 const clientSelect = document.getElementById("clientForTransactionsSelect");
                 const customerSelect = document.getElementById("customerTransactionsSelect");
 
+                const role = "<?= session()->get('role') ?>"; // admin / user
+                const loggedUserId = "<?= session()->get('user_id') ?>";
+
+                // -------------- ADMIN LOGIC -------------- //
+
                 // 1️⃣ Admin selects USER → Load CLIENTS of that user
-                if (userSelect) {
+                if (role === "admin" && userSelect) {
                     userSelect.addEventListener("change", function() {
                         let userId = this.value;
                         clientSelect.innerHTML = '<option>Loading...</option>';
@@ -579,11 +584,11 @@
                     });
                 }
 
-                // 2️⃣ Admin selects CLIENT → Load CUSTOMERS for selected user + client
-                if (clientSelect) {
+                // 2️⃣ Admin selects CLIENT → Load CUSTOMERS
+                if (role === "admin" && clientSelect) {
                     clientSelect.addEventListener("change", function() {
                         let clientId = this.value;
-                        let userId = userSelect ? userSelect.value : "<?= session()->get('user_id') ?>";
+                        let userId = userSelect.value;
 
                         customerSelect.innerHTML = '<option>Loading...</option>';
 
@@ -597,6 +602,32 @@
                             });
                     });
                 }
+
+
+                // -------------- USER LOGIN LOGIC -------------- //
+
+                // User login → directly load customers (skip user & client dropdowns)
+                if (role === "user" && customerSelect) {
+                    customerSelect.innerHTML = '<option>Loading...</option>';
+
+                    fetch(`<?= base_url('user/customer-by-user/') ?>${loggedUserId}`)
+                        .then(res => res.json())
+                        .then(list => {
+                            customerSelect.innerHTML = '<option value="">Select Customer</option>';
+                            list.forEach(c => {
+                                customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                            });
+
+                            if (list.length === 0) {
+                                customerSelect.innerHTML = '<option>No Customers Found</option>';
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Error loading customers:", err);
+                            customerSelect.innerHTML = '<option>Error Loading</option>';
+                        });
+                }
+
 
             });
 
@@ -676,7 +707,7 @@
             </script>
         <?php endif; ?>
 
-
+        <script src="<?= base_url('assets/js/app.js') ?>"></script>
         </body>
 
         </html>

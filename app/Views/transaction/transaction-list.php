@@ -36,7 +36,7 @@ $role = session()->get('role');
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        <?php endif; ?>
+                       
 
                         <!-- Client -->
                         <div class="col-md-2 col-6">
@@ -50,7 +50,7 @@ $role = session()->get('role');
                                 <?php endif; ?>
                             </select>
                         </div>
-
+                        <?php endif; ?>
                         <!-- Customer -->
                         <div class="col-md-2 col-6">
                             <label class="form-label">Customer</label>

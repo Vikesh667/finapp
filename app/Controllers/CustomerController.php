@@ -174,6 +174,22 @@ class CustomerController extends BaseController
     }
 
 
+    public function getCustomersByUser($userId = null)
+    {
+        $session = session();
+        $loggedIn = $session->get('user_id');
+        $customerModel = new CustomerModel();
+
+        // If userId not provided use logged user
+        $userId = $userId ?? $loggedIn;
+
+        $customers = $customerModel
+            ->where('user_id', $userId)
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        return $this->response->setJSON($customers);
+    }
 
     //  Get all users assigned to a specific client
     public function getClientUsers($clientId)
@@ -272,7 +288,7 @@ class CustomerController extends BaseController
         $transactions = $transactionModel->where('customer_id', $id)->orderBy('created_at', 'DESC')->findAll();
         $paymentHistory = $transactionHistoryModel->where('customer_id', $id)->findAll();
         $companyName = $clientModel->find($customer['client_id']);
-        $createdBy=$userModel->find($customer['created_by']);
+        $createdBy = $userModel->find($customer['created_by']);
         return view('customer/customer-details', [
             'customer' => $customer,
             'transactions' => $transactions,

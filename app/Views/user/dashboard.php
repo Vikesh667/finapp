@@ -74,13 +74,13 @@
                     <div class="col-md-5 p-3 border-start summary-side">
                         <div class="summary-item mb-2">
                             <ion-icon name="receipt-outline"></ion-icon>
-                            <strong>With GST:</strong>
-                            <span>₹ <?= number_format($totals['amount_with_gst']) ?></span>
+                            <h6>With GST:</h6>
+                            <h3>₹ <?= number_format($totals['amount_with_gst']) ?></h3>
                         </div>
                         <div class="summary-item">
                             <ion-icon name="pricetag-outline"></ion-icon>
-                            <strong>Without GST:</strong>
-                            <span>₹ <?= number_format($totals['amount_without_gst']) ?></span>
+                            <h6>Without GST:</h6>
+                            <h3>₹ <?= number_format($totals['amount_without_gst']) ?></h3>
                         </div>
                     </div>
 
