@@ -11,7 +11,7 @@ class ClientModel extends Model
     protected $primaryKey    = 'id';
 
     protected $allowedFields = [
-        'user_id',       
+        'user_id',
         'created_by',
         'username',
         'name',
@@ -24,6 +24,7 @@ class ClientModel extends Model
     protected $useTimestamps = true;
 
     protected $validationRules = [
+        'id'    => 'permit_empty',
         'name'  => 'required|alpha_space|min_length[3]|max_length[255]',
         'email' => 'required|valid_email|is_unique[clients.email,id,{id}]',
     ];
@@ -37,7 +38,7 @@ class ClientModel extends Model
         ],
         'email' => [
             'required'   => 'The email field is required.',
-            'valid_email'=> 'Please provide a valid email address.',
+            'valid_email' => 'Please provide a valid email address.',
             'is_unique'  => 'This email is already registered.',
         ],
     ];
@@ -45,7 +46,7 @@ class ClientModel extends Model
     protected $skipValidation = false;
 
 
-     
+
     public function getFilteredClients($role, $userId, $keyword = null, $filterUserId = null)
     {
         $builder = $this->select('clients.*, u.name AS user_name, c.name AS created_by_name')
@@ -60,14 +61,14 @@ class ClientModel extends Model
                 ->where('clients.user_id', $userId)
                 ->orWhere('clients.created_by', $userId)
                 ->orWhere('cu.user_id', $userId)
-            ->groupEnd();
+                ->groupEnd();
         }
 
         if (!empty($filterUserId)) {
             $builder->groupStart()
                 ->where('clients.user_id', $filterUserId)
                 ->orWhere('cu.user_id', $filterUserId)
-            ->groupEnd();
+                ->groupEnd();
         }
 
         if (!empty($keyword)) {
@@ -75,7 +76,7 @@ class ClientModel extends Model
                 ->like('clients.name', $keyword)
                 ->orLike('clients.email', $keyword)
                 ->orLike('clients.company_name', $keyword)
-            ->groupEnd();
+                ->groupEnd();
         }
 
         return $builder;
@@ -87,7 +88,7 @@ class ClientModel extends Model
     {
         $logoName = $data['old_logo'] ?? '';
 
-        //  Handle logo upload
+        // Handle logo upload
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $logoName = $file->getRandomName();
             $file->move(FCPATH . 'assets/uploads/logos', $logoName);
@@ -99,32 +100,28 @@ class ClientModel extends Model
             'company_name' => trim($data['company_name'] ?? ''),
             'email'        => strtolower(trim($data['email'] ?? '')),
             'url'          => trim($data['url'] ?? ''),
-            'created_by'   => $loggedInUserId ?? null,
+            'updated_by'   => $loggedInUserId,         // set for update
         ];
 
         if (!empty($logoName)) {
             $clientData['logo'] = $logoName;
         }
 
-        //  CREATE (allow no owner)
+        // CREATE
         if (empty($clientId)) {
-            if (!empty($ownerId)) {
-                $clientData['user_id'] = (int) $ownerId;
-            } else {
-                $clientData['user_id'] = null; // no owner yet
-            }
-
-            $insertId = $this->insert($clientData);
-            if (!$insertId) {
-                log_message('error', 'Client insert failed: ' . json_encode($this->errors()));
-                throw new Exception('Failed to insert client record.');
-            }
-            return $insertId;
+            $clientData['created_by'] = $loggedInUserId;
+            $clientData['user_id']    = $ownerId ? (int) $ownerId : null;
+            return $this->insert($clientData);
         }
 
-        //  UPDATE (do not change owner automatically)
-        return $this->update($clientId, $clientData);
+        // UPDATE (never lose ownership)
+        $clientData['user_id'] = $ownerId ? (int) $ownerId : (int) $loggedInUserId;
+
+        // Use save() instead of update() → automatically updates timestamp
+        $clientData['id'] = $clientId;
+        return $this->save($clientData);
     }
+
 
     public function deleteClientById($id, $role, $userId)
     {

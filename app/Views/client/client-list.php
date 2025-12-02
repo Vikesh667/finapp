@@ -55,22 +55,20 @@ $role = session()->get('role');
     <?php echo view('client/add-product'); ?>
     <?php echo view('client/client-assign-modal'); ?>
 
-    <script>
-        window.appConfig = {
-            clientListDataUrl: "<?= base_url('admin/listClientData') ?>",
-            logoUrl: "<?= base_url('assets/uploads/logos/') ?>",
+<script>
+window.appConfig = {
+    clientListDataUrl: "<?= base_url('admin/listClientData') ?>",
+    logoUrl: "<?= base_url('assets/uploads/logos/') ?>",
 
-            adminEditClientUrl: "<?= base_url('admin/client/edit-client/') ?>",
-            userEditClientUrl: "<?= base_url('user/client/edit-client/') ?>",
+    editClientUrl: "<?= base_url('admin/client/edit-client/') ?>",
+    deleteClientUrl: "<?= base_url('admin/client/delete/') ?>",
 
-            adminDeleteClientUrl: "<?= base_url('admin/client/delete/') ?>",
-            userDeleteClientUrl: "<?= base_url('user/client/delete/') ?>",
+    viewClientProductUrl: "<?= base_url('admin/product/') ?>",
 
-            viewClientProductUrl: "<?= base_url('admin/product/') ?>",
+    isAdmin: "<?= session()->get('role') === 'admin' ? 1 : 0 ?>"
+};
+</script>
 
-            isAdmin: "<?= session()->get('role') === 'admin' ? 1 : 0 ?>"
-        };
-    </script>
 
 
 

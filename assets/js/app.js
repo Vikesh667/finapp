@@ -2,12 +2,11 @@ const listDataUrl = window.appConfig.listDataUrl;
 const logoUrl = window.appConfig.logoUrl;
 const editUrl = window.appConfig.editUrl;
 const deleteUserUrl = window.appConfig.deleteUserUrl;
+
 const clientListDataUrl = window.appConfig.clientListDataUrl;
 const logoUrlc = window.appConfig.logoUrl;
-const adminEditClientUrl = window.appConfig.adminEditClientUrl;
-const userEditClientUrl = window.appConfig.userEditClientUrl;
-const adminDeleteClientUrl = window.appConfig.adminDeleteClientUrl;
-const userDeleteClientUrl = window.appConfig.userDeleteClientUrl;
+const editClientUrl = window.appConfig.editClientUrl;
+const deleteClientUrl = window.appConfig.deleteClientUrl;
 const viewClientProductUrl = window.appConfig.viewClientProductUrl;
 const isAdmin = Number(window.appConfig.isAdmin);
 
@@ -100,19 +99,20 @@ function deleteUser(id) {
   });
 }
 
+
+
 function loadClients() {
-  // show spinner inside tbody only
   $("#clientBody").html(`
-        <tr>
-            <td colspan="8" class="text-center py-4">
-                <div class="spinner-border text-primary"></div>
-                <p class="mt-2">Loading clients...</p>
-            </td>
-        </tr>
-    `);
+    <tr>
+      <td colspan="8" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Loading clients...</p>
+      </td>
+    </tr>
+  `);
 
   $.ajax({
-    url: clientListDataUrl, // from window.appConfig
+    url: clientListDataUrl,
     method: "GET",
     dataType: "json",
     success: function (response) {
@@ -120,60 +120,80 @@ function loadClients() {
       let start = 1;
 
       response.clients.forEach((client, index) => {
-        let editUrl =
-          client.role === "admin"
-            ? `${adminEditClientUrl}${client.id}`
-            : `${userEditClientUrl}${client.id}`;
+        let actions = `
+          <a href="${viewClientProductUrl}${client.id}"
+            class="btn btn-sm btn-warning rounded-pill px-3"
+            title="View Client Products">
+            View
+          </a>
 
-        let deleteUrl =
-          client.role === "admin"
-            ? `${adminDeleteClientUrl}${client.id}`
-            : `${userDeleteClientUrl}${client.id}`;
+          <a href="${editClientUrl}${client.id}"
+            class="btn btn-sm btn-outline-primary rounded-circle action-btn"
+            title="Edit Client">
+            <ion-icon name="create-outline"></ion-icon>
+          </a>
+
+          <button onclick="deleteClient(${client.id})"
+            class="btn btn-sm btn-outline-danger rounded-circle action-btn"
+            title="Delete Client">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+
+          <button class="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-1 px-3"
+            data-bs-toggle="modal"
+            data-bs-target="#userModal"
+            data-client-id="${client.id}"
+            title="Assign User">
+            <i class="bi bi-person-plus"></i> Assign
+          </button>
+        `;
 
         rows += `
-                <tr>
-                    <td>${start + index}</td>
-                    <td>${client.name}</td>
-                    <td>${client.email}</td>
-                    <td>${client.company_name ?? "-"}</td>
-                    <td><a href="${client.url}" target="_blank">${
-          client.url
-        }</a></td>
-                    <td><img src="${logoUrlc}${client.logo}" width="50"></td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center flex-wrap gap-2">
-
-                            <a href="${editUrl}" class="btn btn-sm btn-outline-primary rounded-circle action-btn" title="Edit Client">
-                                <ion-icon name="create-outline"></ion-icon>
-                            </a>
-
-                            <button onclick="deleteClient(${client.id})"
-                                class="btn btn-sm btn-outline-danger rounded-circle action-btn"
-                                title="Delete Client">
-                                <ion-icon name="trash-outline"></ion-icon>
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-1 px-3"
-                                data-bs-toggle="modal"
-                                data-bs-target="#userModal"
-                                data-client-id="${client.id}"
-                                title="Assign User">
-                                <i class="bi bi-person-plus"></i> Assign
-                            </button>
-
-                            <a href="${viewClientProductUrl}${client.id}"
-                                class="btn btn-sm btn-warning rounded-pill px-3"
-                                title="View Client Products">
-                                View
-                            </a>
-
-                        </div>
-                    </td>
-                </tr>`;
+          <tr>
+            <td>${start + index}</td>
+            <td>${client.name}</td>
+            <td>${client.email}</td>
+            <td>${client.company_name ?? "-"}</td>
+            <td><a href="${client.url}" target="_blank">${client.url}</a></td>
+            <td><img src="${logoUrlc}${client.logo}" width="50"></td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center flex-wrap gap-2">
+                ${actions}
+              </div>
+            </td>
+          </tr>
+        `;
       });
 
       $("#clientBody").html(rows);
     },
+  });
+}
+function deleteClient(id) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "Once deleted, this client cannot be recovered!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+
+    fetch(deleteClientUrl + id, {
+      method: "POST",
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success") {
+          Swal.fire("Deleted!", data.message, "success");
+          loadClients(); // refresh table without reloading the page
+        } else {
+          Swal.fire("Error", data.message, "error");
+        }
+      })
+      .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
   });
 }
 

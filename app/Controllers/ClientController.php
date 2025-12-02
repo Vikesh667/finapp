@@ -80,6 +80,10 @@ class ClientController extends BaseController
 
     public function edit_client($id = null)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/unauthorized');
+        }
+
         $clientModel = new ClientModel();
         $client      = $clientModel->find($id);
 
@@ -87,53 +91,53 @@ class ClientController extends BaseController
             return redirect()->to('admin/client-list')->with('error', 'Client not found.');
         }
 
-        if (
-            session()->get('role') === 'user' &&
-            $client['created_by'] != session()->get('user_id')
-        ) {
-            return redirect()->to('/unauthorized');
-        }
-
         return view('client/edit-client', ['client' => $client]);
     }
 
 
-    public function update_client()
-    {
-        $session     = session();
-        $clientModel = new ClientModel();
+public function update_client()
+{
+    $session     = session();
+    $clientModel = new ClientModel();
 
-        $clientId = $this->request->getPost('id');
-        $client   = $clientModel->find($clientId);
-
-        if (!$client) {
-            return redirect()->to('admin/client-list')->with('error', 'Client not found.');
-        }
-
-        if (
-            $session->get('role') === 'user' &&
-            $client['created_by'] != $session->get('user_id')
-        ) {
-            return redirect()->to('/unauthorized');
-        }
-
-        $data   = $this->request->getPost();
-        $logo   = $this->request->getFile('logo');
-        $logged = $session->get('user_id');
-
-        $ownerId = $client['user_id']; // don’t change ownership
-
-        try {
-            $clientModel->saveClient($data, $logo, $ownerId, $logged, $clientId);
-            return redirect()->to('admin/client-list')->with('success', 'Client updated successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
+    $clientId = $this->request->getPost('id');
+    $client   = $clientModel->find($clientId);
+    
+    if (!$client) {
+        return redirect()->to('admin/client-list')->with('error', 'Client not found.');
     }
+
+    if ($session->get('role') === 'user') {
+        return redirect()->to('/unauthorized');
+    }
+
+    $data   = $this->request->getPost();
+    $logo   = $this->request->getFile('logo');
+
+    $logged = $session->get('user_id');
+
+    // Preserve or fallback to admin
+    $ownerId = $client['user_id'] ?: $logged;
+
+    try {
+        $clientModel->saveClient($data, $logo, $ownerId, $logged, $clientId);
+        return redirect()->to('admin/client-list')->with('success', 'Client updated successfully.');
+    } catch (Exception $e) {
+        return redirect()->back()->withInput()->with('error', $e->getMessage());
+    }
+}
+
 
 
     public function delete_client($id = null)
     {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Invalid request'
+            ]);
+        }
+
         $clientModel = new ClientModel();
         $session     = session();
 
@@ -144,11 +148,18 @@ class ClientController extends BaseController
         );
 
         if (!$deleted) {
-            return redirect()->back()->with('error', 'Client not found or unauthorized.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Client not found or unauthorized'
+            ]);
         }
 
-        return redirect()->to('admin/client-list')->with('success', 'Client deleted successfully.');
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Client deleted successfully'
+        ]);
     }
+
 
 
     public function assign_user()
