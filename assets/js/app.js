@@ -262,11 +262,6 @@ function loadCustomers() {
              title="Customer Details">
             <ion-icon name="eye-outline"></ion-icon>
           </a>
-        `;
-
-        // Admin — extra privileges (edit / delete / reassign)
-        if (isAdmin === 1) {
-          actions += `
           
             <button onclick="deleteCustomer(${cust.id})"
               class="btn btn-sm btn-outline-danger rounded-circle"
@@ -274,6 +269,11 @@ function loadCustomers() {
               <ion-icon name="trash-outline"></ion-icon>
             </button>
 
+        `;
+
+        // Admin — extra privileges (edit / delete / reassign)
+        if (isAdmin === 1) {
+          actions += `    
            <button class="btn btn-sm btn-warning reassign-btn"
              data-bs-toggle="modal"
              data-bs-target="#reassignCustomerModal"
@@ -365,6 +365,7 @@ function reassignCustomer() {
 }
 
 function deleteCustomer(id) {
+  console.log('Deleting customer with ID:', id);
   Swal.fire({
     toast: true,
     position: "top-center",
@@ -382,6 +383,7 @@ function deleteCustomer(id) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log('Delete response data:', data);
         if (data.status === "success") {
           Swal.fire({
             toast: true,
@@ -409,7 +411,48 @@ function deleteCustomer(id) {
   });
 }
 
+function loadDeleteHistory() {
+  $("#deleteHistoryBody").html(`
+    <tr>  
+      <td colspan="6" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Loading deleted customers...</p>
+      </td>
+    </tr>
+  `);
+  $.ajax({
+    url: window.appConfig.customerDeleteHistoryUrl,
+    method: "GET",
+    dataType: "json",
+    success: function (response) {
+    
+      let rows = "";
+      let start = 1;
+      response.deleted_customers.forEach((cust, index) => {
+        console.log('Deleted customer:', cust);
+        rows += `
+          <tr>
+            <td>${start + index}</td>
+            <td>${cust.client_names}</td>
+            <td>${cust.name}</td>
+            <td>${cust.email}</td>
+            <td>${cust.shop_name}</td>
+            <td>${cust.deleted_at}</td>
+            <td>${cust.deleted_by_name}</td>
+          </tr>
+        `;
+      });
+
+      $("#deleteHistoryBody").html(rows);
+    },
+    error: () => {
+      $("#deleteHistoryBody").html(`
+        <tr><td colspan="6" class="text-center text-danger">Failed to load deleted customers.</td></tr>
+      `);
+    },
+  }); 
+}
 loadUsers();
 loadClients();
 loadCustomers();
-loadTransactions();
+loadDeleteHistory();

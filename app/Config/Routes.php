@@ -57,6 +57,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
   $routes->get('customer/customer-detail/(:num)', 'CustomerController::customer_detail/$1');
   $routes->post('customer/delete/(:num)', 'CustomerController::delete_customer/$1');
+  $routes->get('customer-delete-history', 'CustomerController::delete_customer_history');
+  $routes->get('customer/delete-history', 'CustomerController::customerDeleteHistory');
   $routes->post('customer/update', 'CustomerController::updateCustomer');
   $routes->post('reassign-customer', 'CustomerController::reassign_customer');
   $routes->post('bulk-reassign-customers', 'CustomerController::bulk_reassign_customers');
@@ -131,7 +133,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
 
   $routes->post('customer/add', 'CustomerController::add_customer');
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
-
+ $routes->post('customer/delete/(:num)', 'CustomerController::delete_customer/$1');
   $routes->get('transaction-list', 'TransactionController::transaction_list');
   $routes->post('transaction/add', 'TransactionController::create_transaction');
   $routes->get('transaction/getTransaction/(:num)', 'TransactionController::getTransaction/$1');

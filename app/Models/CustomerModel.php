@@ -21,7 +21,10 @@ class CustomerModel extends Model
         'city',
         'state',
         'country',
-        'address'
+        'address',
+        'is_deleted',
+        'deleted_by',
+        'deleted_at',
     ];
 
     protected $useTimestamps = true;
@@ -29,7 +32,7 @@ class CustomerModel extends Model
     protected $updatedField  = 'updated_at';
 
     protected $validationRules = [
-          'id'    => 'permit_empty',
+        'id'    => 'permit_empty',
         'name'     => 'required|alpha_space|min_length[3]|max_length[255]',
         'email'    => 'required|valid_email|is_unique[customers.email,id,{id}]',
         'phone'    => 'permit_empty|numeric|min_length[10]|max_length[15]',
@@ -90,38 +93,37 @@ class CustomerModel extends Model
 
     //  Create or Update Customer
     public function saveCustomer(array $data, $userId, $clientId, $loggedUserId, $customerId = null)
-{
-    if (empty($userId)) {
-        throw new \Exception("user_id cannot be empty");
+    {
+        if (empty($userId)) {
+            throw new \Exception("user_id cannot be empty");
+        }
+
+        if (empty($clientId)) {
+            throw new \Exception("client_id cannot be empty");
+        }
+
+        // Common fields
+        $customerData = [
+            'user_id'     => (int) $userId,
+            'client_id'   => (int) $clientId,
+            'name'        => trim($data['name']),
+            'phone'       => trim($data['phone']),
+            'shop_name'   => trim($data['shop_name']),
+            'email'       => strtolower(trim($data['email'])),
+            'device_type' => trim($data['device_type']),
+            'city'        => trim($data['city']),
+            'state'       => trim($data['state']),
+            'country'     => trim($data['country']),
+            'address'     => trim($data['address']),
+        ];
+
+        // Insert mode — add created_by ONE TIME
+        if (!$customerId) {
+            $customerData['created_by'] = (int) $loggedUserId;
+            return $this->insert($customerData);
+        }
+
+        // Update mode — DO NOT modify created_by
+        return $this->update($customerId, $customerData);
     }
-
-    if (empty($clientId)) {
-        throw new \Exception("client_id cannot be empty");
-    }
-
-    // Common fields
-    $customerData = [
-        'user_id'     => (int) $userId,
-        'client_id'   => (int) $clientId,
-        'name'        => trim($data['name']),
-        'phone'       => trim($data['phone']),
-        'shop_name'   => trim($data['shop_name']),
-        'email'       => strtolower(trim($data['email'])),
-        'device_type' => trim($data['device_type']),
-        'city'        => trim($data['city']),
-        'state'       => trim($data['state']),
-        'country'     => trim($data['country']),
-        'address'     => trim($data['address']),
-    ];
-
-    // Insert mode — add created_by ONE TIME
-    if (!$customerId) {
-        $customerData['created_by'] = (int) $loggedUserId;
-        return $this->insert($customerData);
-    }
-
-    // Update mode — DO NOT modify created_by
-    return $this->update($customerId, $customerData);
-}
-
 }

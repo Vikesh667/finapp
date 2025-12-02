@@ -59,7 +59,7 @@ class CustomerController extends BaseController
         }
 
         return $this->response->setJSON([
-            'customers' => $builder->findAll(),
+            'customers' => $builder->where('customers.is_deleted', 0)->findAll(),
             'role'      => $role
         ]);
     }
@@ -102,7 +102,7 @@ class CustomerController extends BaseController
         $customerModel->saveCustomer($data, $userId, $clientId, $loggedUserId);
 
         return redirect()
-            ->to(base_url($role === 'admin' ? 'admin/customer-list' : '/'))
+            ->to(base_url($role === 'admin' ? 'admin/customer-list' : 'user/customer-list'))
             ->with('success', 'client added successfully!');
     }
 
@@ -146,18 +146,50 @@ class CustomerController extends BaseController
     {
         $customerModel = new CustomerModel();
         $role = session()->get('role');
+        $userId = session()->get('user_id');
 
         if (!$id || !$customerModel->find($id)) {
-            return redirect()->back()->with('error', 'Customer not found!');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Customer not found!'
+            ]);
         }
 
-        $customerModel->delete($id);
+        $customer = $customerModel->find($id);
 
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Customer deleted successfully!'
+        // only admin can delete any, user can delete only own customers
+        if ($role !== 'admin' && $customer['user_id'] != $userId) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'You do not have permission to delete this customer!'
+            ]);
+        }
+
+        $customerDeleted = $customerModel->update($id, [
+            'is_deleted' => 1,
+            'deleted_by' => $userId,
+            'deleted_at' => date('Y-m-d H:i:s')
         ]);
+        if ($customerDeleted === false) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Failed to delete customer!'
+            ]);
+        } else {
+              $notificationModel = new \App\Models\NotificationModel();
+              $notificationModel->insert([
+                  'user_id' => $customer['user_id'],
+                  'message' => "Customer '{$customer['name']}' has been deleted.",
+                  'is_read' => 0,
+                  'created_at' => date('Y-m-d H:i:s')
+              ]);
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Customer deleted successfully!'
+            ]);
+        }
     }
+
 
     //  Get all customers of a client
 
@@ -233,13 +265,13 @@ class CustomerController extends BaseController
 
     public function reassign_customer()
     {
-         $userModel = new UserModel();
+        $userModel = new UserModel();
         $customerId = $this->request->getPost('customer_id');
         $newUserId  = $this->request->getPost('new_user_id');
         $adminId = session()->get('user_id');
-         $user= $userModel->find($newUserId);
-         $newUserName=$user['name'];
-    
+        $user = $userModel->find($newUserId);
+        $newUserName = $user['name'];
+
         if (!$customerId || !$newUserId) {
             return $this->response->setJSON([
                 'status' => 'error',
@@ -263,7 +295,7 @@ class CustomerController extends BaseController
 
         $clientId = $customer['client_id'];
         $oldUserId = $customer['user_id'];
-       
+
         // Ensure new user belongs to same client
         $isAssigned = $clientUserModel
             ->where('client_id', $clientId)
@@ -316,7 +348,7 @@ class CustomerController extends BaseController
             'status' => 'success',
             'message' => 'Customer reassigned successfully',
             'new_user_name' => $newUserName
-            
+
         ]);
     }
 
@@ -442,5 +474,27 @@ class CustomerController extends BaseController
         $data['assign_history'] = $customerReassignHistoryModel->getAllHistory();
 
         return view('customer/customer_reassign_history', $data);
+    }
+
+
+    public function delete_customer_history()
+    {
+        return view('customer/customer_delete_history');
+    }
+
+    public function customerDeleteHistory()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('customers');
+        $builder->select('customers.id, customers.name, customers.email, customers.shop_name, customers.deleted_at, customers.deleted_by, clients.company_name as client_names, users.name as deleted_by_name');
+        $builder->join('clients', 'clients.id = customers.client_id', 'left');
+        $builder->join('users', 'users.id = customers.deleted_by', 'left');
+        $builder->where('customers.is_deleted', 1);
+        $builder->orderBy('customers.deleted_at', 'DESC');
+        $query = $builder->get();
+        $data = [
+            'deleted_customers' => $query->getResultArray()
+        ];
+        return $this->response->setJSON($data);
     }
 }
