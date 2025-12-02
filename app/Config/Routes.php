@@ -73,6 +73,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   // --- TRANSACTION MANAGEMENT ---
 
   $routes->get('transaction-list', 'TransactionController::transaction_list');
+  $routes->get('transaction-list-data', 'TransactionController::transactionListData');
   $routes->post('transaction/add', 'TransactionController::create_transaction');
   $routes->get('transaction/getTransaction/(:num)', 'TransactionController::getTransaction/$1');
   $routes->post('transaction/payNow', 'TransactionController::payNow');

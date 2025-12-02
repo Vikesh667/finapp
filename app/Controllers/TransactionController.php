@@ -27,7 +27,7 @@ class TransactionController extends BaseController
     public function transaction_list()
     {
         $transactionModel = new TransactionModel();
-        $userModel= new UserModel();
+        $userModel = new UserModel();
         $filters = [
             'keyword'      => $this->request->getGet('search'),
             'client_id'    => $this->request->getGet('client_id'),
@@ -51,14 +51,40 @@ class TransactionController extends BaseController
         $data['clients'] = model('ClientModel')->findAll();
         $userId = ($userRole === 'admin')  ? "created_by" : session()->get('user_id');
         $data['customers'] = model('CustomerModel')->where('user_id', $userId)->findAll();
- 
+
         // For form to remember filters
         $data['filters'] = $filters;
-        $data['users'] =$userModel->findAll();
+        $data['users'] = $userModel->findAll();
+        
         return view('transaction/transaction-list', $data);
     }
 
+    public function transactionListData()
+    {
+        $transactionModel = new TransactionModel();
+        $userModel = new UserModel();
+        $filters = [
+            'keyword'      => $this->request->getGet('search'),
+            'client_id'    => $this->request->getGet('client_id'),
+            'customer_id'  => $this->request->getGet('customer_id'),
+            'status'       => $this->request->getGet('status'),
+            'date_filter'  => $this->request->getGet('date_filter'), // ⭐ Add this
+            'from_date'    => $this->request->getGet('from_date'),
+            'to_date'      => $this->request->getGet('to_date'),
+        ];
 
+
+
+        $userRole = session()->get('role');
+        $userId   = session()->get('user_id');
+        $builder = $transactionModel->getTransaction($userRole, $userId, $filters);
+        $data['transactions'] = $builder->findAll();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'transactions' => $data['transactions']
+        ]);
+    }
 
     public function create_transaction()
     {
@@ -171,7 +197,7 @@ class TransactionController extends BaseController
         }
 
         $transactionId = $transactionModel->insert($data);
-    
+
         // Insert payment history
         if ($paidAmount > 0) {
             $historyModel->insert([

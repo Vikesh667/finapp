@@ -165,7 +165,11 @@
 
 
                 function loadCountries(target) {
-                    fetch("<?= base_url('admin/get-countries') ?>")
+                    let url = (role === "admin") ?
+                        "<?= base_url('admin/get-countries') ?>" :
+                        "<?= base_url('user/get-countries') ?>";
+
+                    fetch(url)
                         .then(res => res.json())
                         .then(list => {
                             target.innerHTML = '<option value="">Select Country</option>';
@@ -174,7 +178,11 @@
                 }
 
                 function loadStates(countryId, target) {
-                    fetch(`<?= base_url('admin/get-states/') ?>${countryId}`)
+                    let stateUrl = (role === "admin") ?
+                        "<?= base_url('admin/get-states') ?>" :
+                        "<?= base_url('user/get-states') ?>";
+
+                    fetch(`${stateUrl}/${countryId}`)
                         .then(res => res.json())
                         .then(list => {
                             target.innerHTML = '<option value="">Select State</option>';
@@ -183,7 +191,11 @@
                 }
 
                 function loadCities(stateId, target) {
-                    fetch(`<?= base_url('admin/get-cities/') ?>${stateId}`)
+                    let citiesUrl = (role === "admin") ?
+                        "<?= base_url('admin/get-cities') ?>" :
+                        "<?= base_url('user/get-cities') ?>";
+
+                    fetch(`${citiesUrl}/${stateId}`)
                         .then(res => res.json())
                         .then(list => {
                             target.innerHTML = '<option value="">Select City</option>';
@@ -683,11 +695,13 @@
         <?php if (session()->getFlashdata('success')): ?>
             <script>
                 Swal.fire({
-                    position: "center",
+                    toast: true,
+                    position: "top",
                     icon: "success",
                     text: "<?= esc(session()->getFlashdata('success')) ?>",
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 2500,
+                    timerProgressBar: true
                 });
             </script>
         <?php endif; ?>
@@ -695,11 +709,13 @@
         <?php if (session()->getFlashdata('error')): ?>
             <script>
                 Swal.fire({
-                    position: "center",
+                    toast: true,
+                    position: "top-center",
                     icon: "error",
                     text: `<?= esc(session()->getFlashdata('error')) ?>`.replace(/\\n/g, "\n"),
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 3000,
+                    timerProgressBar: true
                 });
             </script>
         <?php endif; ?>

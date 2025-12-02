@@ -16,6 +16,8 @@ const deleteCustomerUrl = window.appConfig.deleteCustomerUrl;
 const transactionHistoryUrl = window.appConfig.transactionHistoryUrl;
 const detailViewUrl = window.appConfig.detailViewUrl;
 
+
+
 function loadUsers() {
   // Loader inside tbody
   $("#userBody").html(`
@@ -192,9 +194,26 @@ function deleteClient(id) {
       .then((data) => {
         if (data.status === "success") {
           Swal.fire("Deleted!", data.message, "success");
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: `Client deleted successfully`,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          })
           loadClients(); // refresh table without reloading the page
         } else {
-          Swal.fire("Error", data.message, "error");
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "error",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
         }
       })
       .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
@@ -320,17 +339,26 @@ function reassignCustomer() {
     .then((data) => {
       if (data.status === "success") {
         Swal.fire({
+          toast: true,
+          position: "top",
           icon: "success",
-          title: "Customer Reassigned",
-          html: `
-            <span style="color: green;">New customer reassigned to: <b>${data.new_user_name}</b></span>
-        `,
+          title: `Customer reassigned to ${data.new_user_name}`,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
         });
 
         $("#reassignCustomerModal").modal("hide");
         loadCustomers();
       } else {
-        Swal.fire("Error", data.message, "error");
+        Swal.fire({
+          toast: true,
+          position: "top-center",
+          icon: "error",
+          title: data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
       }
     })
     .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
@@ -338,6 +366,8 @@ function reassignCustomer() {
 
 function deleteCustomer(id) {
   Swal.fire({
+    toast: true,
+    position: "top-center",
     title: "Are you sure?",
     text: "Once deleted, this customer cannot be recovered!",
     icon: "warning",
@@ -353,16 +383,92 @@ function deleteCustomer(id) {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
-          Swal.fire("Deleted!", data.message, "success");
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: `Customer deleted successfully`,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
           loadCustomers(); // refresh table without reloading the page
         } else {
-          Swal.fire("Error", data.message, "error");
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "error",  
+            title: data.message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
         }
       })
       .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
   });
 }
 
+function loadTransactions(){
+    $("#transactionTableBody").html(`
+        <tr>
+            <td colspan="7" class="text-center py-4">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-2">Loading data...</p>
+            </td>
+        </tr>
+    `);
+    $.ajax({
+      url:window.appConfig.fetchTransactionDataUrl,
+      method:"GET",
+      dataType:"json",
+      success:function(response){
+          console.log(response);
+        let rows="";
+        let start=1;
+        response.transactions.forEach((txn,index)=>{
+         let actionButtons=`
+            <a href="${window.appConfig.detailViewUrl}${txn.id}" class="btn btn-sm btn-outline-info rounded-circle" title="View Details">
+                <ion-icon name="eye-outline"></ion-icon></a>
+            `;
+
+            rows+=`
+                <tr>
+                    <td>${start+index}</td>
+                    <td>${txn.transfor_by}</td>
+                    <td>${txn.code}</td>
+                    <td>${txn.rate}</td>
+                    <td>${txn.extra_code}</td>
+                    <td>${txn.total_amount}</td>
+                    <td>${txn.paid_amount}</td>
+                    <td>${txn.remaining_amount}</td>
+                    <td>${txn.total_code}</td>
+                    <td>${txn.created_at}</td>
+                     <td>${txn.remark}</td>
+                     <td>${txn.gst_applied}</td>
+                     <td>${txn.gst_number ?? '-'}</td>
+                     td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center flex-wrap gap-2"> 
+                            ${actionButtons}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        $("#transactionTableBody").html(rows);   
+
+        
+      }
+    })
+}
+
+
+
+
+
+
 loadUsers();
 loadClients();
 loadCustomers();
+loadTransactions();
