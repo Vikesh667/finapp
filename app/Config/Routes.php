@@ -52,6 +52,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
 
   // --- CUSTOMER MANAGEMENT ---
   $routes->get('customer-list', 'CustomerController::customer_list');
+  $routes->get('customer/list-data', 'CustomerController::listData');
   $routes->post('customer/add', 'CustomerController::add_customer');
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
   $routes->get('customer/customer-detail/(:num)', 'CustomerController::customer_detail/$1');
@@ -122,8 +123,11 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   // --- CUSTOMER MANAGEMENT ---
   $routes->get('get-users', 'UserController::getUsers');
   $routes->get('get-clients/(:num)', 'ClientController::getClientsByUser/$1');
+  
   $routes->get('get-customers', 'CustomerController::getCustomers');
   $routes->get('customer-list', 'CustomerController::customer_list');
+  $routes->get('customer/list-data', 'CustomerController::listData');
+
   $routes->post('customer/add', 'CustomerController::add_customer');
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
 

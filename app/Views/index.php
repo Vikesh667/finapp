@@ -59,7 +59,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Total Users</div>
+                                <div class="title fw-bold text-dark">Total Users</div>
                                 <div class="value text-success fs-5"><?= esc($totalUser) ?></div>
                             </div>
                             <ion-icon name="people-outline" class="fs-3 text-success"></ion-icon>
@@ -72,7 +72,7 @@
                         <div class="stat-box  border rounded p-3 shadow-sm">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="title fw-bold text-secondary">Total Product</div>
+                                    <div class="title fw-bold text-dark">Total Product</div>
                                     <div class="value text-danger fs-5"><?= esc($totalClient) ?></div>
                                 </div>
                                 <ion-icon name="person-outline" class="fs-3 text-danger"></ion-icon>
@@ -89,7 +89,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Total Client</div>
+                                <div class="title fw-bold text-dark">Total Client</div>
                                 <div class="value text-primary fs-5"><?= esc($totalCustomer) ?></div>
                             </div>
                             <ion-icon name="people-circle-outline" class="fs-3 text-primary"></ion-icon>
@@ -102,7 +102,7 @@
                     <div class="stat-box border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Total Transactions</div>
+                                <div class="title fw-bold text-dark">Total Transactions</div>
                                 <div class="value text-info fs-5"><?= esc($totalTransactions) ?></div>
                             </div>
                             <ion-icon name="swap-horizontal-outline" class="fs-3 text-info"></ion-icon>
@@ -117,7 +117,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Total License Key</div>
+                                <div class="title fw-bold text-dark">Total License Key</div>
                                 <div class="value text-success fs-5"><?= esc($totalCode) ?></div>
                             </div>
                             <ion-icon name="code-slash-outline" class="fs-3 text-success"></ion-icon>
@@ -129,7 +129,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Free License Key(CN)</div>
+                                <div class="title fw-bold text-dark">Free License Key(CN)</div>
                                 <div class="value text-warning fs-5"><?= esc($extraCode) ?></div>
                             </div>
                             <ion-icon name="add-circle-outline" class="fs-3 text-warning"></ion-icon>
@@ -144,7 +144,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Total Paid</div>
+                                <div class="title fw-bold text-dark">Total Paid</div>
                                 <div class="value text-success fs-5">₹<?= esc($totalPaid) ?></div>
                             </div>
                             <ion-icon name="cash-outline" class="fs-3 text-success"></ion-icon>
@@ -156,7 +156,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Pending Payments</div>
+                                <div class="title fw-bold text-dark">Pending Payments</div>
                                 <div class="value text-danger fs-5">₹<?= esc($totalRemaining) ?></div>
                             </div>
                             <ion-icon name="hourglass-outline" class="fs-3 text-danger"></ion-icon>
@@ -175,7 +175,7 @@
                     <div class="stat-box border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">This Month</div>
+                                <div class="title fw-bold text-dark">This Month</div>
                                 <div class="value text-primary fs-5 count-up" data-value="<?= $thisMonthRevenue ?>">0</div>
                             </div>
                             <!-- Better Icon -->
@@ -189,7 +189,7 @@
                     <div class="stat-box border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Today</div>
+                                <div class="title fw-bold text-dark">Today</div>
                                 <div class="value text-success fs-5 count-up" data-value="<?= $todayRevenue ?>">0</div>
                             </div>
                             <!-- Better Icon -->
@@ -207,7 +207,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Last Transaction Code</div>
+                                <div class="title fw-bold text-dark">Last Transaction Code</div>
                                 <div class="value text-info fs-5"><?= esc($lastTransactionCode) ?></div>
                             </div>
                             <ion-icon name="receipt-outline" class="fs-3 text-info"></ion-icon>
@@ -220,7 +220,7 @@
                 <!-- This Month Pie -->
                 <div class="col-md-4 col-12 mb-3">
                     <div class="card shadow-sm border-0 p-3 text-center">
-                        <h6 class="fw-bold text-secondary mb-2">This Month</h6>
+                        <h6 class="fw-bold text-dark mb-2">This Month</h6>
                         <div style="width: 150px; height: 150px; margin: 0 auto;">
                             <canvas id="pieChartMonth"></canvas>
                         </div>
@@ -230,7 +230,7 @@
                 <!-- Today Pie -->
                 <div class="col-md-4 col-12 mb-3">
                     <div class="card shadow-sm border-0 p-3 text-center">
-                        <h6 class="fw-bold text-secondary mb-2">Today</h6>
+                        <h6 class="fw-bold text-dark mb-2">Today</h6>
                         <div style="width: 150px; height: 150px; margin: 0 auto;">
                             <canvas id="pieChartToday"></canvas>
                         </div>
@@ -240,7 +240,7 @@
                 <!-- Paid vs Pending Pie -->
                 <div class="col-md-4 col-12 mb-3">
                     <div class="card shadow-sm border-0 p-3 text-center">
-                        <h6 class="fw-bold text-secondary mb-2">Paid vs Pending</h6>
+                        <h6 class="fw-bold text-dark mb-2">Paid vs Pending</h6>
                         <div style="width: 150px; height: 150px; margin: 0 auto;">
                             <canvas id="piePaidPending"></canvas>
                         </div>
@@ -256,7 +256,7 @@
                     <div class="stat-box border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Month Comparison</div>
+                                <div class="title fw-bold text-dark">Month Comparison</div>
                                 <div class="value fs-5">₹<?= number_format($thisMonth) ?></div>
                                 <small class="<?= ($monthChange >= 0) ? 'text-success' : 'text-danger' ?>">
                                     <?= ($monthChange >= 0 ? '↑' : '↓') ?>
@@ -277,7 +277,7 @@
                     <div class="stat-box border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Today Comparison</div>
+                                <div class="title fw-bold text-dark">Today Comparison</div>
                                 <div class="value fs-5">₹<?= number_format($today) ?></div>
                                 <small class="<?= ($dayChange >= 0) ? 'text-success' : 'text-danger' ?>">
                                     <?= ($dayChange >= 0 ? '↑' : '↓') ?>

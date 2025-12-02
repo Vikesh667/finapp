@@ -33,105 +33,49 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table id="example" class="table table-modern">
-                        <thead>
-                            <tr>
-                                <th>Sr.No</th>
-                                <th>CreatedBy</th>
-                                <th>Product Name</th>
-                                <th>Shop Name</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Action</th>
-                                <?php if (session()->get('role') === 'admin'): ?>
-                                    <th>Assign</th>
-                                <?php endif; ?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($customers)): ?>
-                                <?php
-                                $start = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
-                                foreach ($customers as $index => $customer):
-                                ?>
-                                    <tr>
-                                        <td><?= $start + $index ?></td>
-                                        <td><?= esc($customer['created_by_name']) ?></td>
-                                        <td><?= esc($customer['client_name']) ?></td>
-                                        <td><?= esc($customer['shop_name']) ?></td>
-                                        <td><?= esc($customer['name']) ?></td>
-                                        <td><?= esc($customer['device_type']) ?> </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center flex-wrap gap-2">
-                                                <?php $role = session()->get('role');
-                                                $actionUrl = ($role === 'admin') ? ('admin/customer/edit/' . $customer['id']) : ('user/customer/edit/' . $customer['id']);
-                                                $actionUrlPath = ($role === 'admin') ? ('admin/transaction-history/' . $customer['id']) : ('user/transaction-history/' . $customer['id']);
-                                                $actionUrlPathDetails = ($role === 'admin') ? ('admin/customer/customer-detail/' . $customer['id']) : ('user/customer/customer-detail/' . $customer['id']);
-                                                ?>
-
-                                                <!-- Edit -->
-
-                                                <!-- Transaction History -->
-                                                <a href="<?= base_url($actionUrlPath) ?>"
-                                                    class="btn btn-sm btn-outline-secondary rounded-circle action-btn"
-                                                    title="Transaction History">
-                                                    <ion-icon name="document-text-outline"></ion-icon>
-                                                </a>
-
-                                                <!-- View Details -->
-                                                <a href="<?= base_url($actionUrlPathDetails) ?>"
-                                                    class="btn btn-sm btn-outline-info rounded-circle action-btn"
-                                                    title="Customer Details">
-                                                    <ion-icon name="eye-outline"></ion-icon>
-                                                </a>
-
-                                                <!-- Delete -->
-                                                <form method="post" action="<?= base_url('admin/customer/delete/' . $customer['id']) ?>"
-                                                    onsubmit="return confirm('Are you sure?')" style="display:inline;">
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger rounded-circle action-btn"
-                                                        title="Delete Customer">
-                                                        <ion-icon name="trash-outline"></ion-icon>
-                                                    </button>
-                                                </form>
-
-                                            </div>
-                                        </td>
-
-                                        <?php if (session()->get('role') === 'admin'): ?>
-                                            <td class="text-center">
-
-                                                <!-- ✅ Add this Reassign Button -->
-
-                                                <button
-                                                    class="btn btn-sm btn-warning reassign-btn"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#reassignCustomerModal"
-                                                    data-customer-id="<?= $customer['id'] ?>"
-                                                    data-customer-name="<?= esc($customer['name']) ?>"
-                                                    data-client-id="<?= $customer['client_id'] ?>">
-                                                    <ion-icon name="swap-horizontal-outline"></ion-icon> Reassign
-                                                </button>
-                                            </td>
-                                        <?php endif; ?>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
+                    <div class="table-responsive">
+                        <table id="customerTable" class="table table-modern"> <!-- ✔ table ID -->
+                            <thead>
                                 <tr>
-                                    <!-- FIXED: colspan should match total <th> count (11) -->
-                                    <td colspan="11" class="text-center text-muted py-3">No users found</td>
+                                    <th>Sr.No</th>
+                                    <th>CreatedBy</th>
+                                    <th>Product Name</th>
+                                    <th>Shop Name</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <!-- AJAX inserts rows here -->
+                            <tbody id="customerBody"></tbody> <!-- ✔ only tbody has this ID -->
+
+                        </table>
+                    </div>
 
                 </div>
+
             </div>
         </div>
     </div>
     <?php echo view('customer/add-customer'); ?>
     <?php echo view('customer/customer-assign'); ?>
     <!-- ✅ Reassign Customer Modal -->
+    <script>
+        const ROLE = "<?= session()->get('role') ?>"; // admin or user
+        const BASE = "<?= base_url() ?>";
+
+        window.appConfig = {
+            customerListDataUrl: `${BASE}/${ROLE}/customer/list-data`,
+            editCustomerUrl: `${BASE}/${ROLE}/customer/edit/`,
+            deleteCustomerUrl: `${BASE}/${ROLE}/customer/delete/`,
+            detailViewUrl: `${BASE}/${ROLE}/customer/customer-detail/`,
+            transactionHistoryUrl: `${BASE}/${ROLE}/transaction-history/`,
+            reassignCustomerUrl: `reassign-customer`, // 🔥 NEW
+            isAdmin: "<?= (session()->get('role') === 'admin') ? 1 : 0 ?>"
+
+        };
+    </script>
 
 
 

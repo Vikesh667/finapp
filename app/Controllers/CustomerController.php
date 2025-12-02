@@ -19,26 +19,52 @@ class CustomerController extends BaseController
     //  List Customers
     public function customer_list()
     {
-        $customerModel = new CustomerModel();
         $userModel     = new UserModel();
         $clientModel   = new ClientModel();
         $serviceModel  = new ServiceModel();
 
-        $role   = session()->get('role');
-        $userId = session()->get('user_id');
-        $filterClientId = $this->request->getGet('client_id');
+        $data['users']    = $userModel->findAll();     // dropdown for Admin only
+        $data['clients']  = $clientModel->findAll();   // Client filter for both
+        $data['services'] = $serviceModel->findAll();  // Service filter for both
+        $data['role']     = session()->get('role');    // Send role to view
 
-        $builder = $customerModel->getFilterdCustomer($role, $userId, $filterClientId);
-        $data['customers'] = $builder->paginate(30, 'customers');
-
-        $data['pager'] = $customerModel->pager;
-
-        $data['users']   = $userModel->findAll();
-        $data['clients'] = $clientModel->findAll();
-        $data['services'] = $serviceModel->findAll();
-
-        return view('customer/customer-list', $data);
+        return view('customer/customer-list', $data); // table loads by AJAX
     }
+
+    public function listData()
+    {
+        $session = session();
+        $customerModel = new CustomerModel();
+        $role   = $session->get('role');
+        $userId = $session->get('user_id');
+
+        $clientId  = $this->request->getGet('client_id');
+        $serviceId = $this->request->getGet('service_id');
+        $search    = $this->request->getGet('search');
+
+        // Base filter according to role
+        $builder = $customerModel->getFilterdCustomer($role, $userId, $clientId);
+
+        if ($serviceId) {
+            $builder->where('clients.service_id', $serviceId);
+        }
+
+        if ($search) {
+            $builder->groupStart()
+                ->like('clients.name', $search)
+                ->orLike('clients.shop_name', $search)
+                ->orLike('clients.client_name', $search)
+                ->orLike('clients.device_type', $search)
+                ->groupEnd();
+        }
+
+        return $this->response->setJSON([
+            'customers' => $builder->findAll(),
+            'role'      => $role
+        ]);
+    }
+
+
 
     // ➕ Add Customer
     public function add_customer()
@@ -101,7 +127,6 @@ class CustomerController extends BaseController
         $role = $session->get('role');
         $loggedUserId = $session->get('user_id');
         $customerId = $this->request->getPost('id') ?? null;
-
         $existingCustomer = $customerId ? $customerModel->find($customerId) : null;
 
         $userId = ($role === 'admin')
@@ -110,7 +135,7 @@ class CustomerController extends BaseController
 
         $clientId = $this->request->getPost('client_id') ?? $existingCustomer['client_id'] ?? null;
 
-        $result = $customerModel->saveCustomer($data, $userId, $clientId, $loggedUserId, $customerId);
+        $result = $customerModel->skipValidation(true)->saveCustomer($data, $userId, $clientId, $loggedUserId, $customerId);
 
         return $result
             ? redirect()->to('admin/customer-list')->with('success', 'Customer updated successfully!')
@@ -128,9 +153,10 @@ class CustomerController extends BaseController
 
         $customerModel->delete($id);
 
-        return redirect()
-            ->to($role === 'admin' ? base_url('admin/customer-list') : base_url('user/customer-list'))
-            ->with('success', 'Customer deleted successfully!');
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Customer deleted successfully!'
+        ]);
     }
 
     //  Get all customers of a client
@@ -207,44 +233,61 @@ class CustomerController extends BaseController
 
     public function reassign_customer()
     {
+         $userModel = new UserModel();
+        $customerId = $this->request->getPost('customer_id');
+        $newUserId  = $this->request->getPost('new_user_id');
+        $adminId = session()->get('user_id');
+         $user= $userModel->find($newUserId);
+         $newUserName=$user['name'];
+    
+        if (!$customerId || !$newUserId) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Missing customer or user ID'
+            ]);
+        }
+
         $customerModel = new \App\Models\CustomerModel();
         $clientUserModel = new \App\Models\ClientUserModel();
         $transactionModel = new \App\Models\TransactionModel();
         $transactionHistoryModel = new \App\Models\TransactionHistoryModal();
         $assignHistory = new \App\Models\CustomerReassignHistoryModel();
-        $customerId = $this->request->getPost('customer_id');
-        $newUserId  = $this->request->getPost('new_user_id');
-        $adminId = session()->get('user_id');
-        if (!$customerId || !$newUserId) {
-            return redirect()->back()->with('error', 'Missing data.');
-        }
 
-        //  Find the customer
         $customer = $customerModel->find($customerId);
         if (!$customer) {
-            return redirect()->back()->with('error', 'Customer not found.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Customer not found'
+            ]);
         }
 
         $clientId = $customer['client_id'];
         $oldUserId = $customer['user_id'];
-        //  Ensure new user belongs to same client
+       
+        // Ensure new user belongs to same client
         $isAssigned = $clientUserModel
             ->where('client_id', $clientId)
             ->where('user_id', $newUserId)
             ->countAllResults();
 
         if ($isAssigned == 0) {
-            return redirect()->back()->with('error', 'This user is not assigned to the same client.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Selected user is not assigned to this client'
+            ]);
         }
+
         $db = \Config\Database::connect();
         $db->transStart();
 
-        //  Update ownership
-        $updated = $customerModel->update($customerId, ['user_id' => $newUserId]);
+        // Update ownership
+        $customerModel->update($customerId, ['user_id' => $newUserId]);
+
         $transactionModel
             ->where('customer_id', $customerId)
             ->set(['user_id' => $newUserId])
             ->update();
+
         $transactionHistoryModel
             ->where('customer_id', $customerId)
             ->set(['user_id' => $newUserId])
@@ -259,17 +302,24 @@ class CustomerController extends BaseController
             'type'          => 'single',
             'created_at'    => date('Y-m-d H:i:s')
         ]);
+
         $db->transComplete();
 
         if ($db->transStatus() === false) {
-            return redirect()->back()->with('error', 'Failed to reassign customer with transactions.');
-        }
-        if (!$updated) {
-            return redirect()->back()->with('error', 'Failed to reassign customer.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Database transaction failed'
+            ]);
         }
 
-        return redirect()->back()->with('success', 'Customer reassigned successfully.');
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Customer reassigned successfully',
+            'new_user_name' => $newUserName
+            
+        ]);
     }
+
 
 
     //  View Customer Details

@@ -639,50 +639,47 @@
             });
         </script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const reassignButtons = document.querySelectorAll('.reassign-btn');
-                const userSelect = document.getElementById('modalUserSelect');
-                const customerIdInput = document.getElementById('modalCustomerId');
-                const customerNameInput = document.getElementById('modalCustomerName');
+            document.addEventListener("click", async function(event) {
+                const button = event.target.closest(".reassign-btn");
+                if (!button) return;
 
-                reassignButtons.forEach(button => {
-                    button.addEventListener('click', async () => {
-                        const customerId = button.dataset.customerId;
-                        const customerName = button.dataset.customerName;
-                        const clientId = button.dataset.clientId;
+                const customerId = button.dataset.customerId;
+                const customerName = button.dataset.customerName;
+                const clientId = button.dataset.clientId;
+                const currentUserId = button.dataset.currentUserId; // ⭐ added
 
-                        // Fill modal data
-                        customerIdInput.value = customerId;
-                        customerNameInput.value = customerName;
-                        userSelect.innerHTML = '<option value="">Loading...</option>';
+                document.getElementById("modalCustomerId").value = customerId;
+                document.getElementById("modalCustomerName").value = customerName;
 
-                        // Fetch users under same client
-                        try {
-                            const res = await fetch(`<?= base_url('admin/get-client-users/') ?>${clientId}`);
-                            const users = await res.json();
-                            userSelect.innerHTML = '<option value="">-- Select User --</option>';
-                            users.forEach(u => {
-                                const option = document.createElement('option');
-                                option.value = u.id;
-                                option.textContent = u.name;
-                                userSelect.appendChild(option);
-                            });
-                        } catch (error) {
-                            console.error('Error loading users:', error);
-                            userSelect.innerHTML = '<option value="">Error loading users</option>';
+                const userSelect = document.getElementById("modalUserSelect");
+                userSelect.innerHTML = `<option value="">Loading...</option>`;
+
+                try {
+                    const response = await fetch(`<?= base_url('admin/get-client-users/') ?>${clientId}`);
+                    const result = await response.json();
+                    userSelect.innerHTML = `<option value="">-- Select User --</option>`;
+
+                    if (Array.isArray(result) && result.length > 0) {
+                        result.forEach(user => {
+                            userSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+                        });
+
+                        // ⭐ auto-select assigned user
+                        if (currentUserId) {
+                            userSelect.value = currentUserId;
                         }
-                    });
-                });
-            });
-            document.querySelectorAll(".submenu-toggle").forEach(btn => {
-                btn.addEventListener("click", function() {
-                    const parent = this.closest(".has-submenu");
-                    parent.classList.toggle("active");
-                    const submenu = parent.querySelector(".submenu");
-                    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
-                });
+
+                    } else {
+                        userSelect.innerHTML += `<option value="">No users for this client</option>`;
+                    }
+
+                } catch (error) {
+                    console.error("Error loading users:", error);
+                    userSelect.innerHTML = `<option value="">Error loading users</option>`;
+                }
             });
         </script>
+
         <?php if (session()->getFlashdata('success')): ?>
             <script>
                 Swal.fire({
