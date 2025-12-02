@@ -97,44 +97,47 @@ class UserController extends Controller
 
     public function delete($id = null)
     {
-        $userModel   = new \App\Models\UserModel();
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Invalid request'
+            ]);
+        }
+
+        $userModel = new \App\Models\UserModel();
         $customerModel = new \App\Models\CustomerModel();
 
-        // 1️⃣ Check if user exists
         $user = $userModel->find($id);
         if (!$user) {
-            return redirect()->to(base_url('admin/user-list'))->with('error', 'User not found.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'User not found'
+            ]);
         }
 
-        // 2️⃣ Get admin user (auto transfer target)
+        // Get admin for auto transfer
         $admin = $userModel->where('role', 'admin')->first();
         if (!$admin) {
-            return redirect()->to(base_url('admin/user-list'))->with('error', 'Admin not found.');
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Admin not found'
+            ]);
         }
 
-        // 3️⃣ Transfer this user’s clients to Admin (Approach 1)
-        $customerModel
-            ->where('user_id', $id)
+        // Transfer this user’s clients to admin
+        $customerModel->where('user_id', $id)
             ->set(['user_id' => $admin['id']])
             ->update();
 
-        // 4️⃣ Optionally, you can store a record of who originally handled those clients
-        // Uncomment if your table has a `previous_user_id` column
-        /*
-    $clientModel
-        ->where('user_id', $admin['id'])
-        ->set(['previous_user_id' => $id])
-        ->update();
-    */
-
-        // 5️⃣ Delete or deactivate user
+        // Delete user
         $userModel->delete($id);
 
-        // 6️⃣ Redirect with confirmation
-        return redirect()
-            ->to(base_url('admin/user-list'))
-            ->with('success', 'User deleted successfully and their clients have been transferred to admin. You can reassign them later if needed.');
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'User deleted successfully and clients transferred to admin'
+        ]);
     }
+
 
 
     public function uploadProfile()

@@ -39,7 +39,12 @@ class ClientController extends BaseController
 
         return view('client/client-list', $data);
     }
-
+    public function client_list_data()
+    {
+        $clientModel = new ClientModel();
+        $data['clients'] = $clientModel->findAll();
+        return $this->response->setJSON(['clients' => $data['clients']]);
+    }
 
     public function add_client()
     {
@@ -253,23 +258,23 @@ class ClientController extends BaseController
         }
     }
 
- public function getClientsByUser($userId)
-{
-    $clientModel = new \App\Models\ClientModel();
+    public function getClientsByUser($userId)
+    {
+        $clientModel = new \App\Models\ClientModel();
 
-    $clients = $clientModel->select('clients.id, clients.company_name, clients.name')
-        ->join('client_users', 'client_users.client_id = clients.id', 'left')
-        ->groupStart()
+        $clients = $clientModel->select('clients.id, clients.company_name, clients.name')
+            ->join('client_users', 'client_users.client_id = clients.id', 'left')
+            ->groupStart()
             ->where('clients.user_id', $userId)
             ->orWhere('client_users.user_id', $userId)
-        ->groupEnd()
-        ->groupBy('clients.id')
-        ->orderBy('clients.company_name', 'ASC')
-        ->get()
-        ->getResultArray();  // ✔ Correct fetch
+            ->groupEnd()
+            ->groupBy('clients.id')
+            ->orderBy('clients.company_name', 'ASC')
+            ->get()
+            ->getResultArray();  // ✔ Correct fetch
 
-    return $this->response->setJSON($clients);
-}
+        return $this->response->setJSON($clients);
+    }
 
 
     public function single_client($id = null)
@@ -297,10 +302,11 @@ class ClientController extends BaseController
         ]);
     }
 
-    public function client_assing_history(){
-         $clientAssignHistory= new ClientAssignHistoryModel();
-         $data['assign_history']=$clientAssignHistory->getFullHistory();
-        
-        return view('client/client_assign_history',$data);
+    public function client_assing_history()
+    {
+        $clientAssignHistory = new ClientAssignHistoryModel();
+        $data['assign_history'] = $clientAssignHistory->getFullHistory();
+
+        return view('client/client_assign_history', $data);
     }
 }

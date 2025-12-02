@@ -47,7 +47,8 @@
     window.appConfig = {
       listDataUrl: "<?= base_url('admin/listData') ?>",
       logoUrl: "<?= base_url('assets/uploads/logos/') ?>",
-      editUrl: "<?= base_url('admin/user/edit/') ?>"
+      editUrl: "<?= base_url('admin/user/edit/') ?>",
+      deleteUserUrl: "<?= base_url('admin/user/delete/') ?>",
     };
   </script>
 

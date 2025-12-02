@@ -40,6 +40,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->post('profile-save', 'UserController::save_profile');
   // --- CLIENT MANAGEMENT ---
   $routes->get('client-list', 'ClientController::client_list');
+  $routes->get('listClientData', 'ClientController::client_list_data');
   $routes->get('get-users', 'UserController::getUsers');
   $routes->get('get-clients/(:num)', 'ClientController::getClientsByUser/$1');
   $routes->get('get-customers', 'CustomerController::getCustomers');
