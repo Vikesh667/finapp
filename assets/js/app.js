@@ -409,65 +409,6 @@ function deleteCustomer(id) {
   });
 }
 
-function loadTransactions(){
-    $("#transactionTableBody").html(`
-        <tr>
-            <td colspan="7" class="text-center py-4">
-                <div class="spinner-border text-primary"></div>
-                <p class="mt-2">Loading data...</p>
-            </td>
-        </tr>
-    `);
-    $.ajax({
-      url:window.appConfig.fetchTransactionDataUrl,
-      method:"GET",
-      dataType:"json",
-      success:function(response){
-          console.log(response);
-        let rows="";
-        let start=1;
-        response.transactions.forEach((txn,index)=>{
-         let actionButtons=`
-            <a href="${window.appConfig.detailViewUrl}${txn.id}" class="btn btn-sm btn-outline-info rounded-circle" title="View Details">
-                <ion-icon name="eye-outline"></ion-icon></a>
-            `;
-
-            rows+=`
-                <tr>
-                    <td>${start+index}</td>
-                    <td>${txn.transfor_by}</td>
-                    <td>${txn.code}</td>
-                    <td>${txn.rate}</td>
-                    <td>${txn.extra_code}</td>
-                    <td>${txn.total_amount}</td>
-                    <td>${txn.paid_amount}</td>
-                    <td>${txn.remaining_amount}</td>
-                    <td>${txn.total_code}</td>
-                    <td>${txn.created_at}</td>
-                     <td>${txn.remark}</td>
-                     <td>${txn.gst_applied}</td>
-                     <td>${txn.gst_number ?? '-'}</td>
-                     td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center flex-wrap gap-2"> 
-                            ${actionButtons}
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-        $("#transactionTableBody").html(rows);   
-
-        
-      }
-    })
-}
-
-
-
-
-
-
 loadUsers();
 loadClients();
 loadCustomers();

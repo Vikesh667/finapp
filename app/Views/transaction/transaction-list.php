@@ -131,7 +131,7 @@ $role = session()->get('role');
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <?php if (isset($transactions) && !empty($transactions)): ?>
                                 <?php
                                 $start = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
@@ -246,12 +246,6 @@ $role = session()->get('role');
     <?php echo view('transaction/pay-now'); ?>
     <!-- Invoice Modal -->
     <?php echo view('transaction/transactionPaymentHistory'); ?>
-    <script>
-        window.appConfig = {
-            userRole: '<?= session()->get('role') ?>',
-            fetchTransactionDataUrl: '<?= base_url('') ?>/<?= (session()->get('role') === 'admin') ? 'admin' : 'user' ?>/transaction-list-data',
-        };
-    </script>
     <?php echo view('sidebar'); ?>
     <?php echo view('bottomMenu'); ?>
     <?php echo view('footerlink'); ?>

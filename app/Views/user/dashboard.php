@@ -94,14 +94,14 @@
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">My Clients</span>
+                        <span class="stat-title text-dark">My Clients</span>
                         <h3 class="stat-value"><?= $totalCustomer ?></h3>
                         <ion-icon name="people-outline" class="stat-icon"></ion-icon>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">Transactions</span>
+                        <span class="stat-title text-dark">Transactions</span>
                         <h3 class="stat-value"><?= $totalTransactions ?></h3>
                         <ion-icon name="swap-horizontal-outline" class="stat-icon"></ion-icon>
                     </div>
@@ -111,14 +111,14 @@
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">Total License Keys</span>
+                        <span class="stat-title text-dark">Total License Keys</span>
                         <h3 class="stat-value"><?= $totalCode ?></h3>
                         <ion-icon name="key-outline" class="stat-icon"></ion-icon>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">Free Keys(CN)</span>
+                        <span class="stat-title text-dark">Free Keys(CN)</span>
                         <h3 class="stat-value"><?= $extraCode ?></h3>
                         <ion-icon name="key-outline" class="stat-icon"></ion-icon>
                     </div>
@@ -128,14 +128,14 @@
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">Paid</span>
+                        <span class="stat-title text-dark">Paid</span>
                         <h3 class="stat-value text-success">₹<?= number_format($totalPaid) ?></h3>
                         <ion-icon name="cash-outline" class="stat-icon"></ion-icon>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box premium-box">
-                        <span class="stat-title">Pending</span>
+                        <span class="stat-title text-dark">Pending</span>
                         <h3 class="stat-value text-danger">₹<?= number_format($totalRemaining) ?></h3>
                         <ion-icon name="hourglass-outline" class="stat-icon"></ion-icon>
                     </div>
@@ -146,7 +146,7 @@
                     <div class="stat-box  border rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="title fw-bold text-secondary">Last Transaction Code</div>
+                                <div class="title fw-bold text-dark">Last Transaction Code</div>
                                 <div class="value text-info fs-5"><?= esc($recentTransactionCode) ?></div>
                             </div>
                             <ion-icon name="receipt-outline" class="fs-3 text-info"></ion-icon>
