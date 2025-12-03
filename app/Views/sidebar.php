@@ -193,6 +193,14 @@ $counter = $this->common->getcounter();
                                         <div class="in">Client Assign History</div>
                                     </a>
                                 </li>
+                                 <li>
+                                    <a href="<?= base_url('admin/customer-delete-history') ?>" class="item">
+                                        <div class="icon-box">
+                                            <ion-icon name="person-add-outline"></ion-icon>
+                                        </div>
+                                        <div class="in">Client Delete History</div>
+                                    </a>
+                                </li>
                             </ul>
 
                         </li>

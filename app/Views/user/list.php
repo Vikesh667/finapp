@@ -20,7 +20,7 @@
 
         <!-- User Table -->
         <div class="table-responsive">
-
+          <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search users...">
           <table id="userTable" class="table table-modern">
             <thead>
               <tr>
@@ -35,9 +35,7 @@
             </thead>
             <tbody id="userBody"></tbody>
           </table>
-
-
-
+          <div id="pagination" class="mt-3"></div>
         </div>
       </div>
     </div>

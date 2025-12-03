@@ -34,6 +34,12 @@
 
                 <div class="table-responsive">
                     <div class="table-responsive">
+                        <input
+                            type="text"
+                            id="searchCustomer"
+                            class="form-control mb-3"
+                            placeholder="Search customers..." />
+
                         <table id="customerTable" class="table table-modern"> <!-- ✔ table ID -->
                             <thead>
                                 <tr>
@@ -51,6 +57,8 @@
                             <tbody id="customerBody"></tbody> <!-- ✔ only tbody has this ID -->
 
                         </table>
+                        <div id="customerPagination" class="mt-3"></div>
+
                     </div>
 
                 </div>

@@ -42,9 +42,42 @@ class ClientController extends BaseController
     public function client_list_data()
     {
         $clientModel = new ClientModel();
-        $data['clients'] = $clientModel->findAll();
-        return $this->response->setJSON(['clients' => $data['clients']]);
+
+        $page         = (int) ($this->request->getGet('page') ?? 1);
+        $search       = $this->request->getGet('search');
+        $filterUserId = $this->request->getGet('user_id');
+        $role         = session()->get('role');
+        $loggedUserId = session()->get('user_id');
+
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        // Base filtered query
+        $builder = $clientModel->getFilteredClients($role, $loggedUserId, $search, $filterUserId);
+
+        // Clone before applying limit/offset
+        $countBuilder = clone $builder;
+
+        // Apply LIMIT
+        $clients = $builder->orderBy('clients.id', 'DESC')->findAll($limit, $offset);
+
+        // Count search-filtered records
+        $filtered = $countBuilder->countAllResults();
+
+        // Count total clients (no search/no filter)
+        $total = $clientModel->countAll();
+
+        return $this->response->setJSON([
+            'clients'      => $clients,
+            'current_page' => $page,
+            'per_page'     => $limit,
+            'total'        => $total,
+            'filtered'     => $filtered,
+            'total_pages'  => ceil($filtered / $limit)
+        ]);
     }
+
+
 
     public function add_client()
     {
@@ -95,37 +128,37 @@ class ClientController extends BaseController
     }
 
 
-public function update_client()
-{
-    $session     = session();
-    $clientModel = new ClientModel();
+    public function update_client()
+    {
+        $session     = session();
+        $clientModel = new ClientModel();
 
-    $clientId = $this->request->getPost('id');
-    $client   = $clientModel->find($clientId);
-    
-    if (!$client) {
-        return redirect()->to('admin/client-list')->with('error', 'Client not found.');
+        $clientId = $this->request->getPost('id');
+        $client   = $clientModel->find($clientId);
+
+        if (!$client) {
+            return redirect()->to('admin/client-list')->with('error', 'Client not found.');
+        }
+
+        if ($session->get('role') === 'user') {
+            return redirect()->to('/unauthorized');
+        }
+
+        $data   = $this->request->getPost();
+        $logo   = $this->request->getFile('logo');
+
+        $logged = $session->get('user_id');
+
+        // Preserve or fallback to admin
+        $ownerId = $client['user_id'] ?: $logged;
+
+        try {
+            $clientModel->saveClient($data, $logo, $ownerId, $logged, $clientId);
+            return redirect()->to('admin/client-list')->with('success', 'Client updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
     }
-
-    if ($session->get('role') === 'user') {
-        return redirect()->to('/unauthorized');
-    }
-
-    $data   = $this->request->getPost();
-    $logo   = $this->request->getFile('logo');
-
-    $logged = $session->get('user_id');
-
-    // Preserve or fallback to admin
-    $ownerId = $client['user_id'] ?: $logged;
-
-    try {
-        $clientModel->saveClient($data, $logo, $ownerId, $logged, $clientId);
-        return redirect()->to('admin/client-list')->with('success', 'Client updated successfully.');
-    } catch (Exception $e) {
-        return redirect()->back()->withInput()->with('error', $e->getMessage());
-    }
-}
 
 
 

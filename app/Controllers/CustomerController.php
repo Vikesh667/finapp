@@ -31,38 +31,66 @@ class CustomerController extends BaseController
         return view('customer/customer-list', $data); // table loads by AJAX
     }
 
-    public function listData()
-    {
-        $session = session();
-        $customerModel = new CustomerModel();
-        $role   = $session->get('role');
-        $userId = $session->get('user_id');
+   public function listData()
+{
+    $session = session();
+    $customerModel = new CustomerModel();
+    $role   = $session->get('role');
+    $userId = $session->get('user_id');
 
-        $clientId  = $this->request->getGet('client_id');
-        $serviceId = $this->request->getGet('service_id');
-        $search    = $this->request->getGet('search');
+    $page      = (int) ($this->request->getGet('page') ?? 1);
+    $search    = $this->request->getGet('search');
+    $clientId  = $this->request->getGet('client_id');
+    $serviceId = $this->request->getGet('service_id');
 
-        // Base filter according to role
-        $builder = $customerModel->getFilterdCustomer($role, $userId, $clientId);
+    $limit  = 10;
+    $offset = ($page - 1) * $limit;
 
-        if ($serviceId) {
-            $builder->where('clients.service_id', $serviceId);
-        }
+    // Base filters (role + assigned + created + client)
+    $builder = $customerModel->getFilterdCustomer($role, $userId, $clientId);
 
-        if ($search) {
-            $builder->groupStart()
-                ->like('clients.name', $search)
-                ->orLike('clients.shop_name', $search)
-                ->orLike('clients.client_name', $search)
-                ->orLike('clients.device_type', $search)
-                ->groupEnd();
-        }
-
-        return $this->response->setJSON([
-            'customers' => $builder->where('customers.is_deleted', 0)->findAll(),
-            'role'      => $role
-        ]);
+    // Filter by service
+    if (!empty($serviceId)) {
+        $builder->where('clients.service_id', $serviceId);
     }
+
+    // Search filter (fixed column names)
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('customers.name', $search)
+            ->orLike('customers.shop_name', $search)
+            ->orLike('clients.company_name', $search)  // client name
+            ->orLike('createdBy.name', $search)        // created by
+            ->orLike('assignedTo.name', $search)       // assigned user
+            ->orLike('customers.device_type', $search)
+        ->groupEnd();
+    }
+
+    $builder->where('customers.is_deleted', 0);
+
+    // Clone for correct filtered count
+    $countBuilder = clone $builder;
+
+    // Fetch current page results
+    $customers = $builder->orderBy('customers.id', 'DESC')->findAll($limit, $offset);
+
+    // Count filtered
+    $filtered = $countBuilder->countAllResults();
+
+    // Count all records
+    $total = $customerModel->where('is_deleted', 0)->countAllResults();
+
+    return $this->response->setJSON([
+        'customers'    => $customers,
+        'current_page' => $page,
+        'per_page'     => $limit,
+        'total'        => $total,
+        'filtered'     => $filtered,
+        'total_pages'  => ceil($filtered / $limit),
+        'role'         => $role
+    ]);
+}
+
 
 
 
@@ -177,12 +205,14 @@ class CustomerController extends BaseController
             ]);
         } else {
               $notificationModel = new \App\Models\NotificationModel();
-              $notificationModel->insert([
+              if($role === 'user') {
+                 $notificationModel->insert([
                   'user_id' => $customer['user_id'],
                   'message' => "Customer '{$customer['name']}' has been deleted.",
                   'is_read' => 0,
                   'created_at' => date('Y-m-d H:i:s')
               ]);
+              }
             return $this->response->setJSON([
                 'status' => 'success',
                 'message' => 'Customer deleted successfully!'

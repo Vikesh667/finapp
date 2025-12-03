@@ -16,10 +16,12 @@ const deleteCustomerUrl = window.appConfig.deleteCustomerUrl;
 const transactionHistoryUrl = window.appConfig.transactionHistoryUrl;
 const detailViewUrl = window.appConfig.detailViewUrl;
 
-
+let page = 1;
+let search = "";
+let clientPage = 1;
+let clientSearch = "";
 
 function loadUsers() {
-  // Loader inside tbody
   $("#userBody").html(`
         <tr>
             <td colspan="7" class="text-center py-4">
@@ -32,45 +34,117 @@ function loadUsers() {
   $.ajax({
     url: listDataUrl,
     method: "GET",
+    data: { page, search },
     dataType: "json",
+
     success: function (response) {
       let rows = "";
-      let start = 1;
+      let start = (response.current_page - 1) * response.per_page + 1;
+
+      if (response.users.length === 0) {
+        $("#userBody").html(`
+            <tr>
+                <td colspan="7" class="text-center py-4 text-muted">
+                    No data found
+                </td>
+            </tr>
+        `);
+        $("#pagination").html("");
+        return;
+      }
 
       response.users.forEach((user, index) => {
         rows += `
-                <tr>
-                    <td>${start + index}</td>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.phone ?? "-"}</td>
-                    <td>${user.address ?? "-"}</td>
-                    <td><img src="${logoUrl}${
-          user.profile_image
-        }" width="50"></td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="${editUrl}${
+          <tr>
+            <td>${start + index}</td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.phone ?? "-"}</td>
+            <td>${user.address ?? "-"}</td>
+            <td><img src="${logoUrl}${user.profile_image}" width="50"></td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <a href="${editUrl}${
           user.id
         }" class="btn btn-sm btn-outline-primary rounded-circle">
-                                <ion-icon name="create-outline"></ion-icon>
-                            </a>
-                            <button onclick="deleteUser(${
-                              user.id
-                            })" class="btn btn-sm btn-outline-danger rounded-circle">
-                                <ion-icon name="trash-outline"></ion-icon>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`;
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+                <button onclick="deleteUser(${
+                  user.id
+                })" class="btn btn-sm btn-outline-danger rounded-circle">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+            </td>
+          </tr>`;
       });
 
       $("#userBody").html(rows);
+
+      // PAGINATION WITH FIRST, PREVIOUS, NUMBERS, NEXT, LAST
+      let pag = `<div class="d-flex justify-content-center flex-wrap gap-1">`;
+
+      // First
+      if (page > 1) {
+        pag += `
+          <button class="btn btn-sm btn-outline-primary"
+            onclick="changePage(1)">First</button>`;
+      }
+
+      // Previous
+      if (page > 1) {
+        pag += `
+          <button class="btn btn-sm btn-outline-primary"
+            onclick="changePage(${page - 1})">Previous</button>`;
+      }
+
+      // Page numbers
+      for (let i = 1; i <= response.total_pages; i++) {
+        pag += `
+          <button class="btn btn-sm ${
+            i == page ? "btn-primary" : "btn-outline-primary"
+          }"
+            onclick="changePage(${i})">${i}</button>`;
+      }
+
+      // Next
+      if (page < response.total_pages) {
+        pag += `
+          <button class="btn btn-sm btn-outline-primary"
+            onclick="changePage(${page + 1})">Next</button>`;
+      }
+
+      // Last
+      if (page < response.total_pages) {
+        pag += `
+          <button class="btn btn-sm btn-outline-primary"
+            onclick="changePage(${response.total_pages})">Last</button>`;
+      }
+
+      pag += `</div>`;
+      $("#pagination").html(pag);
     },
   });
 }
+
+function changePage(p) {
+  page = p;
+  loadUsers();
+}
+
+$("#searchInput").on("keyup", function () {
+  search = $(this).val();
+  page = 1;
+  loadUsers();
+});
+
+$(document).ready(function () {
+  loadUsers();
+});
+
 function deleteUser(id) {
   Swal.fire({
+    toast: true,
     title: "Are you sure?",
     text: "This user will be deleted and clients transferred to admin.",
     icon: "warning",
@@ -88,6 +162,8 @@ function deleteUser(id) {
       .then((result) => {
         if (result.status === "success") {
           Swal.fire({
+            toast: true,
+            position: "top",
             icon: "success",
             title: "Deleted!",
             text: result.message,
@@ -97,6 +173,8 @@ function deleteUser(id) {
           loadUsers();
         } else {
           Swal.fire({
+            toast: true,
+            position: "top",
             icon: "error",
             title: "Error!",
             text: result.message,
@@ -120,40 +198,25 @@ function loadClients() {
   $.ajax({
     url: clientListDataUrl,
     method: "GET",
+    data: { page: clientPage, search: clientSearch },
     dataType: "json",
     success: function (response) {
       let rows = "";
-      let start = 1;
+      let start = (response.current_page - 1) * response.per_page + 1;
+
+      if (response.clients.length === 0) {
+        $("#clientBody").html(`
+          <tr>
+            <td colspan="8" class="text-center py-4 text-muted">
+              No data found
+            </td>
+          </tr>
+        `);
+        $("#clientPagination").html("");
+        return;
+      }
 
       response.clients.forEach((client, index) => {
-        let actions = `
-          <a href="${viewClientProductUrl}${client.id}"
-            class="btn btn-sm btn-warning rounded-pill px-3"
-            title="View Client Products">
-            View
-          </a>
-
-          <a href="${editClientUrl}${client.id}"
-            class="btn btn-sm btn-outline-primary rounded-circle action-btn"
-            title="Edit Client">
-            <ion-icon name="create-outline"></ion-icon>
-          </a>
-
-          <button onclick="deleteClient(${client.id})"
-            class="btn btn-sm btn-outline-danger rounded-circle action-btn"
-            title="Delete Client">
-            <ion-icon name="trash-outline"></ion-icon>
-          </button>
-
-          <button class="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-1 px-3"
-            data-bs-toggle="modal"
-            data-bs-target="#userModal"
-            data-client-id="${client.id}"
-            title="Assign User">
-            <i class="bi bi-person-plus"></i> Assign
-          </button>
-        `;
-
         rows += `
           <tr>
             <td>${start + index}</td>
@@ -164,7 +227,30 @@ function loadClients() {
             <td><img src="${logoUrlc}${client.logo}" width="50"></td>
             <td class="text-center">
               <div class="d-flex justify-content-center flex-wrap gap-2">
-                ${actions}
+                <a href="${viewClientProductUrl}${
+          client.id
+        }" class="btn btn-sm btn-warning rounded-pill px-3">
+                  View
+                </a>
+
+                <a href="${editClientUrl}${
+          client.id
+        }" class="btn btn-sm btn-outline-primary rounded-circle action-btn">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+
+                <button onclick="deleteClient(${
+                  client.id
+                })" class="btn btn-sm btn-outline-danger rounded-circle action-btn">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+
+                <button class="btn btn-sm btn-outline-secondary rounded-pill d-flex align-items-center gap-1 px-3"
+                  data-bs-toggle="modal" data-bs-target="#userModal" data-client-id="${
+                    client.id
+                  }">
+                  <i class="bi bi-person-plus"></i> Assign
+                </button>
               </div>
             </td>
           </tr>
@@ -172,9 +258,63 @@ function loadClients() {
       });
 
       $("#clientBody").html(rows);
+
+      /* PAGINATION — FIRST / PREVIOUS / NUMBERS / NEXT / LAST */
+      let pag = `<div class="d-flex justify-content-center flex-wrap gap-1">`;
+
+      // First
+      if (clientPage > 1) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeClientPage(1)">First</button>`;
+      }
+
+      // Previous
+      if (clientPage > 1) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeClientPage(${
+          clientPage - 1
+        })">Previous</button>`;
+      }
+
+      // Page numbers
+      for (let i = 1; i <= response.total_pages; i++) {
+        pag += `
+          <button class="btn btn-sm ${
+            i == clientPage ? "btn-primary" : "btn-outline-primary"
+          }"
+            onclick="changeClientPage(${i})">${i}</button>`;
+      }
+
+      // Next
+      if (clientPage < response.total_pages) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeClientPage(${
+          clientPage + 1
+        })">Next</button>`;
+      }
+
+      // Last
+      if (clientPage < response.total_pages) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeClientPage(${response.total_pages})">Last</button>`;
+      }
+
+      pag += `</div>`;
+      $("#clientPagination").html(pag);
     },
   });
 }
+
+$("#clientSearchInput").on("keyup", function () {
+  clientSearch = $(this).val();   
+  clientPage = 1;                 
+  loadClients();                 
+});
+function changeClientPage(p) {
+  clientPage = p;
+  loadClients();
+}
+
+$(document).ready(function () {
+  loadClients();
+});
+
 function deleteClient(id) {
   Swal.fire({
     title: "Are you sure?",
@@ -202,7 +342,7 @@ function deleteClient(id) {
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
-          })
+          });
           loadClients(); // refresh table without reloading the page
         } else {
           Swal.fire({
@@ -219,35 +359,51 @@ function deleteClient(id) {
       .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
   });
 }
+let customerPage = 1;   // current page number
+let customerSearch = ""; // search keyword (optional)
+
 function loadCustomers() {
   // loader
   $("#customerBody").html(`
-  <tr>
-    <td colspan="10" class="text-center py-4">
-      <div class="spinner-border text-primary"></div>
-      <p class="mt-2">Loading customers...</p>
-    </td>
-  </tr>
-`);
+    <tr>
+      <td colspan="10" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Loading customers...</p>
+      </td>
+    </tr>
+  `);
 
   // filter values
   let client = $("#filterClient").val();
   let service = $("#filterService").val();
-  let search = $("#searchCustomer").val();
+  customerSearch = $("#searchCustomer").val();
 
   $.ajax({
     url: customerListDataUrl,
     method: "GET",
     dataType: "json",
     data: {
-      client_id: client || "",
-      service_id: service || "",
-      search: search || "",
+      page: customerPage,           // pagination
+      search: customerSearch || "", // search
+      client_id: client || "",      // filter
+      service_id: service || "",    // filter
     },
     success: function (response) {
       let rows = "";
-      let start = 1;
       let customers = response.customers;
+      let start = (response.current_page - 1) * response.per_page + 1;
+
+      if (customers.length === 0) {
+        $("#customerBody").html(`
+          <tr>
+            <td colspan="10" class="text-center py-4 text-muted">
+              No customers found
+            </td>
+          </tr>
+        `);
+        $("#customerPagination").html("");
+        return;
+      }
 
       customers.forEach((cust, index) => {
         let actions = `
@@ -262,28 +418,25 @@ function loadCustomers() {
              title="Customer Details">
             <ion-icon name="eye-outline"></ion-icon>
           </a>
-          
-            <button onclick="deleteCustomer(${cust.id})"
-              class="btn btn-sm btn-outline-danger rounded-circle"
-              title="Delete Customer">
-              <ion-icon name="trash-outline"></ion-icon>
-            </button>
 
+          <button onclick="deleteCustomer(${cust.id})"
+            class="btn btn-sm btn-outline-danger rounded-circle"
+            title="Delete Customer">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
         `;
 
-        // Admin — extra privileges (edit / delete / reassign)
         if (isAdmin === 1) {
-          actions += `    
-           <button class="btn btn-sm btn-warning reassign-btn"
-             data-bs-toggle="modal"
-             data-bs-target="#reassignCustomerModal"
-             data-customer-id="${cust.id}"
-             data-customer-name="${cust.name}"
-             data-client-id="${cust.client_id}"
-             data-current-user-id="${cust.user_id}">
-            <ion-icon name="swap-horizontal-outline"></ion-icon> Reassign
-             </button>
-
+          actions += `
+            <button class="btn btn-sm btn-warning reassign-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#reassignCustomerModal"
+              data-customer-id="${cust.id}"
+              data-customer-name="${cust.name}"
+              data-client-id="${cust.client_id}"
+              data-current-user-id="${cust.user_id}">
+              <ion-icon name="swap-horizontal-outline"></ion-icon> Reassign
+            </button>
           `;
         }
 
@@ -305,6 +458,39 @@ function loadCustomers() {
       });
 
       $("#customerBody").html(rows);
+
+      // ------- PAGINATION -------
+      let pag = `<div class="d-flex justify-content-center flex-wrap gap-1">`;
+
+      // First
+      if (customerPage > 1) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(1)">First</button>`;
+      }
+
+      // Previous
+      if (customerPage > 1) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${customerPage - 1})">Previous</button>`;
+      }
+
+      // Page numbers
+      for (let i = 1; i <= response.total_pages; i++) {
+        pag += `
+          <button class="btn btn-sm ${i == customerPage ? 'btn-primary' : 'btn-outline-primary'}"
+            onclick="changeCustomerPage(${i})">${i}</button>`;
+      }
+
+      // Next
+      if (customerPage < response.total_pages) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${customerPage + 1})">Next</button>`;
+      }
+
+      // Last
+      if (customerPage < response.total_pages) {
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${response.total_pages})">Last</button>`;
+      }
+
+      pag += `</div>`;
+      $("#customerPagination").html(pag);
     },
     error: () => {
       $("#customerBody").html(`
@@ -313,6 +499,25 @@ function loadCustomers() {
     },
   });
 }
+function changeCustomerPage(p) {
+  customerPage = p;
+  loadCustomers();
+}
+$("#searchCustomer").on("keyup", function () {
+  customerSearch = $(this).val();
+  customerPage = 1; // reset on search
+  loadCustomers();
+});
+
+$("#filterClient, #filterService").on("change", function () {
+  customerPage = 1;
+  loadCustomers();
+});
+
+$(document).ready(function () {
+  loadCustomers();
+});
+
 function reassignCustomer() {
   const customerId = document.getElementById("modalCustomerId").value;
   const newUserId = document.getElementById("modalUserSelect").value;
@@ -365,7 +570,7 @@ function reassignCustomer() {
 }
 
 function deleteCustomer(id) {
-  console.log('Deleting customer with ID:', id);
+  console.log("Deleting customer with ID:", id);
   Swal.fire({
     toast: true,
     position: "top-center",
@@ -383,7 +588,7 @@ function deleteCustomer(id) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('Delete response data:', data);
+        console.log("Delete response data:", data);
         if (data.status === "success") {
           Swal.fire({
             toast: true,
@@ -399,7 +604,7 @@ function deleteCustomer(id) {
           Swal.fire({
             toast: true,
             position: "top",
-            icon: "error",  
+            icon: "error",
             title: data.message,
             showConfirmButton: false,
             timer: 3000,
@@ -425,11 +630,10 @@ function loadDeleteHistory() {
     method: "GET",
     dataType: "json",
     success: function (response) {
-    
       let rows = "";
       let start = 1;
       response.deleted_customers.forEach((cust, index) => {
-        console.log('Deleted customer:', cust);
+        console.log("Deleted customer:", cust);
         rows += `
           <tr>
             <td>${start + index}</td>
@@ -450,7 +654,7 @@ function loadDeleteHistory() {
         <tr><td colspan="6" class="text-center text-danger">Failed to load deleted customers.</td></tr>
       `);
     },
-  }); 
+  });
 }
 loadUsers();
 loadClients();

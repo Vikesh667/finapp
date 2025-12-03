@@ -20,13 +20,44 @@ class UserController extends Controller
         return view('user/list');   // HTML table page
     }
 
-    public function user_list_data()
-    {
-        $model = new UserModel();
-        $users = $model->findAll();   // fetch ALL users
+public function user_list_data()
+{
+    $model = new UserModel();
 
-        return $this->response->setJSON(['users' => $users]);
+    $page   = (int) ($this->request->getGet('page') ?? 1);
+    $search = $this->request->getGet('search');
+
+    $limit = 10;
+    $offset = ($page - 1) * $limit;
+
+    // Base query
+    $builder = $model;
+
+    // If search available
+    if (!empty($search)) {
+        $builder = $builder->like('name', $search)
+                           ->orLike('email', $search)
+                           ->orLike('phone', $search);
     }
+
+    // Get filtered results
+    $users = $builder->orderBy('id', 'DESC')->findAll($limit, $offset);
+    $filtered = $builder->countAllResults(false);
+
+    // Total users (without search)
+    $total = $model->countAll();
+
+    return $this->response->setJSON([
+        'users' => $users,
+        'current_page' => $page,
+        'per_page' => $limit,
+        'total' => $total,
+        'filtered' => $filtered,
+        'total_pages' => ceil($filtered / $limit)
+    ]);
+}
+
+
 
     public function add()
     {

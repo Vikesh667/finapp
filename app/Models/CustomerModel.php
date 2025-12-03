@@ -62,28 +62,33 @@ class CustomerModel extends Model
         $builder = $this->select('
         customers.*,
         clients.company_name AS client_name,
-        users.name AS created_by_name
+        createdBy.name AS created_by_name,
+        assignedTo.name AS assigned_user_name
     ')
             ->join('clients', 'clients.id = customers.client_id', 'left')
-            ->join('users', 'users.id = customers.created_by', 'left')
+            ->join('users AS createdBy', 'createdBy.id = customers.created_by', 'left')
+            ->join('users AS assignedTo', 'assignedTo.id = customers.user_id', 'left')
             ->orderBy('customers.created_at', 'DESC')
             ->distinct();
 
-        //  Admin sees all customers
+        // ADMIN → CAN SEE ALL CUSTOMERS
         if ($role === 'admin') {
-            if ($filterClientId) {
+            if (!empty($filterClientId)) {
                 $builder->where('customers.client_id', $filterClientId);
             }
             return $builder;
         }
 
-        //  User sees only customers assigned or created by them
+        // USER → CAN SEE ONLY CUSTOMERS ASSIGNED OR CREATED BY THEM
         if ($role === 'user') {
-            $builder->where('customers.user_id', $userId);
+            $builder->groupStart()
+                ->where('customers.user_id', $userId)
+                ->orWhere('customers.created_by', $userId)
+                ->groupEnd();
         }
 
-        //  Optional filter by client
-        if ($filterClientId) {
+        // OPTIONAL FILTER BY CLIENT
+        if (!empty($filterClientId)) {
             $builder->where('customers.client_id', $filterClientId);
         }
 

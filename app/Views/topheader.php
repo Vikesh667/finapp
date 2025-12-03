@@ -38,10 +38,6 @@
 
             <?php elseif ($role === 'user'): ?>
                 <!-- User: Only Avatar/Profile -->
-                <a href="<?= base_url('admin/app-notifications') ?>" class="headerButton">
-                    <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                    <span class="badge badge-danger">4</span>
-                </a>
                 <a href="<?= base_url('user/app-settings') ?>" class="headerButton">
                     <?php if (!empty($profileImage) && file_exists(FCPATH . 'assets/uploads/logos/' . $profileImage)): ?>
                         <img
