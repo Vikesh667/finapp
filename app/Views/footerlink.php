@@ -384,103 +384,91 @@
                 const role = "<?= $role ?>"; // ✅ Make sure $role is available in your view
 
                 // when edit button is clicked
-                document.querySelectorAll('.edit-transaction').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const transactionId = this.getAttribute('data-id');
+                $(document).on("click", ".edit-transaction", function(e) {
+                    e.preventDefault();
 
-                        //  Use correct route based on role
-                        const fetchUrl = (role === 'admin') ?
-                            `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}` :
-                            `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
+                    const transactionId = $(this).data("id");
 
-                        // Fetch transaction data from backend
-                        fetch(fetchUrl)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data && data.transaction) {
-                                    const t = data.transaction; // ✅ Shortcut for easier use
+                    const fetchUrl = (role === 'admin') ?
+                        `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}` :
+                        `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
 
-                                    //  Fill modal fields with transaction data
-                                    document.getElementById('customerName').value = t.customer_name || '';
-                                    document.getElementById('totalAmount').value = t.total_amount || '';
-                                    document.getElementById('remainingAmount').value = t.remaining_amount || '';
-                                    document.getElementById('transactionId').value = t.id || '';
+                    fetch(fetchUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.transaction) {
+                                const t = data.transaction;
 
-                                    // ✅ Set correct form action dynamically
-                                    const payForm = document.getElementById('payNowForm');
-                                    payForm.action = (role === 'admin') ?
-                                        "<?= base_url('admin/transaction/payNow') ?>" :
-                                        "<?= base_url('user/transaction/payNow') ?>";
+                                $("#customerName").val(t.customer_name);
+                                $("#totalAmount").val(t.total_amount);
+                                $("#remainingAmount").val(t.remaining_amount);
+                                $("#transactionId").val(t.id);
 
-                                    // ✅ Show modal
-                                    const payNowModal = new bootstrap.Modal(document.getElementById('payNowModal'));
-                                    payNowModal.show();
-                                } else {
-                                    console.error('Transaction data not found:', data);
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    });
+                                const payForm = document.getElementById("payNowForm");
+                                payForm.action = (role === 'admin') ?
+                                    "<?= base_url('admin/transaction/payNow') ?>" :
+                                    "<?= base_url('user/transaction/payNow') ?>";
+
+                                new bootstrap.Modal(document.getElementById("payNowModal")).show();
+                            } else {
+                                console.error("Transaction not found:", data);
+                            }
+                        })
+                        .catch(error => console.error("Fetch Error:", error));
                 });
 
-                document.querySelectorAll('.view-transaction').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const transactionId = this.getAttribute('data-view-id');
 
-                        const fetchUrl = (role === 'admin') ?
-                            `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}` :
-                            `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
+                $(document).on("click", ".view-transaction", function(e) {
+                    e.preventDefault();
+                    const transactionId = $(this).data("view-id");
 
-                        fetch(fetchUrl)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data && data.transaction) {
-                                    const t = data.transaction;
-                                    const history = data.history || [];
+                    const fetchUrl = (role === 'admin') ?
+                        `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}` :
+                        `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
 
+                    fetch(fetchUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.transaction) {
+                                const t = data.transaction;
+                                const history = data.history || [];
 
-                                    document.getElementById('customer_Name').textContent = t.customer_name || 'N/A';
-                                    document.getElementById('transaction_Id').textContent = t.recipt_no || 'N/A';
-                                    document.getElementById('transactionCode').textContent = t.code || 'N/A';
-                                    document.getElementById('total_Amount').textContent = t.total_amount || '0';
-                                    document.getElementById('paidAmount').textContent = t.paid_amount || '0';
-                                    document.getElementById('remaining_Amount').textContent = t.remaining_amount || '0';
-                                    document.getElementById('transactionDate').textContent = t.created_at || 'N/A';
-                                    document.getElementById('extraCode').textContent = t.extra_code || 'N/A';
-                                    document.getElementById('totalCode').textContent = t.total_code || 'N/A';
+                                $("#customer_Name").text(t.customer_name || 'N/A');
+                                $("#transaction_Id").text(t.recipt_no || 'N/A');
+                                $("#transactionCode").text(t.code || 'N/A');
+                                $("#total_Amount").text(t.total_amount || '0');
+                                $("#paidAmount").text(t.paid_amount || '0');
+                                $("#remaining_Amount").text(t.remaining_amount || '0');
+                                $("#transactionDate").text(t.created_at || 'N/A');
+                                $("#extraCode").text(t.extra_code || 'N/A');
+                                $("#totalCode").text(t.total_code || 'N/A');
 
-                                    const historyContainer = document.getElementById('transactionHistory');
-                                    if (historyContainer) {
-                                        historyContainer.innerHTML = ''; // Clear old data
+                                const historyContainer = $("#transactionHistory");
+                                historyContainer.html("");
 
-                                        if (history.length > 0) {
-                                            history.forEach((h, index) => {
-                                                const row = `
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        
-                                        <td>${h.before_paid_amount || '0'}</td>
-                                        <td>${h.amount || '0'}</td>
-                                        <td>${h.after_paid_amount || '0'}</td>
-                                        <td>${h.created_at || 'N/A'}</td>
-                                        <td>${h.remark || 'N/A'}</td>
-                                    </tr>
-                                `;
-                                                historyContainer.insertAdjacentHTML('beforeend', row);
-                                            });
-                                        } else {
-                                            historyContainer.innerHTML = `<tr><td colspan="5" class="text-center">No history available</td></tr>`;
-                                        }
-                                    }
-
-                                    const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
-                                    invoiceModal.show();
+                                if (history.length > 0) {
+                                    history.forEach((h, index) => {
+                                        historyContainer.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${h.before_paid_amount || '0'}</td>
+                                <td>${h.amount || '0'}</td>
+                                <td>${h.after_paid_amount || '0'}</td>
+                                <td>${h.created_at || 'N/A'}</td>
+                                <td>${h.remark || 'N/A'}</td>
+                            </tr>
+                        `);
+                                    });
+                                } else {
+                                    historyContainer.html(
+                                        `<tr><td colspan="6" class="text-center">No history available</td></tr>`
+                                    );
                                 }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    });
+
+                                new bootstrap.Modal(document.getElementById("invoiceModal")).show();
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
                 });
 
                 const downloadBtn = document.getElementById("downloadReceipt");
@@ -760,8 +748,6 @@
                 // Refresh dropdown + count
                 loadNotifications();
             });
-
-          
         </script>
 
         </body>

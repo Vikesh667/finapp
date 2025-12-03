@@ -55,36 +55,43 @@ class TransactionController extends BaseController
         // For form to remember filters
         $data['filters'] = $filters;
         $data['users'] = $userModel->findAll();
-        
+
         return view('transaction/transaction-list', $data);
     }
-
-    public function transactionListData()
+    public function transaction_list_json()
     {
         $transactionModel = new TransactionModel();
-        $userModel = new UserModel();
+
+        $page = $this->request->getGet('page') ?? 1;
+        $limit = 30;
+
         $filters = [
-            'keyword'      => $this->request->getGet('search'),
+            'keyword'      => $this->request->getGet('keyword'), // ← IMPORTANT
             'client_id'    => $this->request->getGet('client_id'),
             'customer_id'  => $this->request->getGet('customer_id'),
             'status'       => $this->request->getGet('status'),
-            'date_filter'  => $this->request->getGet('date_filter'), // ⭐ Add this
+            'date_filter'  => $this->request->getGet('date_filter'),
             'from_date'    => $this->request->getGet('from_date'),
             'to_date'      => $this->request->getGet('to_date'),
         ];
 
-
-
         $userRole = session()->get('role');
         $userId   = session()->get('user_id');
+
         $builder = $transactionModel->getTransaction($userRole, $userId, $filters);
-        $data['transactions'] = $builder->findAll();
+
+        $transactions = $builder->paginate($limit, 'transactions');
+        $pager = $builder->pager;
 
         return $this->response->setJSON([
-            'status' => 'success',
-            'transactions' => $data['transactions']
+            'transactions' => $transactions ?? [],
+            'current_page' => $pager->getCurrentPage('transactions') ?? 1,
+            'per_page'     => $pager->getPerPage('transactions') ?? $limit,
+            'total_pages'  => $pager->getPageCount('transactions') ?? 1,
         ]);
     }
+
+
 
     public function create_transaction()
     {
@@ -213,7 +220,12 @@ class TransactionController extends BaseController
                 'remark'             => $this->request->getPost('remark')
             ]);
         }
-
+        $session = session();
+        if ($session->get('role') === 'user') {
+            $adminId = 1; // assuming admin has user ID 1
+            $message = "{$session->get('user_name')} created a new transaction for '{$customer['name']}'";
+            push_notification($adminId, $message, "New Transaction Created");
+        }
         $redirectPath = session()->get('role') === 'admin'
             ? 'admin/transaction-list'
             : 'user/transaction-list';
@@ -302,9 +314,16 @@ class TransactionController extends BaseController
             'remark'             => $this->request->getPost('remark')
         ]);
 
+        $session = session();
+        if ($session->get('role') === 'user') {
+            $adminId = 1; // assuming admin has user ID 1
+            $customerModel = new CustomerModel();
+            $customer = $customerModel->find($transaction['customer_id']);
+            $message = "{$session->get('user_name')} made a payment of {$payAmount} for '{$customer['name']}'";
+            push_notification($adminId, $message, "Payment Received");
+        }
 
-
-        $redirectPath = session()->get('role') === 'admin'
+        $redirectPath = $session->get('role') === 'admin'
             ? 'admin/transaction-list'
             : 'user/transaction-list';
 

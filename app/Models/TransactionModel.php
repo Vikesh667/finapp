@@ -26,78 +26,90 @@ class TransactionModel extends Model
 
 
     public function getTransaction($role, $userId, $filters = [])
-    {
-        $builder = $this->select('transactions.*, customers.name as transfor_by')
-            ->join('customers', 'customers.id = transactions.customer_id', 'left')
-            ->orderBy('transactions.created_at', 'DESC');
+{
+    $builder = $this->select('transactions.*, customers.name as transfor_by')
+        ->join('customers', 'customers.id = transactions.customer_id', 'left')
+        ->orderBy('transactions.created_at', 'DESC');
 
-        // 1️⃣ Role filter
-        if ($role === 'user') {
-            $builder->where('transactions.user_id', $userId);
-        }
-
-        // 2️⃣ Client filter
-        if (!empty($filters['client_id'])) {
-            $builder->where('transactions.client_id', $filters['client_id']);
-        }
-
-        // 3️⃣ Customer filter
-        if (!empty($filters['customer_id'])) {
-            $builder->where('transactions.customer_id', $filters['customer_id']);
-        }
-
-        // 4️⃣ Status filter
-        if (!empty($filters['status'])) {
-            if ($filters['status'] === 'paid') {
-                $builder->where('transactions.remaining_amount', 0);
-            } elseif ($filters['status'] === 'pending') {
-                $builder->where('transactions.remaining_amount >', 0);
-            }
-        }
-
-        // 5️⃣ Date filter
-        if (!empty($filters['date_filter'])) {
-            switch ($filters['date_filter']) {
-                case 'today':
-                    $builder->where('DATE(transactions.created_at)', date('Y-m-d'));
-                    break;
-
-                case 'yesterday':
-                    $builder->where('DATE(transactions.created_at)', date('Y-m-d', strtotime('-1 day')));
-                    break;
-
-                case 'this_week':
-                    $builder->where('YEARWEEK(transactions.created_at, 1)', date('oW')); // ISO week
-                    break;
-
-
-                case 'last_week':
-                    $builder->where('YEARWEEK(transactions.created_at)', date('YW', strtotime('-1 week')));
-                    break;
-
-                case 'this_month':
-                    $builder->where('MONTH(transactions.created_at)', date('m'))
-                        ->where('YEAR(transactions.created_at)', date('Y'));
-                    break;
-
-                case 'last_month':
-                    $builder->where('MONTH(transactions.created_at)', date('m', strtotime('-1 month')))
-                        ->where('YEAR(transactions.created_at)', date('Y', strtotime('-1 month')));
-                    break;
-
-                case 'custom':
-                    if (!empty($filters['from_date'])) {
-                        $builder->where('DATE(transactions.created_at) >=', $filters['from_date']);
-                    }
-                    if (!empty($filters['to_date'])) {
-                        $builder->where('DATE(transactions.created_at) <=', $filters['to_date']);
-                    }
-                    break;
-            }
-        }
-
-        return $builder;
+    // 1️⃣ Role filter
+    if ($role === 'user') {
+        $builder->where('transactions.user_id', $userId);
     }
+
+    // 🔍 2️⃣ Keyword / Search filter (MISSING BEFORE)
+    if (!empty($filters['keyword'])) {
+        $builder->groupStart();
+            $builder->like('customers.name', $filters['keyword']);
+            $builder->orLike('transactions.remark', $filters['keyword']);
+            $builder->orLike('transactions.code', $filters['keyword']);
+            $builder->orLike('transactions.total_amount', $filters['keyword']);
+            $builder->orLike('transactions.paid_amount', $filters['keyword']);
+            $builder->orLike('transactions.remaining_amount', $filters['keyword']);
+        $builder->groupEnd();
+    }
+
+    // 3️⃣ Client filter
+    if (!empty($filters['client_id'])) {
+        $builder->where('transactions.client_id', $filters['client_id']);
+    }
+
+    // 4️⃣ Customer filter
+    if (!empty($filters['customer_id'])) {
+        $builder->where('transactions.customer_id', $filters['customer_id']);
+    }
+
+    // 5️⃣ Status filter
+    if (!empty($filters['status'])) {
+        if ($filters['status'] === 'paid') {
+            $builder->where('transactions.remaining_amount', 0);
+        } elseif ($filters['status'] === 'pending') {
+            $builder->where('transactions.remaining_amount >', 0);
+        }
+    }
+
+    // 6️⃣ Date filter
+    if (!empty($filters['date_filter'])) {
+        switch ($filters['date_filter']) {
+            case 'today':
+                $builder->where('DATE(transactions.created_at)', date('Y-m-d'));
+                break;
+
+            case 'yesterday':
+                $builder->where('DATE(transactions.created_at)', date('Y-m-d', strtotime('-1 day')));
+                break;
+
+            case 'this_week':
+                $builder->where('YEARWEEK(transactions.created_at, 1)', date('oW'));
+                break;
+
+            case 'last_week':
+                $builder->where('YEARWEEK(transactions.created_at)', date('YW', strtotime('-1 week')));
+                break;
+
+            case 'this_month':
+                $builder->where('MONTH(transactions.created_at)', date('m'))
+                        ->where('YEAR(transactions.created_at)', date('Y'));
+                break;
+
+            case 'last_month':
+                $builder->where('MONTH(transactions.created_at)', date('m', strtotime('-1 month')))
+                        ->where('YEAR(transactions.created_at)', date('Y', strtotime('-1 month')));
+                break;
+
+            case 'custom':
+                if (!empty($filters['from_date'])) {
+                    $builder->where('DATE(transactions.created_at) >=', $filters['from_date']);
+                }
+                if (!empty($filters['to_date'])) {
+                    $builder->where('DATE(transactions.created_at) <=', $filters['to_date']);
+                }
+                break;
+        }
+    }
+
+    return $builder;
+}
+
 
 
     public function getTransactionDetails($customerId)

@@ -18,7 +18,8 @@ $role = session()->get('role');
                     </div>
                 </div>
 
-                <form method="GET" class="card p-3 mb-3 shadow-sm border-0 filter-card">
+                <form id="filterForm" class="card p-3 mb-3 shadow-sm border-0 filter-card">
+
 
 
                     <h6 class="fw-bold mb-3"><ion-icon name="funnel-outline"></ion-icon> Filter Transactions</h6>
@@ -36,20 +37,20 @@ $role = session()->get('role');
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                       
 
-                        <!-- Client -->
-                        <div class="col-md-2 col-6">
-                            <label class="form-label">Client</label>
-                            <select id="clientForTransactionsSelect" name="client_id" class="form-select">
-                                <option value="">Select Client</option>
-                                <?php if (session()->get('role') !== 'admin'): ?>
-                                    <?php foreach ($clients as $c): ?>
-                                        <option value="<?= $c['id'] ?>"><?= $c['company_name'] ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
-                        </div>
+
+                            <!-- Client -->
+                            <div class="col-md-2 col-6">
+                                <label class="form-label">Client</label>
+                                <select id="clientForTransactionsSelect" name="client_id" class="form-select">
+                                    <option value="">Select Client</option>
+                                    <?php if (session()->get('role') !== 'admin'): ?>
+                                        <?php foreach ($clients as $c): ?>
+                                            <option value="<?= $c['id'] ?>"><?= $c['company_name'] ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
                         <?php endif; ?>
                         <!-- Customer -->
                         <div class="col-md-2 col-6">
@@ -113,7 +114,7 @@ $role = session()->get('role');
 
 
                 <div class="table-responsive">
-                    <table id="example" class="table table-modern">
+                    <table id="transactionTable" class="table table-modern">
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
@@ -131,108 +132,8 @@ $role = session()->get('role');
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php if (isset($transactions) && !empty($transactions)): ?>
-                                <?php
-                                $start = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
-                                foreach ($transactions as $index => $transaction):
-                                ?>
-                                    <tr>
-                                        <td data-label="Sr.No"><?= $start + $index ?></td>
-                                        <td data-label="Customer Name"><?= esc($transaction['transfor_by']) ?></td>
-                                        <td data-label="No Of Codes"><?= esc($transaction['code']) ?></td>
-                                        <td data-label="Rate per code"><?= esc($transaction['rate']) ?></td>
-                                        <td data-label="Free Code"><?= esc($transaction['extra_code']) ?></td>
-                                        <td data-label="Total Amount"><?= esc($transaction['total_amount']) ?></td>
-                                        <td data-label="Paid Amount"><?= esc($transaction['paid_amount']) ?></td>
-                                        <td data-label="Remaining Amount"><?= esc($transaction['remaining_amount']) ?></td>
-                                        <td data-label="Total Code"><?= esc($transaction['total_code']) ?></td>
-                                        <td data-label="Date"><?= esc($transaction['created_at']) ?></td>
-                                        <td data-label="Remark"><?= esc($transaction['remark']) ?></td>
-                                        <td>
-                                            <?php
-                                            $paid = $transaction['total_amount'] - $transaction['remaining_amount'];
-                                            $percentPaid = ($paid / $transaction['total_amount']) * 100;
-                                            $percentPaid = round($percentPaid, 2);
+                        <tbody id="transactionBody">
 
-                                            $percentRemaining = 100 - $percentPaid;
-                                            ?>
-
-                                            <div class="progress" style="height: 10px;">
-
-                                                <!-- PAID PART (Green) -->
-                                                <?php if ($percentPaid > 0): ?>
-                                                    <div class="progress-bar bg-success"
-                                                        style="width: <?= $percentPaid ?>%;">
-                                                    </div>
-                                                <?php endif; ?>
-
-                                                <!-- REMAINING PART (Red) -->
-                                                <?php if ($percentRemaining > 0 && $percentPaid < 100): ?>
-                                                    <div class="progress-bar bg-danger"
-                                                        style="width: <?= $percentRemaining ?>%;">
-                                                    </div>
-                                                <?php endif; ?>
-
-                                            </div>
-
-                                            <small><?= $percentPaid ?>% Paid</small>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex flex-wrap justify-content-center gap-2">
-
-                                                <?php if ($transaction['remaining_amount'] > 0): ?>
-                                                    <!-- Pay Now -->
-                                                    <a href="#"
-                                                        class="btn btn-sm btn-outline-primary edit-transaction"
-                                                        data-id="<?= $transaction['id'] ?>"
-                                                        title="Pay Now"
-                                                        data-bs-toggle="tooltip">
-                                                        <ion-icon name="card-outline"></ion-icon>
-                                                    </a>
-                                                <?php endif; ?>
-
-                                                <!-- View -->
-                                                <a href="#"
-                                                    class="btn btn-sm btn-outline-info view-transaction"
-                                                    data-view-id="<?= $transaction['id'] ?>"
-                                                    title="View Transaction"
-                                                    data-bs-toggle="tooltip">
-                                                    <ion-icon name="eye-outline"></ion-icon>
-                                                </a>
-
-                                                <!-- Delete -->
-                                                <?php
-                                                $deleteUrl = ($role === 'admin')
-                                                    ? base_url('admin/transaction-delete/' . $transaction['id'])
-                                                    : base_url('user/transaction-delete/' . $transaction['id']);
-                                                ?>
-                                                <?php if ($transaction['remaining_amount'] == 0): ?>
-                                                    <form method="post" action="<?= $deleteUrl ?>" onsubmit="return confirm('Are you sure?')">
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            title="Delete"
-                                                            data-bs-toggle="tooltip">
-                                                            <ion-icon name="trash-outline"></ion-icon>
-                                                        </button>
-                                                    </form>
-                                                <?php endif; ?>
-
-                                                <!-- Invoice -->
-                                                <a href="<?= base_url('admin/invoice/preview/' . $transaction['id']) ?>"
-                                                    class="btn btn-sm btn-outline-warning"
-                                                    title="Invoice"
-                                                    data-bs-toggle="tooltip">
-                                                    <ion-icon name="document-text-outline"></ion-icon>
-                                                </a>
-
-                                            </div>
-                                        </td>
-
-
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
                         </tbody>
                     </table>
 
@@ -246,6 +147,15 @@ $role = session()->get('role');
     <?php echo view('transaction/pay-now'); ?>
     <!-- Invoice Modal -->
     <?php echo view('transaction/transactionPaymentHistory'); ?>
+    <script>
+        window.appConfig = {
+            transactionListDataUrl: "<?= (session()->get('role') === 'admin') ? base_url('admin/transaction-list-data') : base_url('user/transaction-list-data') ?>",
+            detailViewUrl: "<?= base_url('admin/transactions/detail-view/') ?>",
+            invoicePreviewUrl: "<?= base_url('admin/invoice/preview/') ?>",
+            payAmountUrl: "<?= base_url('admin/transaction/payNow') ?>",
+            deleteTransactionUrl: "<?= base_url('admin/transaction-delete/') ?>",
+        };
+    </script>
     <?php echo view('sidebar'); ?>
     <?php echo view('bottomMenu'); ?>
     <?php echo view('footerlink'); ?>

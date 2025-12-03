@@ -17,7 +17,8 @@
          <?php if ($role === 'admin'): ?>
              <!-- Admin: Notifications + Avatar -->
              <div class="dropdown">
-                 <a href="#" class="headerButton" data-bs-toggle="dropdown">
+                 <a href="#" class="headerButton" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+
                      <ion-icon class="icon" name="notifications-outline"></ion-icon>
                      <span id="notifyCount" class="badge bg-danger"></span>
                  </a>
@@ -79,16 +80,22 @@
 
      // Create UI for each notification
      function notificationItem(n) {
-         let unread = n.is_read == 0 ? "fw-bold bg-light" : "";
+         let unreadClass = n.is_read == 0 ? "bg-light border border-4 bg-primary" : "";
+         let dot = n.is_read == 0 ? `<span class="dot bg-info rounded-circle me-2" style="width:12px;height:12px;display:inline-block; background-color: #0d6efd;"></span>` : "";
+
          return `
-        <div class="p-2 mb-1 rounded ${unread}" 
+        <div class="d-flex align-items-center p-2 mb-1 rounded   ${unreadClass}" 
              style="cursor:pointer;" 
-             onclick="readNotification(${n.id})">
-            <div class="small text-dark">${n.message}</div>
-            <div class="text-muted small">${n.created_at}</div>
+             onclick="readNotification(${n.id}, event)">
+            ${dot}
+            <div class="flex-grow-1">
+                <div class="small text-dark">${n.message}</div>
+                <div class="text-muted small">${n.created_at}</div>
+            </div>
         </div>
     `;
      }
+
 
      // Load notifications list + update count
      function loadNotifications() {
@@ -117,10 +124,13 @@
      }
 
      // Mark ONE notification as read (when clicked)
-     function readNotification(id) {
+     function readNotification(id, event) {
+         event.stopPropagation(); // ⛔ prevent dropdown close
+
          fetch("<?= base_url('admin/notifications/mark-read') ?>/" + id)
-             .then(() => loadNotifications());
+             .then(() => loadNotifications()); // refresh list only
      }
+
 
      // Initial load
      loadNotifications();

@@ -9,45 +9,45 @@
     <!-- App Capsule -->
     <div id="appCapsule">
         <!-- Wallet Card -->
-        <div class="section wallet-card-section pt-1">
-            <div class="wallet-card">
+     
 
-                <div class="business-card">
-                    <div class="row g-0 align-items-center">
+<div class="section wallet-card-section pt-1">
+    <div class="wallet-card">
+        <div class="premium-stats-card">
 
-                        <!-- LEFT SIDE -->
-                        <div class="col-md-7 p-2 d-flex align-items-center gap-3">
-                            <div class="icon-circle">
-                                <ion-icon name="trending-up-outline"></ion-icon>
-                            </div>
-                            <div>
-                                <h6 class="label">Total Business Value</h6>
-                                <h1 class="amount">₹ <?= esc(number_format($totals['overall_amount'], 2)) ?></h1>
-                                <p class="sub">Including all client transactions</p>
-                            </div>
+            <div class="row g-0 align-items-center justify-content-between stat-row">
+                
+                <!-- LEFT: Total Business Value -->
+                <div class="col-md-6 stat-left">
+                    <h6>Total Business Value</h6>
+                    <h1 class="stats-amount">₹ <?= esc(number_format($totals['overall_amount'], 2)) ?></h1>
+                    <p>Including all client transactions</p>
+                </div>
+
+                <!-- RIGHT: GST Breakdown -->
+                <div class="col-md-6 stat-right">
+                    <div class="gst-breakup">
+                        <div class="gst-item">
+                            <ion-icon name="receipt-outline"></ion-icon>
+                            <span>With GST</span>
+                            <strong>₹ <?= esc(number_format($totals['amount_with_gst'], 2)) ?></strong>
                         </div>
 
-                        <!-- RIGHT SIDE -->
-                        <div class="col-md-5 p-3 border-start summary-side">
-                            <div class="summary-item mb-2">
-                                <ion-icon name="receipt-outline"></ion-icon>
-                                <strong>With GST:</strong>
-                                <span>₹ <?= esc(number_format($totals['amount_with_gst'], 2)) ?></span>
-                            </div>
-                            <div class="summary-item">
-                                <ion-icon name="pricetag-outline"></ion-icon>
-                                <strong>Without GST:</strong>
-                                <span>₹ <?= esc(number_format($totals['amount_without_gst'], 2)) ?></span>
-                            </div>
-                        </div>
+                        <div class="gst-divider"></div>
 
+                        <div class="gst-item">
+                            <ion-icon name="pricetag-outline"></ion-icon>
+                            <span>Without GST</span>
+                            <strong>₹ <?= esc(number_format($totals['amount_without_gst'], 2)) ?></strong>
+                        </div>
                     </div>
                 </div>
 
-
             </div>
-        </div>
 
+        </div>
+    </div>
+</div>
 
         <!-- Stats -->
         <!-- Ionicons -->

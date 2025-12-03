@@ -9293,3 +9293,92 @@ body.dark-mode .btn-reset:hover {
     border-color: transparent;
     box-shadow: 0 2px 6px rgba(0, 123, 255, 0.35);
 }
+/* Main card */
+.premium-stats-card {
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+}
+
+/* LEFT SECTION */
+.stat-left h6 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+}
+
+.stats-amount {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 2px 0;
+    color: #111;
+}
+
+.stat-left p {
+    font-size: 13px;
+    color: #777;
+}
+
+/* RIGHT SECTION */
+.stat-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.gst-breakup {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.gst-item {
+    text-align: center;
+}
+
+.gst-item ion-icon {
+    display: block;
+    font-size: 26px;
+    color: #000;
+    margin-bottom: 4px;
+}
+
+.gst-item span {
+    font-size: 14px;
+    color: #000;
+}
+
+.gst-item strong {
+    display: block;
+    font-size: 16px;
+    margin-top: 2px;
+    color: #000;
+}
+
+/* divider */
+.gst-divider {
+    width: 1px;
+    height: 45px;
+    background: #dcdcdc;
+}
+
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+    .stat-row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stat-right {
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    .gst-breakup {
+        gap: 18px;
+    }
+
+    .stats-amount {
+        font-size: 26px;
+    }
+}

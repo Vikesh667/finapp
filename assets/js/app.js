@@ -16,6 +16,12 @@ const deleteCustomerUrl = window.appConfig.deleteCustomerUrl;
 const transactionHistoryUrl = window.appConfig.transactionHistoryUrl;
 const detailViewUrl = window.appConfig.detailViewUrl;
 
+const customerDeleteHistoryUrl = window.appConfig.customerDeleteHistoryUrl;
+
+const transactionListDataUrl = window.appConfig.transactionListDataUrl;
+const deleteTransactionUrl = window.appConfig.deleteTransactionUrl;
+const invoicePreviewUrl = window.appConfig.invoicePreviewUrl;
+const payAmountUrl = window.appConfig.payAmountUrl;
 let page = 1;
 let search = "";
 let clientPage = 1;
@@ -302,9 +308,9 @@ function loadClients() {
 }
 
 $("#clientSearchInput").on("keyup", function () {
-  clientSearch = $(this).val();   
-  clientPage = 1;                 
-  loadClients();                 
+  clientSearch = $(this).val();
+  clientPage = 1;
+  loadClients();
 });
 function changeClientPage(p) {
   clientPage = p;
@@ -359,11 +365,10 @@ function deleteClient(id) {
       .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
   });
 }
-let customerPage = 1;   // current page number
+let customerPage = 1; // current page number
 let customerSearch = ""; // search keyword (optional)
 
 function loadCustomers() {
-  // loader
   $("#customerBody").html(`
     <tr>
       <td colspan="10" class="text-center py-4">
@@ -373,7 +378,6 @@ function loadCustomers() {
     </tr>
   `);
 
-  // filter values
   let client = $("#filterClient").val();
   let service = $("#filterService").val();
   customerSearch = $("#searchCustomer").val();
@@ -383,10 +387,10 @@ function loadCustomers() {
     method: "GET",
     dataType: "json",
     data: {
-      page: customerPage,           // pagination
+      page: customerPage, // pagination
       search: customerSearch || "", // search
-      client_id: client || "",      // filter
-      service_id: service || "",    // filter
+      client_id: client || "", // filter
+      service_id: service || "", // filter
     },
     success: function (response) {
       let rows = "";
@@ -469,19 +473,25 @@ function loadCustomers() {
 
       // Previous
       if (customerPage > 1) {
-        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${customerPage - 1})">Previous</button>`;
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${
+          customerPage - 1
+        })">Previous</button>`;
       }
 
       // Page numbers
       for (let i = 1; i <= response.total_pages; i++) {
         pag += `
-          <button class="btn btn-sm ${i == customerPage ? 'btn-primary' : 'btn-outline-primary'}"
+          <button class="btn btn-sm ${
+            i == customerPage ? "btn-primary" : "btn-outline-primary"
+          }"
             onclick="changeCustomerPage(${i})">${i}</button>`;
       }
 
       // Next
       if (customerPage < response.total_pages) {
-        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${customerPage + 1})">Next</button>`;
+        pag += `<button class="btn btn-sm btn-outline-primary" onclick="changeCustomerPage(${
+          customerPage + 1
+        })">Next</button>`;
       }
 
       // Last
@@ -656,7 +666,303 @@ function loadDeleteHistory() {
     },
   });
 }
+//----------------------------------------------------
+// Global Variables
+//----------------------------------------------------
+
+let client_id = "";
+let customer_id = "";
+let status = "";
+let date_filter = "";
+let from_date = "";
+let to_date = "";
+
+// User role fetched from PHP
+const role = "<?= session()->get('role') ?>";
+
+//----------------------------------------------------
+// Collect Filters
+//----------------------------------------------------
+function updateFilters() {
+  search = $("#search").val();
+  client_id = $("#clientForTransactionsSelect").val();
+  customer_id = $("#customerTransactionsSelect").val();
+  status = $("select[name='status']").val();
+  date_filter = $("#dateFilter").val();
+  from_date = $("input[name='from_date']").val();
+  to_date = $("input[name='to_date']").val();
+}
+
+//----------------------------------------------------
+// Load Transactions with Loader + Pagination
+//----------------------------------------------------
+function loadTransactions() {
+  $("#transactionBody").html(`
+    <tr>
+      <td colspan="13" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Loading transactions...</p>
+      </td>
+    </tr>
+  `);
+
+  $.ajax({
+    url: transactionListDataUrl,
+    method: "GET",
+    data: {
+      page,
+      keyword: search, // IMPORTANT - must match controller
+      client_id,
+      customer_id,
+      status,
+      date_filter,
+      from_date,
+      to_date,
+    },
+    dataType: "json",
+
+    success: function (res) {
+      let rows = "";
+      let start = (res.current_page - 1) * res.per_page + 1;
+
+      if (!res.transactions || res.transactions.length === 0) {
+        $("#transactionBody").html(`
+          <tr><td colspan="13" class="text-center py-4">No transactions found</td></tr>
+        `);
+        $("#pagination").html("");
+        return;
+      }
+
+      res.transactions.forEach((t, index) => {
+        let paid = t.total_amount - t.remaining_amount;
+        let percentPaid = Math.round((paid / t.total_amount) * 100);
+        let percentRemaining = 100 - percentPaid;
+
+        rows += `
+          <tr>
+            <td>${start + index}</td>
+            <td>${t.transfor_by}</td>
+            <td>${t.code}</td>
+            <td>${t.rate}</td>
+            <td>${t.extra_code}</td>
+            <td>${t.total_amount}</td>
+            <td>${t.paid_amount}</td>
+            <td>${t.remaining_amount}</td>
+            <td>${t.total_code}</td>
+            <td>${t.created_at}</td>
+            <td>${t.remark ?? "-"}</td>
+            <td>
+              <div class="progress" style="height: 10px;">
+                ${
+                  percentPaid > 0
+                    ? `<div class="progress-bar bg-success" style="width:${percentPaid}%"></div>`
+                    : ""
+                }
+                ${
+                  percentRemaining > 0 && percentPaid < 100
+                    ? `<div class="progress-bar bg-danger" style="width:${percentRemaining}%"></div>`
+                    : ""
+                }
+              </div>
+              <small>${percentPaid}% Paid</small>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                ${
+                  t.remaining_amount > 0
+                    ? `
+                  <a href="#" class="btn btn-sm btn-outline-primary edit-transaction" data-id="${t.id}">
+                    <ion-icon name="card-outline"></ion-icon>
+                  </a>`
+                    : ""
+                }
+
+                <a href="#" class="btn btn-sm btn-outline-info view-transaction" data-view-id="${
+                  t.id
+                }">
+                  <ion-icon name="eye-outline"></ion-icon>
+                </a>
+
+                ${
+                  t.remaining_amount == 0
+                    ? `
+                  <form method="post" action="${
+                    deleteTransactionUrl + t.id
+                  }" onsubmit="return confirm('Are you sure?')">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                  </form>`
+                    : ""
+                }
+
+                <a href="${
+                  invoicePreviewUrl + t.id
+                }" class="btn btn-sm btn-outline-warning">
+                  <ion-icon name="document-text-outline"></ion-icon>
+                </a>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      $("#transactionBody").html(rows);
+
+      //----------------------------------------------------
+      // Pagination
+      //----------------------------------------------------
+      let pag = `<div class="d-flex justify-content-center flex-wrap gap-1">`;
+      if (page > 1)
+        pag += `<button onclick="changePage(1)" class="btn btn-sm btn-outline-primary">First</button>`;
+      if (page > 1)
+        pag += `<button onclick="changePage(${
+          page - 1
+        })" class="btn btn-sm btn-outline-primary">Previous</button>`;
+      for (let i = 1; i <= res.total_pages; i++)
+        pag += `<button onclick="changePage(${i})" class="btn btn-sm ${
+          i == page ? "btn-primary" : "btn-outline-primary"
+        }">${i}</button>`;
+      if (page < res.total_pages)
+        pag += `<button onclick="changePage(${
+          page + 1
+        })" class="btn btn-sm btn-outline-primary">Next</button>`;
+      if (page < res.total_pages)
+        pag += `<button onclick="changePage(${res.total_pages})" class="btn btn-sm btn-outline-primary">Last</button>`;
+      pag += `</div>`;
+      $("#pagination").html(pag);
+    },
+
+    error: function (xhr) {
+      console.error("AJAX ERROR:", xhr.responseText);
+      $("#transactionBody").html(`
+        <tr><td colspan="13" class="text-center text-danger py-4">
+          ❌ Error loading transactions (Status ${xhr.status})
+        </td></tr>
+      `);
+    },
+  });
+}
+
+//----------------------------------------------------
+// Pagination keeps filters
+//----------------------------------------------------
+function changePage(p) {
+  page = p;
+  updateFilters();
+  loadTransactions();
+}
+
+//----------------------------------------------------
+// Filter Form Submit
+//----------------------------------------------------
+$("#filterForm").on("submit", function (e) {
+  e.preventDefault();
+  updateFilters();
+  page = 1;
+  loadTransactions();
+});
+
+//----------------------------------------------------
+// Pay Now Modal (dynamic elements)
+//----------------------------------------------------
+$(document).on("click", ".edit-transaction", function (e) {
+  e.preventDefault();
+  const transactionId = $(this).data("id");
+
+  const fetchUrl =
+    role === "admin"
+      ? `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}`
+      : `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
+
+  fetch(fetchUrl)
+    .then((res) => res.json())
+    .then((data) => {
+      const t = data.transaction;
+      $("#customerName").val(t.customer_name);
+      $("#totalAmount").val(t.total_amount);
+      $("#remainingAmount").val(t.remaining_amount);
+      $("#transactionId").val(t.id);
+
+      $("#payNowForm").attr(
+        "action",
+        role === "admin"
+          ? "<?= base_url('admin/transaction/payNow') ?>"
+          : "<?= base_url('user/transaction/payNow') ?>"
+      );
+
+      new bootstrap.Modal("#payNowModal").show();
+    });
+});
+
+//----------------------------------------------------
+// View Transaction Modal
+//----------------------------------------------------
+$(document).on("click", ".view-transaction", function (e) {
+  e.preventDefault();
+  const transactionId = $(this).data("view-id");
+
+  const fetchUrl =
+    role === "admin"
+      ? `<?= base_url('admin/transaction/getTransaction/') ?>${transactionId}`
+      : `<?= base_url('user/transaction/getTransaction/') ?>${transactionId}`;
+
+  fetch(fetchUrl)
+    .then((res) => res.json())
+    .then((data) => {
+      const t = data.transaction;
+      const history = data.history || [];
+
+      $("#customer_Name").text(t.customer_name);
+      $("#transaction_Id").text(t.recipt_no);
+      $("#transactionCode").text(t.code);
+      $("#total_Amount").text(t.total_amount);
+      $("#paidAmount").text(t.paid_amount);
+      $("#remaining_Amount").text(t.remaining_amount);
+      $("#transactionDate").text(t.created_at);
+      $("#extraCode").text(t.extra_code);
+      $("#totalCode").text(t.total_code);
+
+      let historyHtml = "";
+      if (history.length > 0) {
+        history.forEach((h, i) => {
+          historyHtml += `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${h.before_paid_amount}</td>
+              <td>${h.amount}</td>
+              <td>${h.after_paid_amount}</td>
+              <td>${h.created_at}</td>
+              <td>${h.remark}</td>
+            </tr>
+          `;
+        });
+      } else {
+        historyHtml = `<tr><td colspan="6" class="text-center">No history available</td></tr>`;
+      }
+
+      $("#transactionHistory").html(historyHtml);
+
+      new bootstrap.Modal("#invoiceModal").show();
+    });
+});
+$("#filterForm").on("submit", function(e) {
+  e.preventDefault();
+  updateFilters();
+  page = 1;
+  loadTransactions();
+});
+
+//----------------------------------------------------
+// Auto Load on Page Ready
+//----------------------------------------------------
+$(document).ready(function () {
+  loadTransactions();
+  updateFilters();
+});
+
 loadUsers();
 loadClients();
 loadCustomers();
 loadDeleteHistory();
+loadTransactions();

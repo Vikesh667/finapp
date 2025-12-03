@@ -98,6 +98,7 @@ class CustomerController extends BaseController
     // ➕ Add Customer
     public function add_customer()
     {
+        helper('notification');
         $customerModel = new CustomerModel();
         $countryModel  = new CountryModel();
         $stateModel    = new StateModel();
@@ -129,7 +130,11 @@ class CustomerController extends BaseController
         }
 
         $customerModel->saveCustomer($data, $userId, $clientId, $loggedUserId);
-
+          if($role === 'user') {
+            $adminId = 1; // assuming admin has user ID 1
+            $message = "{$session->get('user_name')} added new customer '{$data['name']}'";
+            push_notification($adminId, $message, "New Customer Added");
+        }
         return redirect()
             ->to(base_url($role === 'admin' ? 'admin/customer-list' : 'user/customer-list'))
             ->with('success', 'client added successfully!');
@@ -165,7 +170,11 @@ class CustomerController extends BaseController
         $clientId = $this->request->getPost('client_id') ?? $existingCustomer['client_id'] ?? null;
 
         $result = $customerModel->skipValidation(true)->saveCustomer($data, $userId, $clientId, $loggedUserId, $customerId);
-
+          if($role === 'user') {
+            $adminId = 1; // assuming admin has user ID 1
+            $message = "{$session->get('user_name')} updated customer '{$data['name']}'";
+            push_notification($adminId, $message, "Customer Updated");
+        }
         return $result
             ? redirect()->to('admin/customer-list')->with('success', 'Customer updated successfully!')
             : redirect()->back()->with('error', 'Failed to update customer!');
@@ -174,18 +183,19 @@ class CustomerController extends BaseController
 
     public function delete_customer($id = null)
     {
+        helper('notification');
         $customerModel = new CustomerModel();
         $notificationModel = new \App\Models\NotificationModel();
         $session = session();   // <-- FIXED
         $role = $session->get('role');
         $userId = $session->get('user_id');
-    
+
         if (!$id || !$customerModel->find($id)) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Customer not found!']);
         }
 
         $customer = $customerModel->find($id);
-        
+
         if ($role !== 'admin' && $customer['user_id'] != $userId) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'You do not have permission!']);
         }
@@ -197,29 +207,11 @@ class CustomerController extends BaseController
         ]);
 
         // Send notification ONLY when user performs delete (not admin)
+
         if ($role === 'user') {
-
-            $message = "Customer '{$customer['name']}' has been deleted by {$session->get('user_name')}";
-
-            // Store in DB for admin (admin user_id = 1)
-            $notificationModel->insert([
-                'user_id'   => $userId,
-                'message'   => $message,
-                'is_read'   => 0,
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-
-            // Real-time Pusher Notification
-            $pusher = new \Pusher\Pusher(
-                getenv('pusher.key'),
-                getenv('pusher.secret'),
-                getenv('pusher.app_id'),
-                ['cluster' => getenv('pusher.cluster'), 'useTLS' => true]
-            );
-
-            $pusher->trigger("admin-notifications", "new-notification", [
-                "message" => $message
-            ]);
+            $adminId = 1;
+            $message = "{$session->get('user_name')} deleted customer '{$customer['name']}'";
+            push_notification($adminId, $message, "Customer Deleted");
         }
 
         return $this->response->setJSON(['status' => 'success', 'message' => 'Customer deleted successfully!']);
@@ -254,6 +246,7 @@ class CustomerController extends BaseController
             $customers = $customerModel
                 ->where('client_id', $clientId)
                 ->where('user_id', $userId)
+                ->where('is_deleted', 0)
                 ->orderBy('name', 'ASC')
                 ->findAll();
         } else {
@@ -261,6 +254,7 @@ class CustomerController extends BaseController
             $customers = $customerModel
                 ->where('client_id', $clientId)
                 ->where('user_id', $loggedIn)
+                ->where('is_deleted', 0)
                 ->orderBy('name', 'ASC')
                 ->findAll();
         }
@@ -280,6 +274,7 @@ class CustomerController extends BaseController
 
         $customers = $customerModel
             ->where('user_id', $userId)
+            ->where('is_deleted', 0)
             ->orderBy('name', 'ASC')
             ->findAll();
 

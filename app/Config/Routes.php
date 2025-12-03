@@ -78,7 +78,7 @@ $routes->get('notifications/mark-read/(:num)', 'NotificationController::markNoti
   // --- TRANSACTION MANAGEMENT ---
 
   $routes->get('transaction-list', 'TransactionController::transaction_list');
-  $routes->get('transaction-list-data', 'TransactionController::transactionListData');
+  $routes->get('transaction-list-data', 'TransactionController::transaction_list_json');
   $routes->post('transaction/add', 'TransactionController::create_transaction');
   $routes->get('transaction/getTransaction/(:num)', 'TransactionController::getTransaction/$1');
   $routes->post('transaction/payNow', 'TransactionController::payNow');
@@ -138,6 +138,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('customer/edit/(:num)', 'CustomerController::edit_customer/$1');
  $routes->post('customer/delete/(:num)', 'CustomerController::delete_customer/$1');
   $routes->get('transaction-list', 'TransactionController::transaction_list');
+   $routes->get('transaction-list-data', 'TransactionController::transaction_list_json');
   $routes->post('transaction/add', 'TransactionController::create_transaction');
   $routes->get('transaction/getTransaction/(:num)', 'TransactionController::getTransaction/$1');
   $routes->post('transaction/payNow', 'TransactionController::payNow');
