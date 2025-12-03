@@ -13,6 +13,7 @@ use App\Models\CountryModel;
 use App\Models\CustomerReassignHistoryModel;
 use App\Models\StateModel;
 use App\Models\TransactionHistoryModal;
+use Pusher\Pusher;
 
 class CustomerController extends BaseController
 {
@@ -31,65 +32,65 @@ class CustomerController extends BaseController
         return view('customer/customer-list', $data); // table loads by AJAX
     }
 
-   public function listData()
-{
-    $session = session();
-    $customerModel = new CustomerModel();
-    $role   = $session->get('role');
-    $userId = $session->get('user_id');
+    public function listData()
+    {
+        $session = session();
+        $customerModel = new CustomerModel();
+        $role   = $session->get('role');
+        $userId = $session->get('user_id');
 
-    $page      = (int) ($this->request->getGet('page') ?? 1);
-    $search    = $this->request->getGet('search');
-    $clientId  = $this->request->getGet('client_id');
-    $serviceId = $this->request->getGet('service_id');
+        $page      = (int) ($this->request->getGet('page') ?? 1);
+        $search    = $this->request->getGet('search');
+        $clientId  = $this->request->getGet('client_id');
+        $serviceId = $this->request->getGet('service_id');
 
-    $limit  = 10;
-    $offset = ($page - 1) * $limit;
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
 
-    // Base filters (role + assigned + created + client)
-    $builder = $customerModel->getFilterdCustomer($role, $userId, $clientId);
+        // Base filters (role + assigned + created + client)
+        $builder = $customerModel->getFilterdCustomer($role, $userId, $clientId);
 
-    // Filter by service
-    if (!empty($serviceId)) {
-        $builder->where('clients.service_id', $serviceId);
+        // Filter by service
+        if (!empty($serviceId)) {
+            $builder->where('clients.service_id', $serviceId);
+        }
+
+        // Search filter (fixed column names)
+        if (!empty($search)) {
+            $builder->groupStart()
+                ->like('customers.name', $search)
+                ->orLike('customers.shop_name', $search)
+                ->orLike('clients.company_name', $search)  // client name
+                ->orLike('createdBy.name', $search)        // created by
+                ->orLike('assignedTo.name', $search)       // assigned user
+                ->orLike('customers.device_type', $search)
+                ->groupEnd();
+        }
+
+        $builder->where('customers.is_deleted', 0);
+
+        // Clone for correct filtered count
+        $countBuilder = clone $builder;
+
+        // Fetch current page results
+        $customers = $builder->orderBy('customers.id', 'DESC')->findAll($limit, $offset);
+
+        // Count filtered
+        $filtered = $countBuilder->countAllResults();
+
+        // Count all records
+        $total = $customerModel->where('is_deleted', 0)->countAllResults();
+
+        return $this->response->setJSON([
+            'customers'    => $customers,
+            'current_page' => $page,
+            'per_page'     => $limit,
+            'total'        => $total,
+            'filtered'     => $filtered,
+            'total_pages'  => ceil($filtered / $limit),
+            'role'         => $role
+        ]);
     }
-
-    // Search filter (fixed column names)
-    if (!empty($search)) {
-        $builder->groupStart()
-            ->like('customers.name', $search)
-            ->orLike('customers.shop_name', $search)
-            ->orLike('clients.company_name', $search)  // client name
-            ->orLike('createdBy.name', $search)        // created by
-            ->orLike('assignedTo.name', $search)       // assigned user
-            ->orLike('customers.device_type', $search)
-        ->groupEnd();
-    }
-
-    $builder->where('customers.is_deleted', 0);
-
-    // Clone for correct filtered count
-    $countBuilder = clone $builder;
-
-    // Fetch current page results
-    $customers = $builder->orderBy('customers.id', 'DESC')->findAll($limit, $offset);
-
-    // Count filtered
-    $filtered = $countBuilder->countAllResults();
-
-    // Count all records
-    $total = $customerModel->where('is_deleted', 0)->countAllResults();
-
-    return $this->response->setJSON([
-        'customers'    => $customers,
-        'current_page' => $page,
-        'per_page'     => $limit,
-        'total'        => $total,
-        'filtered'     => $filtered,
-        'total_pages'  => ceil($filtered / $limit),
-        'role'         => $role
-    ]);
-}
 
 
 
@@ -170,55 +171,61 @@ class CustomerController extends BaseController
             : redirect()->back()->with('error', 'Failed to update customer!');
     }
 
+
     public function delete_customer($id = null)
     {
         $customerModel = new CustomerModel();
-        $role = session()->get('role');
-        $userId = session()->get('user_id');
-
+        $notificationModel = new \App\Models\NotificationModel();
+        $session = session();   // <-- FIXED
+        $role = $session->get('role');
+        $userId = $session->get('user_id');
+    
         if (!$id || !$customerModel->find($id)) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Customer not found!'
-            ]);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Customer not found!']);
         }
 
         $customer = $customerModel->find($id);
-
-        // only admin can delete any, user can delete only own customers
+        
         if ($role !== 'admin' && $customer['user_id'] != $userId) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'You do not have permission to delete this customer!'
-            ]);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You do not have permission!']);
         }
 
-        $customerDeleted = $customerModel->update($id, [
+        $customerModel->update($id, [
             'is_deleted' => 1,
             'deleted_by' => $userId,
             'deleted_at' => date('Y-m-d H:i:s')
         ]);
-        if ($customerDeleted === false) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Failed to delete customer!'
+
+        // Send notification ONLY when user performs delete (not admin)
+        if ($role === 'user') {
+
+            $message = "Customer '{$customer['name']}' has been deleted by {$session->get('user_name')}";
+
+            // Store in DB for admin (admin user_id = 1)
+            $notificationModel->insert([
+                'user_id'   => $userId,
+                'message'   => $message,
+                'is_read'   => 0,
+                'created_at' => date('Y-m-d H:i:s')
             ]);
-        } else {
-              $notificationModel = new \App\Models\NotificationModel();
-              if($role === 'user') {
-                 $notificationModel->insert([
-                  'user_id' => $customer['user_id'],
-                  'message' => "Customer '{$customer['name']}' has been deleted.",
-                  'is_read' => 0,
-                  'created_at' => date('Y-m-d H:i:s')
-              ]);
-              }
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Customer deleted successfully!'
+
+            // Real-time Pusher Notification
+            $pusher = new \Pusher\Pusher(
+                getenv('pusher.key'),
+                getenv('pusher.secret'),
+                getenv('pusher.app_id'),
+                ['cluster' => getenv('pusher.cluster'), 'useTLS' => true]
+            );
+
+            $pusher->trigger("admin-notifications", "new-notification", [
+                "message" => $message
             ]);
         }
+
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Customer deleted successfully!']);
     }
+
+
 
 
     //  Get all customers of a client

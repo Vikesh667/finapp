@@ -71,6 +71,9 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
   $routes->get('client/get-users-for-client/(:num)', 'ClientController::get_users_for_client/$1');
   $routes->get('get-client-users/(:num)', 'CustomerController::getClientUsers/$1');
 
+$routes->get('notifications/list', 'NotificationController::fetchNotifications');
+$routes->get('notifications/mark-read/(:num)', 'NotificationController::markNotificationRead/$1');
+
 
   // --- TRANSACTION MANAGEMENT ---
 
@@ -157,6 +160,7 @@ $routes->group('user', ['filter' => 'auth:user'], function ($routes) {
   $routes->get('login-history', 'AuthController::loging_history');
   $routes->get('get-companies', 'CompanyInfoController::getCompanies');
   $routes->get('get-hsncode', 'CompanyInfoController::hsn_code');
+
 
 
   // user dashboard 

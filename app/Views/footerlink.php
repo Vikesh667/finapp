@@ -721,32 +721,49 @@
         <?php endif; ?>
         <script>
             document.querySelectorAll(".submenu-toggle").forEach(toggle => {
-    toggle.addEventListener("click", () => {
-        const parent = toggle.closest(".has-submenu");
-        const submenu = parent.querySelector(".submenu");
+                toggle.addEventListener("click", () => {
+                    const parent = toggle.closest(".has-submenu");
+                    const submenu = parent.querySelector(".submenu");
 
-        // Close other submenus (optional)
-        document.querySelectorAll(".has-submenu").forEach(item => {
-            if (item !== parent) {
-                item.classList.remove("active");
-                item.querySelector(".submenu").style.display = "none";
-            }
-        });
+                    // Close other submenus (optional)
+                    document.querySelectorAll(".has-submenu").forEach(item => {
+                        if (item !== parent) {
+                            item.classList.remove("active");
+                            item.querySelector(".submenu").style.display = "none";
+                        }
+                    });
 
-        // Toggle current submenu
-        if (parent.classList.contains("active")) {
-            parent.classList.remove("active");
-            submenu.style.display = "none";
-        } else {
-            parent.classList.add("active");
-            submenu.style.display = "block";
-        }
-    });
-});
-
+                    // Toggle current submenu
+                    if (parent.classList.contains("active")) {
+                        parent.classList.remove("active");
+                        submenu.style.display = "none";
+                    } else {
+                        parent.classList.add("active");
+                        submenu.style.display = "block";
+                    }
+                });
+            });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="<?= base_url('assets/js/app.js') ?>"></script>
+        <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
+        <script>
+            const pusher = new Pusher("<?= getenv('pusher.key') ?>", {
+                cluster: "<?= getenv('pusher.cluster') ?>",
+                encrypted: true
+            });
+
+            const channel = pusher.subscribe("notifications");
+            channel.bind("new-notification", function(data) {
+                // Popup alert
+                Swal.fire(data.title, data.message, "info");
+                // Refresh dropdown + count
+                loadNotifications();
+            });
+
+          
+        </script>
+
         </body>
 
         </html>

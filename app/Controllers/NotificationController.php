@@ -1,12 +1,30 @@
-<?php 
+<?php
+
 namespace App\Controllers;
 
-class NotificationController extends BaseController{
+class NotificationController extends BaseController
+{
 
-    public function notifications():string{
-        return view('app-notifications');
+    public function fetchNotifications()
+    {
+        $notificationModel = new \App\Models\NotificationModel();
+        $userId = session()->get('user_id');
+
+        $data = $notificationModel
+            ->orderBy('id', 'DESC')
+            ->limit(10)
+            ->find();
+
+        return $this->response->setJSON($data);
     }
-     public function notification_details():string{
-        return view('app-notification-detail');
+
+    public function markNotificationRead($id)
+    {
+        
+        $notificationModel = new \App\Models\NotificationModel();
+
+        $notificationModel->update($id, ['is_read' => 1]);
+
+        return $this->response->setJSON(['status' => 'success']);
     }
 }
