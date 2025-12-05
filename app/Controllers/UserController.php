@@ -20,42 +20,42 @@ class UserController extends Controller
         return view('user/list');   // HTML table page
     }
 
-public function user_list_data()
-{
-    $model = new UserModel();
+    public function user_list_data()
+    {
+        $model = new UserModel();
 
-    $page   = (int) ($this->request->getGet('page') ?? 1);
-    $search = $this->request->getGet('search');
+        $page   = (int) ($this->request->getGet('page') ?? 1);
+        $search = $this->request->getGet('search');
 
-    $limit = 10;
-    $offset = ($page - 1) * $limit;
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
 
-    // Base query
-    $builder = $model;
+        // Base query
+        $builder = $model;
 
-    // If search available
-    if (!empty($search)) {
-        $builder = $builder->like('name', $search)
-                           ->orLike('email', $search)
-                           ->orLike('phone', $search);
+        // If search available
+        if (!empty($search)) {
+            $builder = $builder->like('name', $search)
+                ->orLike('email', $search)
+                ->orLike('phone', $search);
+        }
+
+        // Get filtered results
+        $users = $builder->orderBy('id', 'DESC')->findAll($limit, $offset);
+        $filtered = $builder->countAllResults(false);
+
+        // Total users (without search)
+        $total = $model->countAll();
+
+        return $this->response->setJSON([
+            'users' => $users,
+            'current_page' => $page,
+            'per_page' => $limit,
+            'total' => $total,
+            'filtered' => $filtered,
+            'total_pages' => ceil($filtered / $limit)
+        ]);
     }
-
-    // Get filtered results
-    $users = $builder->orderBy('id', 'DESC')->findAll($limit, $offset);
-    $filtered = $builder->countAllResults(false);
-
-    // Total users (without search)
-    $total = $model->countAll();
-
-    return $this->response->setJSON([
-        'users' => $users,
-        'current_page' => $page,
-        'per_page' => $limit,
-        'total' => $total,
-        'filtered' => $filtered,
-        'total_pages' => ceil($filtered / $limit)
-    ]);
-}
 
 
 
@@ -349,11 +349,11 @@ public function user_list_data()
 
 
 
-        $totalCustomer = $customerModel->where('user_id', $userId)->countAllResults();
+        $totalCustomer = $customerModel->where('user_id', $userId)->where('is_deleted', 0)->countAllResults();
         $transactionCount = $transactionModel->where('user_id', $userId)->countAllResults();
         $totalPaid = $transactionModel->where('user_id', $userId)->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
         $totalRemaining = $transactionModel->where('user_id', $userId)->selectSum('remaining_amount')->get()->getRow()->remaining_amount ?? 0;
-        $totalLienceKeys = $transactionModel->where('user_id', $userId)->selectSum('code')->get()->getRow()->code ?? 0;
+        $totalLienceKeys = $transactionModel->where('user_id', $userId)->selectSum('total_code')->get()->getRow()->total_code ?? 0;
         $totalCode =  $transactionModel->where('user_id', $userId)->selectSum('code')->get()->getRow()->code ?? 0;
         $extraCode =  $transactionModel->where('user_id', $userId)->selectSum('extra_code')->get()->getRow()->extra_code ?? 0;
         $recentTransaction = $transactionModel->where('user_id', $userId)
@@ -376,9 +376,70 @@ public function user_list_data()
     ", false)
             ->where('user_id', $userId)
             ->first();
+        $todayRvenue = $transactionModel
+            ->where('user_id', $userId)
+            ->where('DATE(created_at)', date('Y-m-d'))
+            ->selectSum('paid_amount')
+            ->get()
+            ->getRow()
+            ->paid_amount ?? 0;
+
+        $thisMonthRevenue = $transactionModel
+            ->where('user_id', $userId)
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->selectSum('paid_amount')
+            ->get()
+            ->getRow()
+            ->paid_amount ?? 0;
+
+        // ================= MONTHLY REVENUE GRAPH (Last 6 Months) =================
+        $monthlyRevenueResults = $transactionModel->getMonthlyRevenueData(6, $userId);
+        $data['monthlyLabels']   = json_encode($monthlyRevenueResults['labels']);
+        $data['monthlyRevenues'] = json_encode($monthlyRevenueResults['data']);
+
+
+        // ================= TODAY REVENUE =================
+        $db = \Config\Database::connect();
+        $todayRevenue = $db->table('transactions')
+            ->selectSum('paid_amount')
+            ->where('DATE(created_at)', date('Y-m-d'))
+            ->where('user_id', $userId)
+            ->get()->getRow()->paid_amount ?? 0;
+        $data['todayRevenue'] = (float)$todayRevenue;
+
+
+        $startOfMonth = date('Y-m-01');
+        $endOfMonth   = date('Y-m-t');
+
+        $daily = $db->table('transactions')
+            ->select("DATE(created_at) as day, SUM(paid_amount) as total")
+            ->where("created_at >=", $startOfMonth)
+            ->where("created_at <=", $endOfMonth)
+            ->where('user_id', $userId)
+            ->groupBy("DATE(created_at)")
+            ->orderBy("DATE(created_at)", "ASC")
+            ->get()->getResultArray();
+
+        $thisMonthLabels = [];
+        $thisMonthValues = [];
+
+        foreach ($daily as $row) {
+            $thisMonthLabels[] = date('d M', strtotime($row['day']));
+            $thisMonthValues[] = (float)$row['total'];
+        }
 
 
 
+        $gstTotals = $transactionModel
+            ->where('user_id', $userId)
+            ->select('SUM(cgst) as total_cgst, SUM(sgst) as total_sgst, SUM(igst) as total_igst')
+            ->get()
+            ->getRow();
+        $data['totalCgst'] = (float) $gstTotals->total_cgst;
+        $data['totalSgst'] = (float) $gstTotals->total_sgst;
+        $data['totalIgst'] = (float) $gstTotals->total_igst;
+        
         return view(
             'user/dashboard',
             [
@@ -392,7 +453,17 @@ public function user_list_data()
                 'extraCode' => $extraCode,
                 'recentTransactionCode' => $recentTransactionCode,
                 'totalCustomer' => $totalCustomer,
-                'recentFiveTransaction' => $recentFiveTransaction
+                'recentFiveTransaction' => $recentFiveTransaction,
+                'todayRevenue' => $todayRvenue,
+                'thisMonthRevenue' => $thisMonthRevenue,
+                'monthlyLabels'   => json_encode($monthlyRevenueResults['labels']),
+                'monthlyRevenues' => json_encode($monthlyRevenueResults['data']),
+                'thisMonthLabels' => json_encode($thisMonthLabels),
+                'thisMonthValues' => json_encode($thisMonthValues),
+
+                'totalCgst' => $data['totalCgst'],
+                'totalSgst' => $data['totalSgst'],
+                'totalIgst' => $data['totalIgst'],
             ]
         );
     }

@@ -19,7 +19,7 @@ class Home extends BaseController
         $totalUser = $userModel->countAllResults();
         $totalClient = $clientModel->countAllResults();
         $transactions = $transactionModel->limit(5)->find();
-        $totalCustomer = $customerModel->countAllResults();
+        $totalCustomer = $customerModel->where('is_deleted', 0)->countAllResults();
         $totalTransactions = $transactionModel->countAllResults();
 
         $totalAmount = $transactionModel->selectSum('total_amount')->get()->getRow()->total_amount ?? 0;

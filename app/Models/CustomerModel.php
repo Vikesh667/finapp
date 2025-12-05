@@ -25,6 +25,7 @@ class CustomerModel extends Model
         'is_deleted',
         'deleted_by',
         'deleted_at',
+        'gst_number',
     ];
 
     protected $useTimestamps = true;

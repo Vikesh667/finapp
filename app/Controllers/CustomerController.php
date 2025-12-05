@@ -110,7 +110,6 @@ class CustomerController extends BaseController
         $loggedUserId = $session->get('user_id');
         $clientId = $this->request->getPost('client_id');
         $userId = ($role === 'admin') ? $this->request->getPost('user_id') : $loggedUserId;
-
         $countryId = $this->request->getPost('country');
         $stateId = $this->request->getPost('state');
         $cityId = $this->request->getPost('city');

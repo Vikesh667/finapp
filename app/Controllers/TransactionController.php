@@ -160,14 +160,25 @@ class TransactionController extends BaseController
         }
 
         // GST Calculation
+        // GST Calculation using state rule only
         $igst = $cgst = $sgst = 0;
+        $gstTypeFinal = 'none';
+
         if ($gstApplied) {
-            if ($gstType === "igst" || ($sellerStateCode !== $customerStateCode)) {
-                $igst = round($baseAmount * 0.18, 2);
-            } elseif ($gstType === "cgst_sgst") {
+            $isSameState = ($sellerStateCode && $customerStateCode && $sellerStateCode == $customerStateCode);
+
+            if ($isSameState) {
+                // Same state → CGST + SGST
                 $cgst = round($baseAmount * 0.09, 2);
                 $sgst = round($baseAmount * 0.09, 2);
+                $gstTypeFinal = 'cgst_sgst';
+            } else {
+                // Different state → IGST
+                $igst = round($baseAmount * 0.18, 2);
+                $gstTypeFinal = 'igst';
             }
+        } else {
+            $gstTypeFinal = 'none';
         }
 
         // Final amount
@@ -190,7 +201,7 @@ class TransactionController extends BaseController
             'remaining_amount' => $grandTotal - $paidAmount,
             'total_code'       => $this->request->getPost('total_code'),
             'gst_applied'      => $gstApplied,
-            'gst_type'         => $gstType,
+            'gst_type' => $gstTypeFinal,
             'gst_number'       => $gstNumber,
             'created_by'       => $loggedIn,
             'recipt_no'        => $receiptNo,

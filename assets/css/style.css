@@ -8286,15 +8286,17 @@ body.dark-mode .cookies-box {
     .action-buttons button {
         flex: 1 1 48%;
     }
-   
+
 }
-@media(max-width:768px){
-     .edit-client-header{
+
+@media(max-width:768px) {
+    .edit-client-header {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 }
+
 .select-client {
     display: flex;
     align-items: center;
@@ -8678,6 +8680,7 @@ body.dark-mode .table-modern tbody td::before {
         padding: 6px 10px;
     }
 }
+
 /* 🌙 DARK MODE — TABLE CONTROLS */
 body.dark-mode .dt-length .dt-input,
 body.dark-mode .dt-search input {
@@ -8762,7 +8765,7 @@ body.dark-mode .dt-paging button.next {
 .customer-avatar:hover,
 .avatar-initials:hover {
     transform: translateX(-50%) scale(1.08);
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .customer-contact {
@@ -8799,6 +8802,7 @@ body.dark-mode .dt-paging button.next {
     transform: translateY(-4px);
     box-shadow: 0px 6px 20px rgba(125, 95, 255, 0.25);
 }
+
 .info-box:hover ion-icon {
     transform: scale(1.15) rotate(6deg);
 }
@@ -8809,15 +8813,27 @@ body.dark-mode .dt-paging button.next {
     color: #7d5fff;
     text-transform: uppercase;
 }
-.info-box h6 { margin: 4px 0 0; font-size: 15px; }
+
+.info-box h6 {
+    margin: 4px 0 0;
+    font-size: 15px;
+}
 
 /* Dark Mode Support */
-body.dark-mode .info-box { background: rgba(255,255,255,0.06) !important; }
-body.dark-mode .info-box ion-icon { color: #d4c5ff; }
-body.dark-mode .info-box:hover { box-shadow: 0px 6px 25px rgba(255,255,255,0.08); }
+body.dark-mode .info-box {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+body.dark-mode .info-box ion-icon {
+    color: #d4c5ff;
+}
+
+body.dark-mode .info-box:hover {
+    box-shadow: 0px 6px 25px rgba(255, 255, 255, 0.08);
+}
 
 .business-card {
-  
+
     color: #000;
     border-radius: 18px;
     box-shadow: 0 8px 30px rgba(108, 71, 255, 0.4);
@@ -8878,8 +8894,15 @@ body.dark-mode .info-box:hover { box-shadow: 0px 6px 25px rgba(255,255,255,0.08)
 
 /* Animation */
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* 🌙 DARK MODE */
@@ -8904,8 +8927,15 @@ body.dark-mode .summary-side {
 }
 
 @keyframes fadeCard {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .badge-title {
@@ -8945,7 +8975,7 @@ body.dark-mode .summary-side {
     border-radius: 22px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.20);
-    box-shadow: 0 6px 22px rgba(0,0,0,0.20);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.20);
     transition: 0.4s;
 }
 
@@ -8957,11 +8987,12 @@ body.dark-mode .summary-side {
 
 .logo-box:hover {
     transform: scale(1.08);
-    box-shadow: 0 10px 30px rgba(255,255,255,0.40);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.40);
 }
+
 body.dark-mode .premium-card {
     background: linear-gradient(135deg, #2c2341, #3c2b60);
-    box-shadow: 0 8px 35px rgba(0,0,0,0.7);
+    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.7);
 }
 
 body.dark-mode .product-info-list a {
@@ -8969,11 +9000,11 @@ body.dark-mode .product-info-list a {
 }
 
 body.dark-mode .logo-box {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 body.dark-mode .logo-box:hover {
-    box-shadow: 0 10px 32px rgba(255,255,255,0.16);
+    box-shadow: 0 10px 32px rgba(255, 255, 255, 0.16);
 }
 
 
@@ -9102,8 +9133,8 @@ body.dark-mode .filter-card .btn-secondary:hover {
     padding: 14px 18px;
     background: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     flex-wrap: wrap;
 }
 
@@ -9154,6 +9185,7 @@ body.dark-mode .filter-card .btn-secondary:hover {
     background: #e4e4e4;
     color: #3d3d3d;
 }
+
 .btn-reset:hover {
     background: #cecece;
 }
@@ -9163,6 +9195,7 @@ body.dark-mode .filter-card .btn-secondary:hover {
     background: linear-gradient(135deg, #38b000, #54d86f);
     color: #fff;
 }
+
 .btn-add:hover {
     background: linear-gradient(135deg, #2b8a00, #43bf63);
     transform: translateY(-2px);
@@ -9173,6 +9206,7 @@ body.dark-mode .filter-card .btn-secondary:hover {
     background: linear-gradient(135deg, #5a3cff, #8a6eff);
     color: #fff;
 }
+
 .btn-action:hover {
     background: linear-gradient(135deg, #482fe0, #7156ff);
     transform: translateY(-2px);
@@ -9184,9 +9218,12 @@ body.dark-mode .filter-card .btn-secondary:hover {
         flex-direction: column;
         align-items: stretch;
     }
-    .client-select, .header-actions {
+
+    .client-select,
+    .header-actions {
         width: 100%;
     }
+
     .header-actions {
         justify-content: space-between;
         flex-wrap: wrap;
@@ -9195,8 +9232,8 @@ body.dark-mode .filter-card .btn-secondary:hover {
 
 body.dark-mode .premium-header {
     background: #241c32;
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
 }
 
 body.dark-mode .premium-header h5 {
@@ -9211,18 +9248,19 @@ body.dark-mode .client-select {
 
 body.dark-mode .client-select:focus {
     border-color: #9f87ff;
-    box-shadow: 0 0 0 4px rgba(160,136,255,0.22);
+    box-shadow: 0 0 0 4px rgba(160, 136, 255, 0.22);
 }
 
 body.dark-mode .btn-reset {
     background: #3b3450;
     color: #dcd2ff;
 }
+
 body.dark-mode .btn-reset:hover {
     background: #4a3e66;
 }
 
-.chart-wrapper{
+.chart-wrapper {
     width: 300px;
     height: 300px;
     display: flex;
@@ -9293,12 +9331,13 @@ body.dark-mode .btn-reset:hover {
     border-color: transparent;
     box-shadow: 0 2px 6px rgba(0, 123, 255, 0.35);
 }
+
 /* Main card */
 .premium-stats-card {
     background: #ffffff;
     border-radius: 22px;
     padding: 26px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
 /* LEFT SECTION */
@@ -9381,4 +9420,296 @@ body.dark-mode .btn-reset:hover {
     .stats-amount {
         font-size: 26px;
     }
+}
+
+.premium-card {
+    background: #f8f7ff;
+    border-radius: 22px;
+    padding: 30px 38px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.10);
+}
+
+.badge-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(90deg, #3a86ff, #8a2be2);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    width: fit-content;
+    /* premium look on desktop */
+}
+
+
+
+/* Heading */
+.product-title {
+    font-size: 30px;
+    margin: 6px 0 12px;
+    font-weight: 700;
+    color: #1e1e2f;
+}
+
+/* Details */
+.product-info-list p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #555;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.product-info-list ion-icon {
+    font-size: 18px;
+    color: #444;
+}
+
+/* Logo Box */
+.logo-box {
+    width: 180px;
+    height: 180px;
+    border-radius: 22px;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: .3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.logo-box:hover {
+    transform: scale(1.04);
+}
+
+.logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+@media (max-width: 480px) {
+    .badge-title {
+        font-size: 12px;
+        padding: 5px 12px;
+        width: fit-content;
+        margin: 0 auto 10px;
+        display: flex;
+        justify-content: center;
+        text-wrap: nowrap;
+    }
+
+    .product-info-list p {
+        display: block;
+        text-align: center;
+        margin: 8px 0;
+        font-size: 14px;
+    }
+
+    .product-info-list strong {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 15px;
+        color: #222;
+    }
+
+    .product-info-list ion-icon {
+        display: none;
+    }
+
+    .product-title {
+        text-align: center;
+        font-size: 24px;
+    }
+
+}
+/* Premium Card Styling */
+.prm-main-card {
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft, elevated shadow */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    overflow: hidden;
+}
+
+/* Left Section: Product Details */
+.prm-details-section {
+    background-color: #f8f9fa; /* Slight off-white background for contrast */
+    min-width: 380px; /* Ensures space for details */
+    border-right: 1px solid #e0e0e0; /* Separator for responsiveness */
+}
+
+/* Logo Styling */
+.prm-logo-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    padding: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.prm-logo-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Info Grid Styling */
+.prm-info-grid {
+    border-top: 1px dashed #dcdcdc;
+}
+
+.prm-info-item {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prm-info-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.prm-info-value, .prm-info-value-link {
+    font-weight: 600;
+    color: #212529;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.prm-info-value-link:hover {
+    color: var(--bs-primary); /* Use your primary color */
+}
+
+/* Right Section: Business Value */
+.prm-value-section {
+    background-color: #ffffff;
+}
+
+.prm-value-label {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.prm-value-amount {
+    font-size: 3rem; /* Large and prominent */
+    color: var(--bs-success, #198754); /* Highlight the main number */
+}
+
+/* Summary Breakdown Styling */
+.prm-summary-breakdown {
+    border-color: #f1f1f1 !important; /* Ensure light border */
+}
+
+.prm-summary-label {
+    font-size: 13px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.prm-summary-amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .prm-details-section {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        min-width: unset;
+    }
+}
+.dashboard-card {
+    padding: 18px;
+    border-radius: 14px;
+    text-align: center;
+    background: #fff;
+    border: 2px solid transparent;
+    transition: 0.25s;
+    box-shadow: 0 0 18px rgba(0,0,0,0.08);
+}
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 28px rgba(0,0,0,0.13);
+}
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #6929ff, #5200ff);
+    color: #fff;
+}
+.dashboard-card .label {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    font-weight: 600;
+}
+.dashboard-card .value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: -5px;
+}
+.dashboard-card .sub {
+    opacity: 0.6;
+    font-size: 0.72rem;
+}
+
+.glass-card {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 18px;
+    height: 210px;                /* FIX: fixed height */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+.chart-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;             /* FIX: prevent overflow */
+}
+.chart-box canvas {
+    max-height: 120px !important; /* FIX: restrict chart height */
+    width: auto !important;
+}
+
+.glass-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 36px rgba(0, 0, 0, 0.18);
+}
+.metric-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #2e2e2e;
+}
+.metric-number {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 4px 0;
+    color: #111;
+}
+.chart-box {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

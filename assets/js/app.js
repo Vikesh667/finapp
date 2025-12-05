@@ -776,13 +776,6 @@ function loadTransactions() {
                   </a>`
                     : ""
                 }
-
-                <a href="#" class="btn btn-sm btn-outline-info view-transaction" data-view-id="${
-                  t.id
-                }">
-                  <ion-icon name="eye-outline"></ion-icon>
-                </a>
-
                 ${
                   t.remaining_amount == 0
                     ? `

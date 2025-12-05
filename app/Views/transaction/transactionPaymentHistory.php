@@ -1,5 +1,5 @@
  <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
             <div class="modal-content border-0 shadow-lg">
 
                 <div class="modal-header bg-light">
@@ -11,7 +11,7 @@
 
                     <!-- Header -->
                     <div class="text-center mb-3">
-                        <img src="https://plus.unsplash.com/premium_photo-1682002135678-87b8a2fdde50?auto=format&fit=crop&q=80&w=735"
+                        <img src="<?= base_url('assets/img/logo.png') ?>" alt="Invoice Icon"
                             class="rounded-circle border"
                             style="width:90px;height:90px;object-fit:cover;">
                         <h4 class="fw-bold mt-2">Customer Invoice</h4>
@@ -23,15 +23,11 @@
                     <!-- Details -->
                     <div class="row mb-4">
 
-                        <div class="col-md-6">
+                       <div class="col-12 col-md-6 mb-3">
+
                             <p><strong>Customer Name:</strong> <span id="customer_Name" class="text-primary"></span></p>
                             <p><strong>Code:</strong> <span id="transactionCode"></span></p>
                             <p><strong>Total Code:</strong> <span id="totalCode"></span></p>
-
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="gstCheck">
-                                <label for="gstCheck" class="form-check-label"><strong>Apply GST (18%)</strong></label>
-                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -47,6 +43,7 @@
 
                     <!-- Payment Summary -->
                     <div class="mb-4">
+                     
                         <h6 class="fw-semibold text-center">Payment Summary</h6>
                         <table class="table table-sm table-bordered text-center">
                             <thead class="table-secondary">
@@ -64,12 +61,14 @@
                                 </tr>
                             </tbody>
                         </table>
+                        
                     </div>
 
                     <!-- GST Summary (Single 18%) -->
                     <div id="gstSection" style="display:none;">
+                           <div class="table-responsive">
                         <h6 class="fw-semibold text-center">GST Breakdown (18%)</h6>
-                        <table class="table table-sm table-bordered text-center">
+                        <table class="table  modern-table">
                             <thead class="table-light">
                                 <tr>
                                     <th>Base Amount</th>
@@ -85,12 +84,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <!-- History -->
                     <div class="mt-3">
                         <h6 class="fw-semibold text-center">Payment History</h6>
-                        <table class="table table-sm table-bordered text-center">
+                        <table class="table modern-table">
                             <thead class="table-light">
                                 <tr>
                                     <th>Sr.No.</th>

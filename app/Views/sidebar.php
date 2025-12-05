@@ -5,7 +5,7 @@ $profileImage = session()->get('profile_image');
 $role      = session()->get('role'); // 'admin' or 'user'
 $this->common = model('CommanModel');
 $counter = $this->common->getcounter();
-
+print_r($userName);
 ?>
 
 <div class="modal fade panelbox panelbox-left" id="sidebarPanel" tabindex="-1" role="dialog">
