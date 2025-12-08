@@ -5,13 +5,13 @@ $profileImage = session()->get('profile_image');
 $role      = session()->get('role'); // 'admin' or 'user'
 $this->common = model('CommanModel');
 $counter = $this->common->getcounter();
-print_r($userName);
+
 ?>
 
 <div class="modal fade panelbox panelbox-left" id="sidebarPanel" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body p-0">
+            <div class="modal-body pb-5">
                 <!-- profile box -->
                 <div class="profileBox pt-2 pb-2">
                     <div class="image-wrapper">
@@ -38,6 +38,7 @@ print_r($userName);
                         <h1 class="amount">₹ <?= esc($counter) ?> </h1>
                     </div>
                 </div>
+    
                 <!-- menu -->
                 <div class="listview-title mt-1">Menu</div>
                 <ul class="listview flush transparent no-line image-listview">

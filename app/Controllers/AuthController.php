@@ -47,6 +47,8 @@ class AuthController extends BaseController
         if (!password_verify($password, $user['password'])) {
             return redirect()->back()->with('error', 'Invalid credentials');
         }
+        // Login success
+        $userModel->update($user['id'], ['force_logout' => 0]);
 
         //  Store session
         $session->set([
@@ -139,6 +141,7 @@ class AuthController extends BaseController
     public function logout()
     {
         $loginModel = new LoginHistoryModel();
+        $userModel = new UserModel();
         $userId     = session()->get('user_id');
 
         // Find the last login row for this user
@@ -151,9 +154,8 @@ class AuthController extends BaseController
                 'logout_time' => date('Y-m-d H:i:s')
             ]);
         }
-
-        // Destroy session
-        session()->destroy();
+          session()->destroy();
+     
 
         return redirect()->to(base_url('app-login'));
     }
@@ -220,5 +222,14 @@ class AuthController extends BaseController
             ->first();
 
         return view('auth/login-history', $data);
+    }
+
+    // Admin Controller
+    public function forceLogoutUser($userId)
+    {
+        $userModel = new UserModel();
+        $userModel->update($userId, ['force_logout' => 1]);
+        session()->destroy();
+        return redirect()->back()->with('success', 'User has been forced to logout');
     }
 }

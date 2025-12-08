@@ -20,7 +20,8 @@ class UserModel extends Model
         'city',
         'password',
         'role',
-        'profile_image'
+        'profile_image',
+        'force_logout'
     ];
 
     protected $useTimestamps = true;

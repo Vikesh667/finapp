@@ -128,14 +128,13 @@
 
                     </div>
 
-
                 </div>
                 <div class="col-md-5">
 
                     <h3 class="section-title medium mt-2">Financial Snapshots</h3>
                     <div class="row mb-3 g-3">
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="dashboard-card bg-gradient-primary">
                                 <div class="label">THIS MONTH REVENUE</div>
                                 <div class="value" id="thisMonthValue">₹ <?= esc($thisMonthRevenue) ?></div>
@@ -143,7 +142,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="dashboard-card bg-gradient-primary">
                                 <div class="label">TODAY REVENUE</div>
                                 <div class="value" id="todayValue">₹ <?= esc($todayRevenue) ?></div>
@@ -151,7 +150,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="dashboard-card border-warning text-warning">
                                 <div class="label">PENDING AMOUNT</div>
                                 <div class="value" id="pendingValue">₹ <?= esc($totalRemaining) ?></div>
@@ -159,7 +158,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="dashboard-card border-success text-success">
                                 <div class="label">TOTAL PAID</div>
                                 <div class="value" id="paidValue">₹ <?= esc($totalPaid) ?></div>

@@ -110,9 +110,7 @@ $role = session()->get('role');
                     </div>
 
                 </form>
-
-
-
+                 <input type="text" id="clientSearchInput" class="form-control mb-3" placeholder="Search clients...">
                 <div class="table-responsive">
                     <table id="transactionTable" class="table table-modern">
                         <thead>
@@ -138,6 +136,7 @@ $role = session()->get('role');
                     </table>
 
                 </div>
+                <div id="pagination" class="mt-3"></div>
             </div>
         </div>
     </div>

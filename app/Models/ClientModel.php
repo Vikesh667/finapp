@@ -113,10 +113,10 @@ class ClientModel extends Model
             $clientData['user_id']    = $ownerId ? (int) $ownerId : null;
             return $this->insert($clientData);
         }
-
+        $slug = url_title(strtolower($this->request->getPost('company_name')), '-', TRUE);
         // UPDATE (never lose ownership)
         $clientData['user_id'] = $ownerId ? (int) $ownerId : (int) $loggedInUserId;
-
+        $clientData['slug'] = $slug;
         // Use save() instead of update() → automatically updates timestamp
         $clientData['id'] = $clientId;
         return $this->save($clientData);

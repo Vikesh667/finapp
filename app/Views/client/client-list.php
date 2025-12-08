@@ -31,9 +31,8 @@ $role = session()->get('role');
                     </div>
                 </div>
 
+                 <input type="text" id="clientSearchInput" class="form-control mb-3" placeholder="Search clients...">
                 <div class="table-responsive">
-                    <input type="text" id="clientSearchInput" class="form-control mb-3" placeholder="Search clients...">
-
                     <table id="userTable" class="table table-modern">
                         <thead>
                             <tr>
@@ -48,8 +47,8 @@ $role = session()->get('role');
                         </thead>
                         <tbody id="clientBody"></tbody>
                     </table>
-<div id="clientPagination" class="mt-3"></div>
                 </div>
+                <div id="clientPagination" class="mt-3"></div>
 
             </div>
         </div>
@@ -57,19 +56,19 @@ $role = session()->get('role');
     <?php echo view('client/add-product'); ?>
     <?php echo view('client/client-assign-modal'); ?>
 
-<script>
-window.appConfig = {
-    clientListDataUrl: "<?= base_url('admin/listClientData') ?>",
-    logoUrl: "<?= base_url('assets/uploads/logos/') ?>",
+    <script>
+        window.appConfig = {
+            clientListDataUrl: "<?= base_url('admin/listClientData') ?>",
+            logoUrl: "<?= base_url('assets/uploads/logos/') ?>",
 
-    editClientUrl: "<?= base_url('admin/client/edit-client/') ?>",
-    deleteClientUrl: "<?= base_url('admin/client/delete/') ?>",
+            editClientUrl: "<?= base_url('admin/client/edit-client/') ?>",
+            deleteClientUrl: "<?= base_url('admin/client/delete/') ?>",
 
-    viewClientProductUrl: "<?= base_url('admin/product/') ?>",
+            viewClientProductUrl: "<?= base_url('admin/product/') ?>",
 
-    isAdmin: "<?= session()->get('role') === 'admin' ? 1 : 0 ?>"
-};
-</script>
+            isAdmin: "<?= session()->get('role') === 'admin' ? 1 : 0 ?>"
+        };
+    </script>
 
 
 

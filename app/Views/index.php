@@ -56,7 +56,7 @@
             <!-- Row 1 -->
             <div class="row mt-2">
                 <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Total Users</div>
@@ -69,7 +69,7 @@
 
                 <div class="col-6">
                     <a href="<?= base_url('admin/client-list') ?>">
-                        <div class="stat-box  border rounded p-3 shadow-sm">
+                        <div class="stat-box  rounded p-3 shadow-sm">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <div class="title fw-bold text-dark">Total Product</div>
@@ -86,7 +86,7 @@
             <div class="row mt-2">
                 <div class="col-6">
 
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Total Client</div>
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="col-6">
-                    <div class="stat-box border rounded p-3 shadow-sm">
+                    <div class="stat-box  rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Total Transactions</div>
@@ -114,7 +114,7 @@
             <!-- Row 3 -->
             <div class="row mt-2">
                 <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Total License Key</div>
@@ -126,7 +126,7 @@
                 </div>
 
                 <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Free License Key(CN)</div>
@@ -141,7 +141,7 @@
             <!-- Row 4 -->
             <div class="row mt-2">
                 <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Total Paid</div>
@@ -153,7 +153,7 @@
                 </div>
 
                 <div class="col-6">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Pending Payments</div>
@@ -172,7 +172,7 @@
 
                 <!-- This Month Revenue -->
                 <div class="col-6">
-                    <div class="stat-box border rounded p-3 shadow-sm">
+                    <div class="stat-box  rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">This Month</div>
@@ -186,7 +186,7 @@
 
                 <!-- Today Revenue -->
                 <div class="col-6">
-                    <div class="stat-box border rounded p-3 shadow-sm">
+                    <div class="stat-box  rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Today</div>
@@ -204,7 +204,7 @@
             <!-- Row 6 -->
             <div class="row mt-2">
                 <div class="col-12">
-                    <div class="stat-box  border rounded p-3 shadow-sm">
+                    <div class="stat-box   rounded p-3 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="title fw-bold text-dark">Last Transaction Code</div>

@@ -21,151 +21,167 @@
 
     <div id="appCapsule" class="pt-5 pb-4" style="margin-top: 60px;">
 
-       <?php
-// Avatar initials + random color
-$name = $customer['name'] ?? '';
-$initials = '';
-if ($name) {
-    $parts = explode(' ', trim($name));
-    $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
-}
+        <?php
+        // Avatar initials + random color
+        $name = $customer['name'] ?? '';
+        $initials = '';
+        if ($name) {
+            $parts = explode(' ', trim($name));
+            $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+        }
 
-$colors = ['#7D5FFF', '#FF6B6B', '#4BC0C0', '#FFA726', '#26A69A', '#42A5F5', '#AB47BC'];
-$colorIndex = hexdec(substr(md5($name), 0, 2)) % count($colors);
-$avatarColor = $colors[$colorIndex];
+        $colors = ['#7D5FFF', '#FF6B6B', '#4BC0C0', '#FFA726', '#26A69A', '#42A5F5', '#AB47BC'];
+        $colorIndex = hexdec(substr(md5($name), 0, 2)) % count($colors);
+        $avatarColor = $colors[$colorIndex];
 
-$avatar = $customer['profile'] ?? '';
-$hasImage = !empty($avatar);
-?>
+        $avatar = $customer['profile'] ?? '';
+        $hasImage = !empty($avatar);
+        ?>
 
-<div class="section mt-2">
-    <div class="card shadow-lg border-0 rounded-4 p-3 customer-wrapper">
+        <div class="section mt-2">
+            <div class="card shadow-lg border-0 rounded-4 p-3 customer-wrapper">
 
-        <div class="row g-4 align-items-start">
+                <div class="row g-4 align-items-start">
 
-            <!-- LEFT PROFILE -->
-            <div class="col-lg-4 col-md-5 col-12 text-center">
+                    <!-- LEFT PROFILE -->
+                    <div class="col-lg-4 col-md-5 col-12 text-center">
 
-                <!-- Banner -->
-                <div class="customer-banner rounded-4">
-                    <?php if ($hasImage): ?>
-                        <img src="<?= base_url('assets/uploads/customers/' . $avatar) ?>" class="customer-avatar">
-                    <?php else: ?>
-                        <div class="avatar-initials" style="background: <?= $avatarColor ?>;">
-                            <?= $initials ?>
+                        <!-- Banner -->
+                        <div class="customer-banner rounded-4">
+                            <?php if ($hasImage): ?>
+                                <img src="<?= base_url('assets/uploads/customers/' . $avatar) ?>" class="customer-avatar">
+                            <?php else: ?>
+                                <div class="avatar-initials" style="background: <?= $avatarColor ?>;">
+                                    <?= $initials ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                    <?php endif; ?>
+
+                        <!-- PROFILE INFO -->
+                        <div class="mt-5 profile-content">
+                            <h4 class="fw-bold mb-1 mt-5"><?= esc($customer['name']) ?></h4>
+
+                            <?php if ($customer['email']): ?>
+                                <p class="customer-contact mb-1">
+                                    <ion-icon name="mail-outline"></ion-icon> <?= esc($customer['email']) ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <?php if ($customer['phone']): ?>
+                                <p class="customer-contact mb-1">
+                                    <ion-icon name="call-outline"></ion-icon> <?= esc($customer['phone']) ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <?php if (!empty($createdBy['name'])): ?>
+                                <p class="customer-contact mb-2">
+                                    <ion-icon name="person-circle-outline"></ion-icon> Added by <?= esc($createdBy['name']) ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <?php
+                            $role = session()->get('role');
+                            $editUrl = ($role === 'admin')
+                                ? ('admin/customer/edit/' . $customer['id'])
+                                : ('user/customer/edit/' . $customer['id']);
+                            ?>
+                            <a href="<?= base_url($editUrl) ?>" class="btn premium-edit-btn mt-2">
+                                <ion-icon name="create-outline"></ion-icon> Edit Profile
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT INFO BOXES -->
+                    <div class="col-lg-8 col-md-7 col-12">
+                        <div class="row g-3">
+
+                            <?php if (!empty($companyName['company_name'])): ?>
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <ion-icon name="cube-outline"></ion-icon>
+                                        <div><small>Product Name</small>
+                                            <h6><?= esc($companyName['company_name']) ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($customer['shop_name']): ?>
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <ion-icon name="storefront-outline"></ion-icon>
+                                        <div><small>Shop Name</small>
+                                            <h6><?= esc($customer['shop_name']) ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($customer['device_type']): ?>
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                                        <div><small>Device Type</small>
+                                            <h6><?= esc($customer['device_type']) ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($customer['gst_number']): ?>
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <ion-icon name="receipt-outline"></ion-icon>
+                                        <div><small>GST Number</small>
+                                            <h6><?= esc($customer['gst_number']) ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <ion-icon name="flag-outline"></ion-icon>
+                                    <div><small>Country</small>
+                                        <h6><?= esc($customer['country']) ?></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <ion-icon name="map-outline"></ion-icon>
+                                    <div><small>State</small>
+                                        <h6><?= esc($customer['state']) ?></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <ion-icon name="business-outline"></ion-icon>
+                                    <div><small>City</small>
+                                        <h6><?= esc($customer['city']) ?></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-box address-box">
+                                    <ion-icon name="location-outline"></ion-icon>
+                                    <div><small>Address</small>
+                                        <h6><?= esc($customer['address'] ?: 'N/A') ?></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
-
-                <!-- PROFILE INFO -->
-                <div class="mt-5 profile-content">
-                    <h4 class="fw-bold mb-1 mt-5"><?= esc($customer['name']) ?></h4>
-
-                    <?php if ($customer['email']): ?>
-                        <p class="customer-contact mb-1">
-                            <ion-icon name="mail-outline"></ion-icon> <?= esc($customer['email']) ?>
-                        </p>
-                    <?php endif; ?>
-
-                    <?php if ($customer['phone']): ?>
-                        <p class="customer-contact mb-1">
-                            <ion-icon name="call-outline"></ion-icon> <?= esc($customer['phone']) ?>
-                        </p>
-                    <?php endif; ?>
-
-                    <?php if (!empty($createdBy['name'])): ?>
-                        <p class="customer-contact mb-2">
-                            <ion-icon name="person-circle-outline"></ion-icon> Added by <?= esc($createdBy['name']) ?>
-                        </p>
-                    <?php endif; ?>
-
-                    <?php
-                    $role = session()->get('role');
-                    $editUrl = ($role === 'admin')
-                        ? ('admin/customer/edit/' . $customer['id'])
-                        : ('user/customer/edit/' . $customer['id']);
-                    ?>
-                    <a href="<?= base_url($editUrl) ?>" class="btn premium-edit-btn mt-2">
-                        <ion-icon name="create-outline"></ion-icon> Edit Profile
-                    </a>
-                </div>
-
             </div>
-
-            <!-- RIGHT INFO BOXES -->
-            <div class="col-lg-8 col-md-7 col-12">
-                <div class="row g-3">
-
-                    <?php if (!empty($companyName['company_name'])): ?>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="cube-outline"></ion-icon>
-                            <div><small>Product Name</small><h6><?= esc($companyName['company_name']) ?></h6></div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if ($customer['shop_name']): ?>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="storefront-outline"></ion-icon>
-                            <div><small>Shop Name</small><h6><?= esc($customer['shop_name']) ?></h6></div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if ($customer['device_type']): ?>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="phone-portrait-outline"></ion-icon>
-                            <div><small>Device Type</small><h6><?= esc($customer['device_type']) ?></h6></div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if ($customer['gst_number']): ?>
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="receipt-outline"></ion-icon>
-                            <div><small>GST Number</small><h6><?= esc($customer['gst_number']) ?></h6></div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="flag-outline"></ion-icon>
-                            <div><small>Country</small><h6><?= esc($customer['country']) ?></h6></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="map-outline"></ion-icon>
-                            <div><small>State</small><h6><?= esc($customer['state']) ?></h6></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="info-box">
-                            <ion-icon name="business-outline"></ion-icon>
-                            <div><small>City</small><h6><?= esc($customer['city']) ?></h6></div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <div class="info-box address-box">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <div><small>Address</small><h6><?= esc($customer['address'] ?: 'N/A') ?></h6></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
         </div>
-    </div>
-</div>
 
 
         <div class="section mt-3">
@@ -177,7 +193,7 @@ $hasImage = !empty($avatar);
                 <div class="card-body p-0">
                     <?php if (!empty($transactions)): ?>
                         <div class="table-responsive">
-                            <table class="table align-middle mb-0">
+                            <table class="table modern-table mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>

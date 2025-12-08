@@ -129,7 +129,8 @@ class CustomerController extends BaseController
         }
 
         $customerModel->saveCustomer($data, $userId, $clientId, $loggedUserId);
-          if($role === 'user') {
+    
+          if($session === 'user') {
             $adminId = 1; // assuming admin has user ID 1
             $message = "{$session->get('user_name')} added new customer '{$data['name']}'";
             push_notification($adminId, $message, "New Customer Added");

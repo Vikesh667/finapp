@@ -321,25 +321,40 @@ class ClientController extends BaseController
     }
 
 
-    public function single_client($id = null)
+    public function single_client($slug = null)
     {
         $clientModel = new ClientModel();
         $customerModel = new CustomerModel();
         $transactionModel = new TransactionModel();
-        $product = $clientModel->where('clients.id', $id)->first();
-        $totalCustomer = $customerModel->where('customers.client_id', $id)->where('customers.is_deleted', 0)->findAll();
-        $transactions = $transactionModel->where('transactions.client_id', $id)->findAll();
-        $totalCode = $transactionModel->where('transactions.client_id', $id)->selectSum('code')->get()->getRow()->code ?? 0;
-        $totalExtracode = $transactionModel->where('transactions.client_id', $id)->selectSum('extra_code')->get()->getRow()->extra_code ?? 0;
-        $totalPaidAmount = $transactionModel->where('transactions.client_id', $id)->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
-        $totalPaindingAmount = $transactionModel->where('transactions.client_id', $id)->selectSum('remaining_amount')->get()->getRow()->remaining_amount ?? 0;
-        $totalAmount = $transactionModel->where('transactions.client_id', $id)->selectSum('total_amount')->get()->getRow()->total_amount ?? 0;
-        $todayRevenue = $transactionModel->where('transactions.client_id', $id)->where('DATE(transactions.created_at)', date('Y-m-d'))
+
+        // Find product by slug
+        $product = $clientModel->where('clients.slug', $slug)->first();
+        if (!$product) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $client_id = $product['id']; // Real ID to use in queries
+
+        $totalCustomer = $customerModel->where('customers.client_id', $client_id)->where('customers.is_deleted', 0)->findAll();
+        $transactions = $transactionModel->where('transactions.client_id', $client_id)->findAll();
+
+        $totalCode = $transactionModel->where('transactions.client_id', $client_id)->selectSum('code')->get()->getRow()->code ?? 0;
+        $totalExtracode = $transactionModel->where('transactions.client_id', $client_id)->selectSum('extra_code')->get()->getRow()->extra_code ?? 0;
+        $totalPaidAmount = $transactionModel->where('transactions.client_id', $client_id)->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
+        $totalPaindingAmount = $transactionModel->where('transactions.client_id', $client_id)->selectSum('remaining_amount')->get()->getRow()->remaining_amount ?? 0;
+        $totalAmount = $transactionModel->where('transactions.client_id', $client_id)->selectSum('total_amount')->get()->getRow()->total_amount ?? 0;
+
+        $todayRevenue = $transactionModel->where('transactions.client_id', $client_id)
+            ->where('DATE(transactions.created_at)', date('Y-m-d'))
             ->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
-        $thisMonthRevenue = $transactionModel->where('transactions.client_id', $id)->where('MONTH(transactions.created_at)', date('m'))
+
+        $thisMonthRevenue = $transactionModel->where('transactions.client_id', $client_id)
+            ->where('MONTH(transactions.created_at)', date('m'))
             ->where('YEAR(transactions.created_at)', date('Y'))
             ->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
-        $thisYearRevenue = $transactionModel->where('transactions.client_id', $id)->where('YEAR(transactions.created_at)', date('Y'))
+
+        $thisYearRevenue = $transactionModel->where('transactions.client_id', $client_id)
+            ->where('YEAR(transactions.created_at)', date('Y'))
             ->selectSum('paid_amount')->get()->getRow()->paid_amount ?? 0;
 
         return view('products/dashboard', [
@@ -356,6 +371,7 @@ class ClientController extends BaseController
             'thisYearRevenue' => $thisYearRevenue,
         ]);
     }
+
 
     public function client_assing_history()
     {

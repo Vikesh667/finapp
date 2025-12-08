@@ -34,6 +34,7 @@
                                     <th>User Agent</th>
                                     <th>Location</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +76,15 @@
                                                     <span class="badge bg-success">Success</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-danger">Failed</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if (empty($row['logout_time'])): ?>
+                                                    <form method="post" action="<?= base_url('admin/force-logout/' . $row['user_id']) ?>" onsubmit="return confirm('Are you sure you want to force logout this user?');">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Force Logout</button>
+                                                    </form>
+                                                <?php else: ?>
+                                                    -
                                                 <?php endif; ?>
                                             </td>
                                         </tr>

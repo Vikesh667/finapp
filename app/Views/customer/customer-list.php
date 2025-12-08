@@ -32,36 +32,33 @@
                     </div>
                 </div>
 
+                <input
+                    type="text"
+                    id="searchCustomer"
+                    class="form-control mb-3"
+                    placeholder="Search customers..." />
                 <div class="table-responsive">
-                    <div class="table-responsive">
-                        <input
-                            type="text"
-                            id="searchCustomer"
-                            class="form-control mb-3"
-                            placeholder="Search customers..." />
+                    <table id="customerTable" class="table table-modern"> <!-- ✔ table ID -->
+                        <thead>
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>CreatedBy</th>
+                                <th>Product Name</th>
+                                <th>Shop Name</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                        <table id="customerTable" class="table table-modern"> <!-- ✔ table ID -->
-                            <thead>
-                                <tr>
-                                    <th>Sr.No</th>
-                                    <th>CreatedBy</th>
-                                    <th>Product Name</th>
-                                    <th>Shop Name</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
+                        <!-- AJAX inserts rows here -->
+                        <tbody id="customerBody"></tbody> <!-- ✔ only tbody has this ID -->
 
-                            <!-- AJAX inserts rows here -->
-                            <tbody id="customerBody"></tbody> <!-- ✔ only tbody has this ID -->
+                    </table>
 
-                        </table>
-                        <div id="customerPagination" class="mt-3"></div>
-
-                    </div>
 
                 </div>
+                <div id="customerPagination" class="mt-3"></div>
 
             </div>
         </div>

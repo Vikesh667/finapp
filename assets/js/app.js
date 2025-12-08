@@ -234,7 +234,7 @@ function loadClients() {
             <td class="text-center">
               <div class="d-flex justify-content-center flex-wrap gap-2">
                 <a href="${viewClientProductUrl}${
-          client.id
+          client.slug
         }" class="btn btn-sm btn-warning rounded-pill px-3">
                   View
                 </a>

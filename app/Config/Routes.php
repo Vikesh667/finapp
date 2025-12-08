@@ -106,9 +106,10 @@ $routes->get('notifications/mark-read/(:num)', 'NotificationController::markNoti
   // --- PROFILE PHOTO UPLOAD ---
   $routes->post('upload-profile', 'UserController::uploadProfile');
   $routes->post('remove-profile', 'UserController::removeProfile');
-  $routes->get('product/(:num)', 'ClientController::single_client/$1');
+  $routes->get('product/(:segment)', 'ClientController::single_client/$1');
 
   $routes->get('login-history', 'AuthController::loging_history');
+  $routes->post('force-logout/(:num)', 'AuthController::forceLogoutUser/$1');
 });
 
 
