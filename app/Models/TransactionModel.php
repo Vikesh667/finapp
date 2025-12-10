@@ -8,7 +8,7 @@ class TransactionModel extends Model
 {
     protected $table = 'transactions';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'client_id', 'customer_id', 'company_id', 'code', 'rate', 'extra_code', 'igst', 'cgst', 'sgst', 'total_amount', 'grand_total', 'paid_amount', 'remaining_amount', 'total_code', 'created_By', 'recipt_no', 'gst_number', 'gst_applied', 'hsn_code', 'remark'];
+    protected $allowedFields = ['user_id', 'client_id', 'customer_id', 'company_id', 'code', 'rate', 'extra_code', 'igst', 'cgst', 'sgst', 'total_amount', 'grand_total', 'paid_amount', 'remaining_amount', 'total_code', 'created_By', 'recipt_no', 'gst_number', 'gst_applied', 'hsn_code', 'remark','is_deleted','deleted_at'];
     protected $useTimestamps = true;
 
     protected $createdField  = 'created_at';

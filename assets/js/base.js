@@ -451,7 +451,6 @@ function _0x4963() {
     "Test",
     "FnwmC",
     "qvhZF",
-    "dark-mode",
     "ZiBcx",
     "ication-di",
     "he\x20develop",

@@ -4,6 +4,9 @@ $role = session()->get('role');
 ?>
 
 <body>
+<div id="loader">
+    <img src="<?= base_url('assets/img/logo.png') ;?>" class="loader-logo">
+</div>
     <?php echo view('topHeader'); ?>
     <div id="appCapsule" class="full-height">
         <div class="user-container">
@@ -19,8 +22,6 @@ $role = session()->get('role');
                 </div>
 
                 <form id="filterForm" class="card p-3 mb-3 shadow-sm border-0 filter-card">
-
-
 
                     <h6 class="fw-bold mb-3"><ion-icon name="funnel-outline"></ion-icon> Filter Transactions</h6>
 

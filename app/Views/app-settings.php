@@ -2,11 +2,9 @@
 
 <body>
 
-    <!-- loader -->
-    <!-- <div id="loader">
-        <img src="assets/img/loading-icon.png" alt="icon" class="loading-icon">
-    </div> -->
-    <!-- * loader -->
+<div id="loader">
+    <img src="<?= base_url('assets/img/logo.png') ;?>" class="loader-logo">
+</div>
 
     <!-- App Header -->
     <div class="appHeader">
@@ -19,9 +17,9 @@
             Settings
         </div>
         <div class="right">
-            <a href="<?= 'app-notifications' ?>" class="headerButton">
+            <a href="<?= base_url('admin/app-notifications') ?>" class="headerButton">
                 <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                <span class="badge badge-danger">4</span>
+                <span class="badge badge-danger"></span>
             </a>
         </div>
     </div>

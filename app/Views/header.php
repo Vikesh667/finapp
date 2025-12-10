@@ -7,23 +7,42 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark"> 
     <title>Finclub</title>
     <meta name="description" content="Finclub">
     <meta name="keywords"
         content="bootstrap, wallet, banking, finclub web App, cordova, phonegap, mobile, html, responsive" />
     <link rel="icon" type="image/png" href="assets/img/logo.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/192x192.png">
+    
+    <style>
+    html.dark-mode, body.dark-mode { 
+        background: #030108 !important; /* Your Dark Mode Color */
+    }
+    </style>
+    
+    <script>
+    (function() {
+        if (localStorage.getItem("darkMode") === "enabled") {
+            // This applies the class instantly, causing the static style above to take effect.
+            document.documentElement.classList.add("dark-mode");
+            if (document.body) {
+                document.body.classList.add("dark-mode");
+            }
+        }
+    })();
+    </script>
+    
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="menifest" href="<?= base_url('assets/icon/menifest.json') ?>">
     <link rel="manifest" href="__manifest.json">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.3/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.3/dist/sweetalert2.all.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+

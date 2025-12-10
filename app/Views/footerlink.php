@@ -2,7 +2,53 @@
         $role = session()->get('role');
         $userId = session()->get('user_id');
         ?>
+
         <script>
+          document.addEventListener("DOMContentLoaded", () => {
+    const loader = document.getElementById("loader");
+
+    // Wait for page to load
+    window.addEventListener("load", () => {
+        // Allow animation + small pause before hiding
+        setTimeout(() => {
+            loader.classList.add("hidden");
+        }, 1400); // adjust delay if needed
+    });
+
+    // Show loader again when navigating to another page
+    document.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            const href = link.getAttribute("href");
+            if (!href || href.startsWith("#") || href.startsWith("javascript:") || link.target === "_blank") return;
+            loader.classList.remove("hidden");
+        });
+    });
+});
+
+
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const switchBtn = document.getElementById("darkmodeSwitch");
+                const body = document.body;
+
+                // Default: light mode (no dark-mode class)
+                // If user had dark mode before, apply it
+                if (localStorage.getItem("darkMode") === "enabled") {
+                    body.classList.add("dark-mode");
+                    switchBtn.checked = true;
+                }
+
+                // Toggle dark mode on switch change
+                switchBtn.addEventListener("change", function() {
+                    if (this.checked) {
+                        body.classList.add("dark-mode");
+                        localStorage.setItem("darkMode", "enabled");
+                    } else {
+                        body.classList.remove("dark-mode");
+                        localStorage.setItem("darkMode", "disabled");
+                    }
+                });
+            });
             document.addEventListener('DOMContentLoaded', function() {
 
                 // 🔹 Carousel Single → 3 cards per view
@@ -92,28 +138,7 @@
                     myModal.show();
                 <?php endif; ?>
             });
-            document.addEventListener("DOMContentLoaded", function() {
-                const switchBtn = document.getElementById("darkmodeSwitch");
-                const body = document.body;
 
-                // Default: light mode (no dark-mode class)
-                // If user had dark mode before, apply it
-                if (localStorage.getItem("darkMode") === "enabled") {
-                    body.classList.add("dark-mode");
-                    switchBtn.checked = true;
-                }
-
-                // Toggle dark mode on switch change
-                switchBtn.addEventListener("change", function() {
-                    if (this.checked) {
-                        body.classList.add("dark-mode");
-                        localStorage.setItem("darkMode", "enabled");
-                    } else {
-                        body.classList.remove("dark-mode");
-                        localStorage.setItem("darkMode", "disabled");
-                    }
-                });
-            });
             document.addEventListener('DOMContentLoaded', function() {
                 new DataTable('#example', {
                     searchable: true,
@@ -749,7 +774,6 @@
                 loadNotifications();
             });
         </script>
-
         </body>
 
         </html>

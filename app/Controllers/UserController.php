@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\CountryModel;
 use App\Models\StateModel;
@@ -10,121 +11,107 @@ use App\Models\ClientModel;
 use App\Models\ClientUserModel;
 use App\Models\CustomerModel;
 use App\Models\TransactionModel;
-use CodeIgniter\Controller;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
+
+    protected $service;
+
+    public function __construct()
+    {
+        $this->service = service('userService');
+    }
+
 
     public function user_list()
     {
-        return view('user/list');   // HTML table page
+        return view('user/list');
     }
 
     public function user_list_data()
     {
-        $model = new UserModel();
-
         $page   = (int) ($this->request->getGet('page') ?? 1);
         $search = $this->request->getGet('search');
 
-        $limit = 10;
-        $offset = ($page - 1) * $limit;
+        $data = $this->service->getPaginatedUsers($page, $search);
 
-        // Base query
-        $builder = $model;
-
-        // If search available
-        if (!empty($search)) {
-            $builder = $builder->like('name', $search)
-                ->orLike('email', $search)
-                ->orLike('phone', $search);
-        }
-
-        // Get filtered results
-        $users = $builder->orderBy('id', 'DESC')->findAll($limit, $offset);
-        $filtered = $builder->countAllResults(false);
-
-        // Total users (without search)
-        $total = $model->countAll();
-
-        return $this->response->setJSON([
-            'users' => $users,
-            'current_page' => $page,
-            'per_page' => $limit,
-            'total' => $total,
-            'filtered' => $filtered,
-            'total_pages' => ceil($filtered / $limit)
-        ]);
+        return $this->response->setJSON($data);
     }
-
 
 
     public function add()
     {
         $model = new UserModel();
 
-        if (! $this->validate($model->getValidationRules(), $model->getValidationMessages())) {
+        if (!$this->validate($model->getValidationRules(), $model->getValidationMessages())) {
             return redirect()
                 ->back()
-                ->with('error', implode("\n", $this->validator->getErrors())) // FIXED
+                ->with('error', implode("\n", $this->validator->getErrors()))
                 ->withInput();
         }
 
         $data = $this->request->getPost();
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
-        if ($model->insert($data)) {
+        try {
+            service('userService')->createUser($data);
+
             return redirect()
                 ->to(base_url('admin/user-list'))
                 ->with('success', 'User added successfully.');
-        }
+        } catch (\Throwable $e) {
 
-        return redirect()
-            ->back()
-            ->with('error', 'Failed to add user. Please try again.');
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage())
+                ->withInput();
+        }
     }
 
 
 
     public function edit($id = null)
     {
-        $model = new UserModel();
-        $user = $model->find($id);
+        // Get user using Service Layer
+        $user = $this->service->getUser($id);
 
-        if (! $user) {
-            return redirect()->to(base_url('admin/user-list'))->with('error', 'User not found.');
+        if (!$user) {
+            return redirect()
+                ->to(base_url('admin/user-list'))
+                ->with('error', 'User not found.');
         }
 
         return view('user/edit', ['user' => $user]);
     }
 
+
     public function update()
     {
-        $model = new UserModel();
         $id = $this->request->getPost('id');
 
-        if (! $id || ! $model->find($id)) {
-            return redirect()->to(base_url('admin/user-list'))->with('error', 'Invalid user ID.');
+        if (!$id) {
+            return redirect()
+                ->to(base_url('admin/user-list'))
+                ->with('error', 'Invalid user ID.');
         }
 
-        $data = [
-            'name'     => trim($this->request->getPost('name')),
-            'email'    => trim($this->request->getPost('email')),
-            'phone'    => trim($this->request->getPost('phone')),
-            'address'  => trim($this->request->getPost('address')),
-            'country'  => trim($this->request->getPost('country')),
-            'state'    => trim($this->request->getPost('state')),
-            'city'     => trim($this->request->getPost('city')),
-        ];
+        $data = $this->request->getPost();
 
-        if ($password = $this->request->getPost('password')) {
-            $data['password'] = password_hash($password, PASSWORD_BCRYPT);
+        try {
+            // Service handles password hashing & update logic
+            $this->service->updateUser($id, $data);
+
+            return redirect()
+                ->to(base_url('admin/user-list'))
+                ->with('success', 'User updated successfully.');
+        } catch (\Throwable $e) {
+
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage())
+                ->withInput();
         }
-
-        $model->skipValidation(true)->update($id, $data);
-
-        return redirect()->to(base_url('admin/user-list'))->with('success', 'User updated successfully.');
     }
+
 
     public function delete($id = null)
     {
@@ -439,7 +426,7 @@ class UserController extends Controller
         $data['totalCgst'] = (float) $gstTotals->total_cgst;
         $data['totalSgst'] = (float) $gstTotals->total_sgst;
         $data['totalIgst'] = (float) $gstTotals->total_igst;
-        
+
         return view(
             'user/dashboard',
             [

@@ -1,6 +1,9 @@
 <?php echo view('header'); ?>
 
 <body>
+    <div id="loader">
+    <img src="<?= base_url('assets/img/logo.png') ;?>" class="loader-logo">
+</div>
     <div class="appHeader bg-primary text-light">
 
         <?php

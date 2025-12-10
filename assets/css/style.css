@@ -490,6 +490,7 @@ a:focus {
     font-size: 14px;
     color: #A9ABAD !important
 }
+
 .profileBox .sidebar-close {
     position: absolute;
     right: 10px;
@@ -1184,29 +1185,41 @@ blockquote.blockquote .blockquote-footer {
     border-radius: 0 !important
 }
 
+/* Loader layout */
 #loader {
     position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 99999;
-    background: #6236FF;
+    inset: 0;
+    background: #8b7cc4 !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    user-select: none
+    z-index: 99999;
+    transition: opacity .4s ease;
 }
 
-#loader .loading-icon {
-    width: 42px;
-    height: auto;
-    animation: loadingAnimation 0.5s ease-in-out infinite
+/* Logo animation (grow × shrink × grow × shrink × grow before exit) */
+.loader-logo {
+    width: 80px;
+    animation: growShrinkLoop 2.7s ease-in-out forwards;
 }
 
+@keyframes growShrinkLoop {
+    0%   { transform: scale(1); }
+    20%  { transform: scale(2.2); }  /* grow 1 */
+    35%  { transform: scale(1); }    /* back */
+    55%  { transform: scale(2.2); }  /* grow 2 */
+    70%  { transform: scale(1); }    /* back */
+    85%  { transform: scale(2.2); }  /* grow 3 */
+    100% { transform: scale(1); }    /* end normal */
+}
+
+/* hide loader smoothly */
 #loader.hidden {
-    display: none
+    opacity: 0;
+    pointer-events: none;
 }
+
+
 
 @keyframes loadingAnimation {
     0% {
@@ -1218,44 +1231,6 @@ blockquote.blockquote .blockquote-footer {
     }
 }
 
-body.animationGoBack {
-    overflow: hidden
-}
-
-body.animationGoBack .appHeader,
-body.animationGoBack .appBottomMenu,
-body.animationGoBack .extraHeader,
-body.animationGoBack #appCapsule {
-    transform: translate(100%, 0);
-    transition: all .24s linear
-}
-
-body.animationGoBack:after {
-    content: "";
-    display: block;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #6236FF;
-    background-image: url("../img/loading-icon.png");
-    background-repeat: no-repeat;
-    background-size: 42px auto;
-    background-position: center center;
-    z-index: 9999;
-    animation: animationGoBack .24s linear
-}
-
-@keyframes animationGoBack {
-    0% {
-        left: -100%
-    }
-
-    100% {
-        left: 0
-    }
-}
 
 .badge {
     font-size: 12px;
@@ -9429,7 +9404,7 @@ body.dark-mode .btn-reset:hover {
     .stats-amount {
         font-size: 26px;
     }
-    
+
 }
 
 .premium-card {
@@ -9539,20 +9514,27 @@ body.dark-mode .btn-reset:hover {
     }
 
 }
+
 /* Premium Card Styling */
 .prm-main-card {
-    background-color: #ffffff; /* Clean white background */
+    background-color: #ffffff;
+    /* Clean white background */
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft, elevated shadow */
-    border: 1px solid #e0e0e0; /* Subtle border */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    /* Soft, elevated shadow */
+    border: 1px solid #e0e0e0;
+    /* Subtle border */
     overflow: hidden;
 }
 
 /* Left Section: Product Details */
 .prm-details-section {
-    background-color: #f8f9fa; /* Slight off-white background for contrast */
-    min-width: 380px; /* Ensures space for details */
-    border-right: 1px solid #e0e0e0; /* Separator for responsiveness */
+    background-color: #f8f9fa;
+    /* Slight off-white background for contrast */
+    min-width: 380px;
+    /* Ensures space for details */
+    border-right: 1px solid #e0e0e0;
+    /* Separator for responsiveness */
 }
 
 /* Logo Styling */
@@ -9589,7 +9571,8 @@ body.dark-mode .btn-reset:hover {
     color: #495057;
 }
 
-.prm-info-value, .prm-info-value-link {
+.prm-info-value,
+.prm-info-value-link {
     font-weight: 600;
     color: #212529;
     text-decoration: none;
@@ -9597,7 +9580,8 @@ body.dark-mode .btn-reset:hover {
 }
 
 .prm-info-value-link:hover {
-    color: var(--bs-primary); /* Use your primary color */
+    color: var(--bs-primary);
+    /* Use your primary color */
 }
 
 /* Right Section: Business Value */
@@ -9616,13 +9600,16 @@ body.dark-mode .btn-reset:hover {
 }
 
 .prm-value-amount {
-    font-size: 3rem; /* Large and prominent */
-    color: var(--bs-success, #198754); /* Highlight the main number */
+    font-size: 3rem;
+    /* Large and prominent */
+    color: var(--bs-success, #198754);
+    /* Highlight the main number */
 }
 
 /* Summary Breakdown Styling */
 .prm-summary-breakdown {
-    border-color: #f1f1f1 !important; /* Ensure light border */
+    border-color: #f1f1f1 !important;
+    /* Ensure light border */
 }
 
 .prm-summary-label {
@@ -9646,6 +9633,7 @@ body.dark-mode .btn-reset:hover {
         min-width: unset;
     }
 }
+
 .dashboard-card {
     padding: 18px;
     border-radius: 14px;
@@ -9653,51 +9641,61 @@ body.dark-mode .btn-reset:hover {
     background: #fff;
     border: 2px solid transparent;
     transition: 0.25s;
-    box-shadow: 0 0 18px rgba(0,0,0,0.08);
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.08);
 }
+
 .dashboard-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 0 28px rgba(0,0,0,0.13);
+    box-shadow: 0 0 28px rgba(0, 0, 0, 0.13);
 }
+
 .bg-gradient-primary {
     background: linear-gradient(135deg, #6929ff, #5200ff);
     color: #fff;
 }
+
 .dashboard-card .label {
     font-size: 0.78rem;
     opacity: 0.8;
     font-weight: 600;
 }
+
 .dashboard-card .value {
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: -5px;
 }
+
 .dashboard-card .sub {
     opacity: 0.6;
     font-size: 0.72rem;
 }
 
 .glass-card {
-    background: rgba(255,255,255,0.65);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(14px);
     border-radius: 22px;
     padding: 18px;
-    height: 210px;                /* FIX: fixed height */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    height: 210px;
+    /* FIX: fixed height */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
     transition: 0.3s;
     display: flex;
     flex-direction: column;
 }
+
 .chart-box {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;             /* FIX: prevent overflow */
+    overflow: hidden;
+    /* FIX: prevent overflow */
 }
+
 .chart-box canvas {
-    max-height: 120px !important; /* FIX: restrict chart height */
+    max-height: 120px !important;
+    /* FIX: restrict chart height */
     width: auto !important;
 }
 
@@ -9705,18 +9703,21 @@ body.dark-mode .btn-reset:hover {
     transform: translateY(-6px);
     box-shadow: 0 15px 36px rgba(0, 0, 0, 0.18);
 }
+
 .metric-title {
     font-size: 15px;
     font-weight: 600;
     margin: 0;
     color: #2e2e2e;
 }
+
 .metric-number {
     font-size: 20px;
     font-weight: 800;
     margin: 4px 0;
     color: #111;
 }
+
 .chart-box {
     flex-grow: 1;
     display: flex;
@@ -9729,7 +9730,7 @@ body.dark-mode .btn-reset:hover {
 /* Card background */
 body.dark-mode .premium-stats-card {
     background: #1b1c1f !important;
-    box-shadow: 0 0 0 rgba(0,0,0,0) !important;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
     border: 1px solid #2d2d31;
 }
 
@@ -9773,7 +9774,8 @@ body.dark-mode {
 /* ===== STAT BOX & CARDS ===== */
 body.dark-mode .stat-box,
 body.dark-mode .card {
-    background: #231b34 !important;         /* contrast from #161129 */
+    background: #231b34 !important;
+    /* contrast from #161129 */
     border: 1px solid #302545 !important;
     box-shadow: none !important;
 }
@@ -9826,7 +9828,8 @@ body.dark-mode .card:hover {
 }
 
 /* ===== SMOOTH TRANSITION ===== */
-.stat-box, .card {
+.stat-box,
+.card {
     transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
@@ -9894,10 +9897,55 @@ body.dark-mode .p-2.bg-white.rounded.shadow-sm:hover {
     body.dark-mode table {
         font-size: 13px;
     }
+
     body.dark-mode .section .card-header h5 {
         font-size: 16px;
     }
+
     body.dark-mode .section .p-2.bg-white.rounded.shadow-sm {
         padding: 10px !important;
     }
+}
+
+.notify-wrapper {
+    margin-top: 10px;
+}
+
+.notify-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    background: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+}
+
+.notify-row:hover {
+    background: #f5f7fa;
+}
+
+.notify-details p {
+    margin: 0;
+}
+
+.dark-mode .notify-row {
+    background: #1d1a29;
+}
+
+.dark-mode .notify-row:hover {
+    background: #271f3c;
+}
+
+.unread-notify {
+    background: #e9f3ff !important;
+    /* light blue */
+    border-left: 4px solid #007bff;
+    /* blue stripe */
+}
+
+.read-notify {
+    background: #ffffff !important;
+    /* normal */
 }

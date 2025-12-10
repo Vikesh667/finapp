@@ -73,6 +73,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
 
 $routes->get('notifications/list', 'NotificationController::fetchNotifications');
 $routes->get('notifications/mark-read/(:num)', 'NotificationController::markNotificationRead/$1');
+$routes->get('notification/view/(:num)', 'NotificationController::view/$1');
+
 
 
   // --- TRANSACTION MANAGEMENT ---
@@ -110,6 +112,8 @@ $routes->get('notifications/mark-read/(:num)', 'NotificationController::markNoti
 
   $routes->get('login-history', 'AuthController::loging_history');
   $routes->post('force-logout/(:num)', 'AuthController::forceLogoutUser/$1');
+
+  $routes->get('app-notifications','NotificationController::app_notification');
 });
 
 

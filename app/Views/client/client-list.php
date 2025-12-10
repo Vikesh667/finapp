@@ -4,6 +4,9 @@ $role = session()->get('role');
 ?>
 
 <body>
+    <div id="loader">
+    <img src="<?= base_url('assets/img/logo.png') ;?>" class="loader-logo">
+</div>
     <?php echo view('topHeader'); ?>
     <div id="appCapsule" class="full-height">
         <div class="user-container">
